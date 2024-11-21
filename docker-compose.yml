@@ -6,13 +6,7 @@ services:
       dockerfile: Dockerfile
     container_name: vue-app
     ports:
-      - 9000:80
-  nginx:
-    image: nginx:alpine
-    container_name: nginx-app
-    volumes:
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
-    ports:
-      - 80:80 # Mengubah port mapping dari 80:80 ke 9000:80
-    depends_on:
-      - app
+      - 9000:9000 # Arahkan port 9000 host ke port 9000 di container
+    environment:
+      - HOST=0.0.0.0 # Pastikan Vue.js menerima koneksi dari semua host
+    command: ["npx", "vite"]
