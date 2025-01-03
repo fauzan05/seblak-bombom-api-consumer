@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <link rel="stylesheet" href="{{ asset('assets/auth/css/style.css') }}">
-
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
 <body class="img js-fullheight" style="background-image: url({{ asset('assets/auth/images/bg.jpg') }});">
