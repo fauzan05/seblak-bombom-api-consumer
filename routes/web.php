@@ -12,6 +12,6 @@ Route::get('/login', [AdminController::class, 'login']);
 Route::post('/login', [AdminController::class, 'post_login']);
 
 Route::middleware([EnsureTokenIsValid::class])->group(function () {
-    Route::get('/admin/dashboard', [AdminController::class, 'index']);
+    Route::get('/admin/{any}', [AdminController::class, 'index']);
 });
 
