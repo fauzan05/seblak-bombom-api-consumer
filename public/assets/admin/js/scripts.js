@@ -591,26 +591,26 @@ $(function () {
 
 const domain_name = $("#domain-url").val();
 
-let imageUploadInput = $("#image-upload")[0];
-let imageContainer = $("#image-preview")[0];
+// let imageUploadInput = $("#image-upload")[0];
+// let imageContainer = $("#image-preview")[0];
 
-function previewImage() {
-  imageContainer.innerHTML = "";
-  for (let file of imageUploadInput.files) {
-    let reader = new FileReader();
-    let figure = document.createElement("div");
+// function previewImage() {
+//   imageContainer.innerHTML = "";
+//   for (let file of imageUploadInput.files) {
+//     let reader = new FileReader();
+//     let figure = document.createElement("div");
 
-    reader.onload = function () {
-      let img = document.createElement("img");
-      let label = $("#image-preview label");
-      label.remove();
-      img.setAttribute("src", reader.result);
-      figure.insertBefore(img, figure.firstChild);
-    }
-    imageContainer.appendChild(figure);
-    reader.readAsDataURL(file);
-  }
-}
+//     reader.onload = function () {
+//       let img = document.createElement("img");
+//       let label = $("#image-preview label");
+//       label.remove();
+//       img.setAttribute("src", reader.result);
+//       figure.insertBefore(img, figure.firstChild);
+//     }
+//     imageContainer.appendChild(figure);
+//     reader.readAsDataURL(file);
+//   }
+// }
 
 // passing data edit category modal
 $("#editCategoryModal").on("show.bs.modal", function (event) {

@@ -47,4 +47,8 @@ class AdminController extends Controller
             return json_encode(false);
         }
     }
+
+    public function post_product(Request $request) {
+        dd($request->hasFile('images'));
+    }
 }

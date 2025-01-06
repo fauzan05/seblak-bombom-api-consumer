@@ -1,3 +1,11 @@
+<style scoped>
+.image-preview-container {
+	height: 250px;
+	overflow-y: scroll;
+	padding: 10px;
+}
+</style>
+
 <template>
 	<div class="main-content">
 		<section class="section">
@@ -132,85 +140,196 @@
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
-				<form action="admin/application" method="post" enctype="multipart/form-data">
+				<form @submit.prevent="submitAddProduct">
 					<div class="modal-body d-flex flex-column align-items-start justify-content-center">
 						<div class="row d-flex align-items-center justify-content-around w-100 mb-3">
+							<!-- Input Upload Gambar -->
 							<div class="form-group row mb-4 col-5">
 								<div class="col-sm-12 col-md-7">
 									<div class="image-preview">
-										<label for="image-upload" class="cursor-pointer" id="image-label">Pilih Gambar
-											&nbsp; <i class="fa-solid fa-image"></i></label>
-										<input type="file" name="image-upload[]" id="image-upload"
-											accept="image/png, image/jpeg, image/" onchange="previewImage()" required
+										<label for="image-upload" class="cursor-pointer" id="image-label">
+											Pilih Gambar &nbsp; <i class="fa-solid fa-image"></i>
+										</label>
+										<input type="file" id="image-upload" @change="previewImage"
 											multiple />
 									</div>
 								</div>
 							</div>
-							<div id="image-preview"
-								class="col-5 border rounded d-flex flex-column align-items-center justify-content-center">
-								<label class="col-12 col-md-3 col-lg-3 text-center p-0">Pratinjau</label>
-								<p class="text-danger d-none" id="category-image-alert"></p>
+
+							<!-- Preview Gambar dengan Drag & Drop -->
+							<div class="form-group border row mb-4 col-5">
+								<Draggable v-model="images" group="images" item-key="id" class="image-preview-container"
+									@end="onDragEnd">
+									<template #item="{ element }">
+										<div class="image-preview-item">
+											<img :src="element.src" alt="Preview Image" />
+											<p class="image-position">Posisi: {{ element.position }}</p>
+										</div>
+									</template>
+								</Draggable>
 							</div>
 						</div>
-						<!-- <div class="d-flex flex-row align-items-start justify-content-around row w-100 mt-3">
-							<div class="col-5 mb-3">
-								<label for="app-title" class="form-label">Judul Aplikasi</label>
-								<input class="form-control" name="app_title" type="text" placeholder="Judul Aplikasi"
-									aria-label="default input example" id="app-title" value=""
-									required>
-								<p class="text-danger d-none" id="app-title-alert"></p>
-							</div>
-							<div class="mb-3 col-7">
-								<label for="app-desc" class="form-label">Deskripsi</label>
-								<div id="ckeditor"></div>
-								<textarea type="text" id="ckeditor-input" name="sizes" hidden></textarea>
-							</div>
-						</div> -->
 						<div class="mb-3 col-12">
-								<label for="app-desc" class="form-label">Deskripsi</label>
-								<div id="ckeditor" class="p-3"></div>
-								<textarea type="text" id="ckeditor-input" name="sizes" hidden></textarea>
-							</div>
+							<label for="product_name" class="form-label">Product Name</label>
+							<input class="form-control" v-model="form.productName" name="product_name" type="text"
+								placeholder="Product Name">
+							<span v-if="errors.name" class="error">{{ errors.name }}</span>
+						</div>
+						<div class="mb-3 col-12">
+							<label for="product_category" class="form-label">Category</label>
+							<select class="form-control selectric" name="product_category" id="product_category">
+								<option disabled selected value="">Choose one</option>
+								<option value="1">Makanan</option>
+								<option value="2">Minuman</option>
+							</select>
+							<span v-if="errors.category" class="error">{{ errors.category }}</span>
+						</div>
+						<div class="mb-3 col-12">
+							<label for="product_price" class="form-label">Price</label>
+							<input class="form-control" v-model="form.productPrice" name="product_price" type="text"
+								placeholder="Rp 15.000">
+							<span v-if="errors.price" class="error">{{ errors.price }}</span>
+						</div>
+						<div class="mb-3 col-12">
+							<label for="product_stock" class="form-label">Stock</label>
+							<input class="form-control" v-model="form.productStock" name="product_stock" type="text"
+								placeholder="100">
+							<span v-if="errors.stock" class="error">{{ errors.stock }}</span>
+						</div>
+						<div class="mb-3 col-12">
+							<label for="product_desc" class="form-label">Description</label>
+							<div id="ckeditor_description" class="p-3" name="product_desc"></div>
+							<textarea type="text" id="ckeditor_description_input" hidden></textarea>
+							<span v-if="errors.desc" class="error">{{ errors.desc }}</span>
+						</div>
 					</div>
 					<div class="modal-footer bg-whitesmoke br">
 						<button type="button" class="btn btn-secondary" data-dismiss="modal">Keluar</button>
 						<button type="submit" class="btn btn-primary" id="add-button">
-							Buat Aplikasi
+							Add Product
 						</button>
 					</div>
 				</form>
 			</div>
 		</div>
 	</div>
-	<div>
-		adasd
-    <ckeditor :editor="editor" v-model="editorData" :config="editorConfig"></ckeditor>
-  </div>
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
-// import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { onMounted, ref, reactive } from 'vue';
+import Draggable from 'vuedraggable';
+
+const api_url = 'http://127.0.0.1:8000/api';
+
+// State untuk Menyimpan Gambar
+const images = ref([]);
+
+// Fungsi Preview Gambar
+const previewImage = (event) => {
+  const files = event.target.files;
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i];
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      images.value.push({
+        id: Date.now() + i, // ID unik untuk setiap gambar
+        src: e.target.result,
+        position: images.value.length + 1,
+      });
+    };
+    reader.readAsDataURL(file);
+  }
+};
+
+// Event Setelah Drag & Drop
+const onDragEnd = () => {
+  images.value.forEach((img, index) => {
+    img.position = index + 1;
+  });
+};
+
+const form = reactive({
+	productName: '',
+	productCategory: '',
+	productPrice: '',
+	productStock: '',
+	productDescription: '',
+});
+
+const errors = ref({});
+
+const submitAddProduct = async () => {
+	console.log(images)
+	if (validateForm()) {
+		form.productCategory = $('#product_category').val();
+		form.productDescription = $('#ckeditor_description_input').val();
+		// Proses login (e.g., kirim ke API)
+		// try {
+		// 	const response = await axios.post(api_url + '/images', {
+		// 		email: email.value,
+		// 		password: password.value,
+		// 	}, {
+		// 		withCredentials: true // Mengirimkan cookie bersama permintaan
+		// 	});
+
+		// 	console.log(response.data);
+		// } catch (error) {
+		// 	console.error('Error:', error);
+		// }
+	}
+}
+
+function validateForm() {
+	console.log($('#product_category').val())
+	errors.value = {};
+	if (!form.productName) {
+		errors.value.name = 'Product Name is Required!'
+	}
+	if (!$('#product_category').val()) {
+		errors.value.category = 'Category is Required!'
+	}
+	if (!form.productPrice) {
+		errors.value.price = 'Price is Required!'
+	}
+	if (!form.productStock) {
+		errors.value.stock = 'Stock is Required!'
+	}
+	if (!$('#ckeditor_description_input').val()) {
+		errors.value.desc = 'Description is Required!'
+	}
+
+	return Object.keys(errors.value).length === 0;
+}
 
 onMounted(() => {
-    // Memastikan CKEditor hanya diinisialisasi setelah script dimuat
-    const script = document.createElement('script');
-    script.src = '/assets/admin/modules/ckeditor5/build/ckeditor.js'; // Pastikan path benar
-    script.onload = () => {
-        ClassicEditor.create(document.querySelector('#ckeditor'))
-            .then(editor => {
-                let MyEditor = editor;
-                editor.model.document.on('change:data', () => {
-                    let body_content = editor.getData();
-                    console.log(body_content);
-                    document.querySelector("#ckeditor-input").value = body_content;
-                });
-            })
-            .catch(error => {
-                console.error("Error initializing CKEditor: ", error);
-            });
-    };
-    document.head.appendChild(script);
+	const script = document.createElement('script');
+	script.src = '/assets/admin/modules/ckeditor5/build/ckeditor.js'; // Pastikan path benar
+	script.onload = () => {
+		ClassicEditor.create(document.querySelector('#ckeditor_description'))
+			.then(editor => {
+				// Menambahkan padding ke area editable CKEditor
+				editor.editing.view.change(writer => {
+					writer.setStyle('padding-left', '20px', editor.editing.view.document.getRoot());
+					writer.setStyle('padding-right', '20px', editor.editing.view.document.getRoot());
+				});
+
+				editor.model.document.on('change:data', () => {
+					let body_content = editor.getData();
+					document.querySelector("#ckeditor_description_input").value = body_content;
+				});
+			})
+			.catch(error => {
+				console.error("Error initializing CKEditor: ", error);
+			});
+	};
+	document.head.appendChild(script);
 });
 
 </script>
+
+<style>
+.error {
+	color: red;
+	font-size: 12px;
+}
+</style>
