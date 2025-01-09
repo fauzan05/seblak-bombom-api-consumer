@@ -1,8 +1,8 @@
 <style scoped>
-.image-preview-container {
+.image-preview-wrapper {
 	height: 250px;
 	overflow-y: scroll;
-	padding: 10px;
+	padding: 25px;
 }
 </style>
 
@@ -10,10 +10,10 @@
 	<div class="main-content">
 		<section class="section">
 			<div class="section-header">
-				<h1>Produk</h1>
+				<h1>Product</h1>
 				<div class="section-header-button">
 					<button href="features-post-create.html" class="btn btn-primary" data-toggle="modal"
-						data-target="#addProductModal">Tambah Produk Baru</button>
+						data-target="#addProductModal">Add New Product</button>
 				</div>
 				<div class="section-header-breadcrumb">
 					<div class="breadcrumb-item active"><a href="#">Dashboard</a></div>
@@ -52,52 +52,34 @@
 									<table class="table table-striped">
 										<tr>
 											<th>No</th>
-											<th>Nama Produk</th>
-											<th>Kategori Produk</th>
-											<th>Daftar Ukuran</th>
-											<th>Deskripsi</th>
-											<th>Gambar</th>
-											<th>Warna</th>
-											<th>Diperbarui</th>
-											<th>Aksi</th>
+											<th>Name</th>
+											<th>Category</th>
+											<th>Description</th>
+											<th>Images</th>
+											<th>Price</th>
+											<th>Stock</th>
+											<th>Updated At</th>
+											<th>Action</th>
 										</tr>
-										<tr>
+										<!-- Mengubah object ke array menggunakan Object.values() -->
+										<tr v-for="(product, index) in Object.values(products)" :key="product.id">
+											<td>{{ index + 1 }}</td>
+											<td>{{ product.name }}</td>
+											<td>{{ product.category?.name || '-' }}</td>
+											<td v-html="product.description || '-'"></td>
 											<td>
-												<p>No</p>
+												<button v-if="product.images" @click="showProductImages(product.images)"
+													class="btn btn-warning btn-sm">See All Images</button>
 											</td>
+											<td>Rp{{ product.price }}</td>
+											<td>{{ product.stock }}</td>
+											<td>{{ product.updated_at }}</td>
 											<td>
-												<p>(Nama Produk)</p>
-											</td>
-											<td>
-												<div>(Produk kategory)</div>
-											</td>
-											<td>
-												<div class="product-sizes my-1">(Ukuran)</div>
-											</td>
-											<td>
-												(Deskripsi)
-											</td>
-											<td>
-												<img alt="image" src="" width="80" data-toggle="title" title="">
-											</td>
-											<td>
-												(warna)
-											</td>
-											<td>udpated</td>
-											<td class="">
-												<div class="action-container">
-													<i class="fa-solid fa-trash-can text-danger cursor-pointer"
-														data-id="<?= $product->product_id ?>" data-toggle="modal"
-														data-target="#deleteProductConfirmSingle"></i>
-													<i class="mx-3 fa-solid fa-pen-to-square cursor-pointer"
-														data-id="<?= $product->product_id ?>"
-														data-name="<?= $product->product_name ?>"
-														data-category-id="<?= $product->category_id ?>"
-														data-desc="<?= $product->product_desc ?>"
-														data-img="<?= $product->product_image ?>"
-														data-color="<?= $product->color ?>"
-														data-sizes="<?= $product->sizes ?>" data-toggle="modal"
-														data-target="#editProductModal"></i>
+												<div class="d-flex flex-column align-items-start justify-content-center p-2">
+													<button @click="editProduct(product)"
+													class="btn btn-warning btn-sm mt-1">Edit</button>
+												<button @click="deleteProduct(product.id)"
+													class="btn btn-danger btn-sm mt-1">Delete</button>
 												</div>
 											</td>
 										</tr>
@@ -135,7 +117,7 @@
 		<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title">Tambah Produk</h5>
+					<h5 class="modal-title">Add Product</h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
@@ -144,26 +126,30 @@
 					<div class="modal-body d-flex flex-column align-items-start justify-content-center">
 						<div class="row d-flex align-items-center justify-content-around w-100 mb-3">
 							<!-- Input Upload Gambar -->
-							<div class="form-group row mb-4 col-5">
+							<div class="form-group row mb-4 col-5 d-flex flex-column">
 								<div class="col-sm-12 col-md-7">
 									<div class="image-preview">
 										<label for="image-upload" class="cursor-pointer" id="image-label">
 											Pilih Gambar &nbsp; <i class="fa-solid fa-image"></i>
 										</label>
-										<input type="file" id="image-upload" @change="previewImage"
-											multiple />
+										<input type="file" id="image-upload" @change="previewImage" multiple />
 									</div>
 								</div>
+								<span v-if="errors.images" class="error text-center">{{ errors.images }}</span>
 							</div>
 
 							<!-- Preview Gambar dengan Drag & Drop -->
-							<div class="form-group border row mb-4 col-5">
+							<div class="form-group border row mb-4 col-5 image-preview-wrapper">
 								<Draggable v-model="images" group="images" item-key="id" class="image-preview-container"
 									@end="onDragEnd">
 									<template #item="{ element }">
 										<div class="image-preview-item">
 											<img :src="element.src" alt="Preview Image" />
-											<p class="image-position">Posisi: {{ element.position }}</p>
+											<div class="d-flex align-items-center justify-content-between">
+												<p class="image-position">Image Position: {{ element.position }}</p>
+												<i class="fa-solid fa-trash text-danger cursor-pointer"
+													@click="handleImageRemover(element.name)"></i>
+											</div>
 										</div>
 									</template>
 								</Draggable>
@@ -187,7 +173,7 @@
 						<div class="mb-3 col-12">
 							<label for="product_price" class="form-label">Price</label>
 							<input class="form-control" v-model="form.productPrice" name="product_price" type="text"
-								placeholder="Rp 15.000">
+								placeholder="Rp 15.000" @input="formatRupiah">
 							<span v-if="errors.price" class="error">{{ errors.price }}</span>
 						</div>
 						<div class="mb-3 col-12">
@@ -213,39 +199,75 @@
 			</div>
 		</div>
 	</div>
+	<div class="modal fade" tabindex="-1" role="dialog" id="showProductImages">
+		<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Show All Product Images</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body d-flex flex-column align-items-start justify-content-center">
+					<!-- Menampilkan gambar jika ada -->
+					<div v-if="selectedImages.length > 0">
+						<div v-for="image in selectedImages" :key="image.id" class="d-flex flex-column align-items-center">
+							<img  :src="`${api_url}/image/${image.file_name}`"
+							:alt="image.file_name" width="100%"
+							style="padding: 10px; " />
+							<span>Image Position : {{ image.position }}</span>
+						</div>
+					</div>
+					<span v-else>This Product Has No Image</span>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade modal-loading" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-danger" role="status">
+            </div>
+        </div>
+    </div>
 </template>
 
 <script setup>
 import { onMounted, ref, reactive } from 'vue';
 import Draggable from 'vuedraggable';
+const base_url = window.location.origin;
 
-const api_url = 'http://127.0.0.1:8000/api';
+const api_url = 'http://localhost:8010/api';
+
+const products = ref([]);
 
 // State untuk Menyimpan Gambar
 const images = ref([]);
 
 // Fungsi Preview Gambar
 const previewImage = (event) => {
-  const files = event.target.files;
-  for (let i = 0; i < files.length; i++) {
-    const file = files[i];
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      images.value.push({
-        id: Date.now() + i, // ID unik untuk setiap gambar
-        src: e.target.result,
-        position: images.value.length + 1,
-      });
-    };
-    reader.readAsDataURL(file);
-  }
+	const files = event.target.files;
+	for (let i = 0; i < files.length; i++) {
+		const file = files[i];
+		const reader = new FileReader();
+		reader.onload = (e) => {
+			images.value.push({
+				id: Date.now() + i, // ID unik untuk setiap gambar
+				src: e.target.result,  // Untuk preview gambar
+				file: file,  // Simpan file asli untuk dikirim ke server
+				position: images.value.length + 1,
+				name: file.name
+			});
+		};
+		reader.readAsDataURL(file);
+	}
 };
 
 // Event Setelah Drag & Drop
 const onDragEnd = () => {
-  images.value.forEach((img, index) => {
-    img.position = index + 1;
-  });
+	images.value.forEach((img, index) => {
+		img.position = index + 1;
+	});
 };
 
 const form = reactive({
@@ -259,29 +281,64 @@ const form = reactive({
 const errors = ref({});
 
 const submitAddProduct = async () => {
-	console.log(images)
+			const getToken = await axios.get(base_url + '/token');
+			const token = getToken.data.token;
+			console.log(token);
 	if (validateForm()) {
-		form.productCategory = $('#product_category').val();
-		form.productDescription = $('#ckeditor_description_input').val();
-		// Proses login (e.g., kirim ke API)
-		// try {
-		// 	const response = await axios.post(api_url + '/images', {
-		// 		email: email.value,
-		// 		password: password.value,
-		// 	}, {
-		// 		withCredentials: true // Mengirimkan cookie bersama permintaan
-		// 	});
+		$('.modal-loading').modal('show');
+		// Proses add product (e.g., kirim ke API)
+		try {
+			const formData = new FormData();
+			formData.append('category_id', $('#product_category').val());
+			formData.append('name', form.productName);
+			formData.append('description', $('#ckeditor_description_input').val());
+			formData.append('price', form.productPrice);
+			formData.append('stock', form.productStock);
 
-		// 	console.log(response.data);
-		// } catch (error) {
-		// 	console.error('Error:', error);
-		// }
+			// Tambahkan setiap gambar ke FormData
+			images.value.forEach((image, index) => {
+				formData.append(`images`, image.file);
+				formData.append(`positions`, image.position);  // Kirim posisi gambar
+			});
+
+			const response = await axios.post(api_url + '/products', formData, {
+				headers: {
+					'Content-Type': 'multipart/form-data', // Pastikan menggunakan tipe konten multipart
+					'Authorization': '0f58ef22-25aa-443e-9af5-44b8958661e6'
+				},
+				withCredentials: true,  // Mengizinkan pengiriman cookie bersama permintaan
+			});
+
+			if (response.status === 201) {
+				products.value = [];
+				getAllProduct();
+			} else {
+				$('.modal-loading').modal('hide');
+			}
+		} catch (error) {
+			console.error('Error:', error);
+		}
 	}
 }
 
+const selectedImageDelete = ref([]);
+
+function handleImageRemover(filename) {
+	selectedImageDelete.value.push(filename)
+}
+
+const selectedImages = ref([]); // Variabel reaktif untuk menyimpan gambar yang dipilih
+
+function showProductImages(images) {
+	selectedImages.value = images; // Menyimpan gambar yang dipilih ke dalam selectedImages
+	$('#showProductImages').modal('show'); // Menampilkan modal
+}
+
 function validateForm() {
-	console.log($('#product_category').val())
 	errors.value = {};
+	if (images.value.length == 0) {
+		errors.value.images = 'Images is required!'
+	}
 	if (!form.productName) {
 		errors.value.name = 'Product Name is Required!'
 	}
@@ -323,7 +380,41 @@ onMounted(() => {
 			});
 	};
 	document.head.appendChild(script);
+	getAllProduct();
 });
+
+async function getAllProduct() {
+	try {
+		const response = await axios.get(api_url + '/products');
+		products.value = response.data.data; // Menimpa isi dengan data produk baru
+		// console.log('Data produk:', response.data.data);
+	} catch (error) {
+		// console.error('Gagal mengambil data produk:', error);
+		throw error; // Meneruskan error agar bisa ditangani di tempat lain
+	}
+}
+
+function editProduct(product) {
+	$('#addProductModal').modal('show');
+	form.productName = product.name;
+	$('#product_category').val(product.category.id).trigger('change');
+	form.productPrice = product.price;
+	form.productStock = product.stock;
+
+}
+
+function formatRupiah(event) {
+  let value = event.target.value.replace(/[^,\d]/g, ''); // Hapus semua kecuali angka dan koma
+  value = value ? parseInt(value, 10) : 0; // Konversi ke integer untuk memformat angka
+
+  // Format angka menggunakan Intl.NumberFormat
+  event.target.value = value
+    ? `Rp ${new Intl.NumberFormat('id-ID').format(value)}`
+    : '';
+
+  // Perbarui v-model setelah pemformatan
+  form.productPrice = event.target.value;
+}
 
 </script>
 
