@@ -7,6 +7,7 @@
 	<meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
 
 	<!-- General CSS Files -->
+	<link rel="stylesheet" href="{{ asset('assets/auth/css/bootstrap.min.css') }}">
 	<link rel="stylesheet" href="{{ asset('assets/admin/modules/bootstrap/css/bootstrap.min.css') }}">
 	<link rel="stylesheet" href="{{ asset('assets/admin/modules/fontawesome/css/all.min.css') }}">
 

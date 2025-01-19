@@ -6,14 +6,12 @@ import '../css/app.css';
 import { createApp } from 'vue';
 import { createRouter, createWebHistory } from 'vue-router'; // Vue 3 Router
 
-// Mengimpor CKEditor untuk Vue 3
-// import CKEditor, { Ckeditor } from '@ckeditor/ckeditor5-vue';
-// import '@ckeditor/ckeditor5-vue';
 
 // Mengimpor Komponen
 import Login from "./components/Login.vue";
 import Dashboard from "./components/admin/Dashboard.vue";
 import Product from "./components/admin/Product.vue";
+import Sidebar from "./components/admin/templates/Sidebar.vue";
 
 // Buat Aplikasi Vue
 const app = createApp({});
@@ -21,19 +19,21 @@ const app = createApp({});
 // Definisikan Route
 const routes = [
     { path: '/admin/dashboard', component: Dashboard },
-    { path: '/admin/product', component: Product }, // Menggunakan komponen Product yang memuat CKEditor
+    { path: '/admin/product', component: Product }, 
 ];
 
 // Daftarkan Komponen Global
 app.component("Login", Login);
 app.component("Dashboard", Dashboard);
 app.component("Product", Product);  // Pastikan komponen ini terdaftar
-// app.use(Ckeditor);
+app.component("Sidebar", Sidebar);  // Pastikan komponen ini terdaftar
 
 // Buat Router
 const router = createRouter({
     history: createWebHistory(),
     routes,
+    linkActiveClass: 'active',
+    linkExactActiveClass: 'active',
 });
 
 // Gunakan Router pada aplikasi Vue
