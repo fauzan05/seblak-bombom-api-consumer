@@ -319,7 +319,7 @@
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">
                             No
                         </button>
-                        <button type="button" @click="deleteProducts" class="btn btn-primary" id="add-button">
+                        <button type="submit" class="btn btn-primary" id="add-button">
                             Yes Delete
                         </button>
                     </div>
@@ -394,96 +394,133 @@ const form = reactive({
 const errors = ref({});
 
 const submitProduct = async () => {
-    if (validateForm()) {
-        $("#addProductModal").modal("hide");
+    if (modalTitle.value == "Delete Product Confirmation") {
+        $("#deleteConfirmationModal").modal("hide");
         $(".modal-loading").modal("show");
-        // Proses add product (e.g., kirim ke API)
-        try {
-            const formData = new FormData();
-            formData.append("category_id", $("#product_category").val());
-            formData.append("name", form.productName);
-            formData.append(
-                "description",
-                $("#ckeditor_description_input").val()
-            );
-            formData.append("stock", form.productStock);
-            formData.append("price", unformatRupiah(form.productPrice));
+        
+        let listDeleteProduct = 'ids=';
+        checkedProducts.value.forEach((value) => {
+            listDeleteProduct += value + ','
+        })
 
-            if (modalTitle.value == "Add Product") {
-                // Tambahkan setiap gambar ke FormData
-                images.value.forEach((image, index) => {
-                    // console.log(image.file);
-                    formData.append(`images`, image.file);
-                    formData.append(`positions`, image.position); // Kirim posisi gambar
-                });
-            } else if (modalTitle.value == "Edit Product"){
-                images.value.forEach((image, index) => {
-                    if (!image.file) {
-                        formData.append(`current_images`, image.id);
-                        formData.append(`current_positions`, image.position);
-                    } else {
-                        formData.append(`new_images`, image.file);
-                        formData.append(`new_positions`, image.position); // Kirim posisi gambar
-                    }
-                });
+        let response = await axios.get(base_url + "/token");
+        let token = response.data.token;
+        if (token === null) {
+            window.location.replace('http://localhost:8000/login');
+        }
 
-                if (selectedImageDelete.value.length > 0) {
-                    formData.append(
-                        "images_deleted",
-                        selectedImageDelete.value
-                    ); // isinya id gambar
-                }
-            } else if (modalTitle.value == "Delete Product Confirmation") {
-
+        response = await axios.delete(
+            api_url + "/products?" + listDeleteProduct,
+            {
+                headers: {
+                    "Content-Type": "multipart/form-data", // Pastikan menggunakan tipe konten multipart
+                    Authorization: token,
+                },
+                withCredentials: true, // Mengizinkan pengiriman cookie bersama permintaan
             }
+        );
 
-            let response = await axios.get(base_url + "/token");
-            let token = response.data.token;
-            if (modalTitle.value == "Add Product") {
-                response = await axios.post(api_url + "/products", formData, {
-                    headers: {
-                        "Content-Type": "multipart/form-data", // Pastikan menggunakan tipe konten multipart
-                        Authorization: token,
-                    },
-                    withCredentials: true, // Mengizinkan pengiriman cookie bersama permintaan
-                });
+        if (response.status === 200) {
+            products.value = [];
+            getAllProduct();
+            $("#deleteConfirmationModal").modal("hide");
+            $(".modal-loading").modal("hide");
+        } else {
+            $("#deleteConfirmationModal").modal("show");
+            $(".modal-loading").modal("hide");
+        }
+    } else if (modalTitle.value == "Add Product" || modalTitle.value == "Edit Product") {
+        if (validateForm()) {
+            $("#addProductModal").modal("hide");
+            $(".modal-loading").modal("show");
+            // Proses add product (e.g., kirim ke API)
+            try {
+                const formData = new FormData();
+                formData.append("category_id", $("#product_category").val());
+                formData.append("name", form.productName);
+                formData.append(
+                    "description",
+                    $("#ckeditor_description_input").val()
+                );
+                formData.append("stock", form.productStock);
+                formData.append("price", unformatRupiah(form.productPrice));
 
-                if (response.status === 201) {
-                    products.value = [];
-                    getAllProduct();
-                    $("#addProductModal").modal("hide");
-                    $(".modal-loading").modal("hide");
-                } else {
-                    $("#addProductModal").modal("show");
-                    $(".modal-loading").modal("hide");
+                if (modalTitle.value == "Add Product") {
+                    // Tambahkan setiap gambar ke FormData
+                    images.value.forEach((image, index) => {
+                        // console.log(image.file);
+                        formData.append(`images`, image.file);
+                        formData.append(`positions`, image.position); // Kirim posisi gambar
+                    });
+                } else if (modalTitle.value == "Edit Product") {
+                    images.value.forEach((image, index) => {
+                        if (!image.file) {
+                            formData.append(`current_images`, image.id);
+                            formData.append(`current_positions`, image.position);
+                        } else {
+                            formData.append(`new_images`, image.file);
+                            formData.append(`new_positions`, image.position); // Kirim posisi gambar
+                        }
+                    });
+
+                    if (selectedImageDelete.value.length > 0) {
+                        formData.append(
+                            "images_deleted",
+                            selectedImageDelete.value
+                        ); // isinya id gambar
+                    }
                 }
-            } else if (modalTitle.value == "Edit Product"){
-                response = await axios.put(
-                    api_url + "/products/" + form.productId,
-                    formData,
-                    {
+
+                let response = await axios.get(base_url + "/token");
+                let token = response.data.token;
+                if (token === null) {
+                    window.location.replace('http://localhost:8000/login');
+                }
+
+                if (modalTitle.value == "Add Product") {
+                    response = await axios.post(api_url + "/products", formData, {
                         headers: {
                             "Content-Type": "multipart/form-data", // Pastikan menggunakan tipe konten multipart
                             Authorization: token,
                         },
                         withCredentials: true, // Mengizinkan pengiriman cookie bersama permintaan
+                    });
+
+                    if (response.status === 201) {
+                        products.value = [];
+                        getAllProduct();
+                        $("#addProductModal").modal("hide");
+                        $(".modal-loading").modal("hide");
+                    } else {
+                        $("#addProductModal").modal("show");
+                        $(".modal-loading").modal("hide");
                     }
-                );
+                } else if (modalTitle.value == "Edit Product") {
+                    response = await axios.put(
+                        api_url + "/products/" + form.productId,
+                        formData,
+                        {
+                            headers: {
+                                "Content-Type": "multipart/form-data", // Pastikan menggunakan tipe konten multipart
+                                Authorization: token,
+                            },
+                            withCredentials: true, // Mengizinkan pengiriman cookie bersama permintaan
+                        }
+                    );
 
-                if (response.status === 200) {
-                    products.value = [];
-                    getAllProduct();
-                    $("#addProductModal").modal("hide");
-                    $(".modal-loading").modal("hide");
-                } else {
-                    $("#addProductModal").modal("show");
-                    $(".modal-loading").modal("hide");
+                    if (response.status === 200) {
+                        products.value = [];
+                        getAllProduct();
+                        $("#addProductModal").modal("hide");
+                        $(".modal-loading").modal("hide");
+                    } else {
+                        $("#addProductModal").modal("show");
+                        $(".modal-loading").modal("hide");
+                    }
                 }
-            } else if (modalTitle.value == "Delete Product Confirmation") {
-
+            } catch (error) {
+                console.error("Error:", error);
             }
-        } catch (error) {
-            console.error("Error:", error);
         }
     }
 };
