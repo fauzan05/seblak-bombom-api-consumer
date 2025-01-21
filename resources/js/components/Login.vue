@@ -127,7 +127,7 @@ const submitLogin = async () => {
         }
     } catch (error) {
         $('.modal-loading').modal('hide');
-        errorMessage.value = error.response?.data?.message || 'Login gagal';
+        errorMessage.value = 'An error occurred on the server. Please try again later.' || 'Login failed! Please try again later.';
         console.error('Error:', error);
     }
 };

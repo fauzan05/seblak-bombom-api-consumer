@@ -25,7 +25,7 @@
 	@vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body>
+<body class="sidebar-mini">
 	<div id="app">
 		<div class="main-wrapper main-wrapper-1">
 			@include('Template.Admin.navbar')

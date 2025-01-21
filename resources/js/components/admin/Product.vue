@@ -27,26 +27,34 @@
                     <div class="breadcrumb-item active">
                         <a href="#">Dashboard</a>
                     </div>
-                    <div class="breadcrumb-item"><a href="#">Produk</a></div>
-                    <div class="breadcrumb-item">Semua Produk</div>
+                    <div class="breadcrumb-item"><a href="#">Product</a></div>
                 </div>
             </div>
             <div class="section-body">
-                <h2 class="section-title">
-                    <i class="fas fa-gem"></i> &nbsp; Produk
-                </h2>
-                <p class="section-lead">
-                    Anda dapat memanage semua produk, seperti edit, hapus dan
-                    lainnya.
-                </p>
+                <div class="d-flex flex-row justify-content-between align-items-center">
+                    <p class="section-lead">
+                        You can manage all products in here such as add, edit, or remove them.
+                    </p>
+                    <div class="alert alert-dismissible show fade"
+                        :class="[alertType, { 'd-none': showAlertMessage != true }]">
+                        <div class="alert-body">
+                            <button class="close" data-dismiss="alert" @click="showAlertMessage = false">
+                                <span>&times;</span>
+                            </button>
+                            <span style="padding-right: 30px;">
+                                {{ alertMessageContent }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-12">
                         <div class="card mb-0">
                             <div class="card-body">
                                 <ul class="nav nav-pills">
                                     <li class="nav-item">
-                                        <a class="nav-link active" href="#">Semua
-                                            <span class="badge badge-white">(Total)</span></a>
+                                        <a class="nav-link active" href="#">All Products
+                                            <span class="badge badge-white">{{ products.length }}</span></a>
                                     </li>
                                 </ul>
                             </div>
@@ -57,13 +65,25 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header d-flex justify-content-between">
-                                <h4>Semua Produk</h4>
-                                <button v-if="checkedProducts.length > 0" @click="deleteProductModal"
-                                    class="btn btn-danger btn-sm mt-1">
-                                    Delete
-                                </button>
+                                <h4>All Products</h4>
                             </div>
                             <div class="card-body">
+                                <div class="float-left">
+                                    <button v-if="checkedProducts.length > 0" @click="deleteProductModal"
+                                        class="btn btn-danger btn-sm mt-1">
+                                        Delete
+                                    </button>
+                                </div>
+                                <div class="float-right">
+                                    <form>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" placeholder="Search">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-primary"><i class="fas fa-search"></i></button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
                                 <div class="clearfix mb-3"></div>
                                 <div class="table-responsive mb-4">
                                     <table class="table table-striped">
@@ -98,7 +118,7 @@
                                                         class="custom-control-label">&nbsp;</label>
                                                 </div>
                                             </td>
-                                            <td>{{ index + 1 }}</td>
+                                            <td>{{ (selectedPage - 1) * dataPerPages + index + 1 }}</td>
                                             <td>{{ product.name }}</td>
                                             <td>
                                                 {{
@@ -106,8 +126,15 @@
                                                     "-"
                                                 }}
                                             </td>
-                                            <td v-html="product.description || '-'
-                                                    "></td>
+                                            <td>
+                                                <button @click="
+                                                showProductDescription(
+                                                    product.description
+                                                )
+                                                    " class="btn btn-warning btn-sm">
+                                                    See Description
+                                                </button>
+                                            </td>
                                             <td>
                                                 <button v-if="product.images" @click="
                                                     showProductImages(
@@ -133,23 +160,42 @@
                                         </tr>
                                     </table>
                                 </div>
+                                <div class="float-left">
+                                    <select class="form-control selectric" name="per_page" id="selectPerPage">
+                                        <option value="5">5</option>
+                                        <option value="10">10</option>
+                                        <option value="25">25</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                    </select>
+                                </div>
                                 <div class="float-right">
                                     <nav>
                                         <ul class="pagination">
-                                            <li class="page-item">
-                                                <a class="page-link" href="" aria-label="Previous">
+                                            <!-- Tombol Previous -->
+                                            <li class="page-item"
+                                                @click.prevent="selectedPage > 1 && updatePage(selectedPage - 1)"
+                                                :class="{ disabled: selectedPage === 1 }">
+                                                <span class="page-link" aria-label="Previous">
                                                     <span aria-hidden="true">&laquo;</span>
                                                     <span class="sr-only">Previous</span>
-                                                </a>
+                                                </span>
                                             </li>
-                                            <li class="page-item">
-                                                <a class="page-link" href=""></a>
+
+                                            <!-- Tombol halaman lainnya (misalnya halaman 1 hingga totalPages) -->
+                                            <li v-for="i in totalPages" :key="i" :class="{ active: selectedPage === i }"
+                                                class="page-item" @click.prevent="updatePage(i)">
+                                                <span class="page-link">{{ i }}</span>
                                             </li>
-                                            <li class="page-item">
-                                                <a class="page-link" href="" aria-label="Next">
+
+                                            <!-- Tombol Next -->
+                                            <li class="page-item"
+                                                @click.prevent="selectedPage < totalPages && updatePage(selectedPage + 1)"
+                                                :class="{ disabled: selectedPage === totalPages }">
+                                                <span class="page-link" aria-label="Next">
                                                     <span aria-hidden="true">&raquo;</span>
                                                     <span class="sr-only">Next</span>
-                                                </a>
+                                                </span>
                                             </li>
                                         </ul>
                                     </nav>
@@ -224,8 +270,9 @@
                                 <option disabled selected value="">
                                     Choose one
                                 </option>
-                                <option value="1">Makanan</option>
-                                <option value="2">Minuman</option>
+                                <option v-for="(category, index) in categories" :key="category.id" :value="category.id">
+                                    {{ category.name }}
+                                </option>
                             </select>
                             <span v-if="errors.category" class="error">{{
                                 errors.category
@@ -283,10 +330,27 @@
                         <div v-for="image in selectedImages" :key="image.id" class="d-flex flex-column align-items-center">
                             <img :src="`${api_url}/image/${image.file_name}`" :alt="image.file_name" width="100%"
                                 style="padding: 10px" />
-                            <span>Image Position : {{ image.position }}</span>
+                            <span class="border rounded-sm bg-primary text-white p-2">Image Position : {{ image.position
+                            }}</span>
                         </div>
                     </div>
                     <span v-else>This Product Has No Image</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" tabindex="-1" role="dialog" id="showProductDescription">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Product Description</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body d-flex flex-column align-items-start justify-content-center">
+                    <span v-html="selectedDescription">
+                    </span>
                 </div>
             </div>
         </div>
@@ -330,7 +394,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, reactive, computed } from "vue";
+import { onMounted, ref, reactive, computed, watch } from "vue";
 import Draggable from "vuedraggable";
 const base_url = window.location.origin;
 
@@ -343,10 +407,25 @@ const images = ref([]);
 
 const modalTitle = ref("Add Product");
 
+const selectedPage = ref(1);
+const totalPages = ref(0);
+const totalDatas = ref(0);
+const dataPerPages = ref(5);
+
+const updatePage = (pageSelected) => {
+    if (pageSelected == 0) {
+        selectedPage.value = 1;
+    } else if (pageSelected > totalPages.value) {
+        selectedPage.value = totalPages.value;
+    } else {
+        selectedPage.value = pageSelected;
+    }
+    getAllProduct(selectedPage.value, dataPerPages.value);
+}
+
 const previewImage = (event, imagesEdit = null) => {
     // Jika imageUrl diberikan, tambahkan gambar langsung dari URL
     if (imagesEdit) {
-        // console.log(imagesEdit);
         for (let i = 0; i < imagesEdit.length; i++) {
             images.value.push({
                 id: imagesEdit[i].id, // ID unik untuk gambar
@@ -372,8 +451,18 @@ const previewImage = (event, imagesEdit = null) => {
             };
             reader.readAsDataURL(file);
         }
+        event.target.value = null; // Reset input file setelah selesai
     }
 };
+
+$(document).ready(function () {
+    $('#selectPerPage').on('change', function () {
+        var selectedValue = $(this).val();
+        dataPerPages.value = selectedValue;
+        selectedPage.value = 1;
+        getAllProduct(selectedPage.value, dataPerPages.value);
+    });
+});
 
 // Event Setelah Drag & Drop
 const onDragEnd = () => {
@@ -392,12 +481,15 @@ const form = reactive({
 });
 
 const errors = ref({});
+const alertMessageContent = ref('');
+const showAlertMessage = ref(false);
+const alertType = ref('alert-danger');
 
 const submitProduct = async () => {
     if (modalTitle.value == "Delete Product Confirmation") {
         $("#deleteConfirmationModal").modal("hide");
         $(".modal-loading").modal("show");
-        
+
         let listDeleteProduct = 'ids=';
         checkedProducts.value.forEach((value) => {
             listDeleteProduct += value + ','
@@ -429,6 +521,13 @@ const submitProduct = async () => {
             $("#deleteConfirmationModal").modal("show");
             $(".modal-loading").modal("hide");
         }
+        checkedProducts.value = [];
+        $('#checkbox-all').prop('checked', false)
+
+        alertMessageContent.value = 'The selected product was deleted successfully!';
+        showAlertMessage.value = true;
+        alertType.value = 'alert-success';
+
     } else if (modalTitle.value == "Add Product" || modalTitle.value == "Edit Product") {
         if (validateForm()) {
             $("#addProductModal").modal("hide");
@@ -487,13 +586,22 @@ const submitProduct = async () => {
                     });
 
                     if (response.status === 201) {
+                        images.value = [];
                         products.value = [];
                         getAllProduct();
                         $("#addProductModal").modal("hide");
                         $(".modal-loading").modal("hide");
+
+                        alertMessageContent.value = 'Product was created successfully!';
+                        showAlertMessage.value = true;
+                        alertType.value = 'alert-success';
                     } else {
                         $("#addProductModal").modal("show");
                         $(".modal-loading").modal("hide");
+
+                        alertMessageContent.value = 'Product creation was unsuccessful!';
+                        showAlertMessage.value = true;
+                        alertType.value = 'alert-danger';
                     }
                 } else if (modalTitle.value == "Edit Product") {
                     response = await axios.put(
@@ -510,12 +618,19 @@ const submitProduct = async () => {
 
                     if (response.status === 200) {
                         products.value = [];
+                        images.value = [];
                         getAllProduct();
                         $("#addProductModal").modal("hide");
                         $(".modal-loading").modal("hide");
+                        alertMessageContent.value = 'Product was updated successfully!';
+                        showAlertMessage.value = true;
+                        alertType.value = 'alert-success';
                     } else {
                         $("#addProductModal").modal("show");
                         $(".modal-loading").modal("hide");
+                        alertMessageContent.value = 'Product updated was unsuccessful!';
+                        showAlertMessage.value = true;
+                        alertType.value = 'alert-danger';
                     }
                 }
             } catch (error) {
@@ -542,6 +657,13 @@ const selectedImages = ref([]); // Variabel reaktif untuk menyimpan gambar yang 
 function showProductImages(images) {
     selectedImages.value = images; // Menyimpan gambar yang dipilih ke dalam selectedImages
     $("#showProductImages").modal("show"); // Menampilkan modal
+}
+
+const selectedDescription = ref('');
+
+function showProductDescription(description) {
+    selectedDescription.value = description;
+    $('#showProductDescription').modal("show");
 }
 
 function validateForm() {
@@ -605,18 +727,24 @@ onMounted(() => {
             });
     };
     document.head.appendChild(script);
-    getAllProduct();
+    getAllProduct(selectedPage.value, dataPerPages.value);
 
     $("#addProductModal").on("hidden.bs.modal", function () {
         selectedImageDelete.value = [];
     });
+
+    $('#checkbox-all').prop('checked', false);
+    showAllCategories();
+
 });
 
-async function getAllProduct() {
+async function getAllProduct(page = 1, perPage = 10) {
     try {
-        const response = await axios.get(api_url + "/products");
+        const response = await axios.get(api_url + "/products?per_page=" + perPage + "&page=" + page);
         products.value = response.data.data; // Menimpa isi dengan data produk baru
-        // console.log('Data produk:', response.data.data);
+        totalPages.value = response.data.total_pages;
+        selectedPage.value = page;
+        totalDatas.value = response.data.total_datas;
     } catch (error) {
         // console.error('Gagal mengambil data produk:', error);
         throw error; // Meneruskan error agar bisa ditangani di tempat lain
@@ -625,6 +753,13 @@ async function getAllProduct() {
 
 function addProduct() {
     images.value = [];
+    form.productName = '';
+    $('#product_category').val('').selectric('refresh');
+    form.productPrice = '';
+    form.productStock = '';
+    if (editorInstance != null) {
+        editorInstance.setData(''); // Misalnya product.description berisi teks yang ingin dimasukkan
+    }
     $("#addProductModal").modal("show");
     modalTitle.value = "Add Product";
 }
@@ -643,7 +778,7 @@ function editProduct(product) {
     form.productStock = product.stock;
 
     // Memasukkan teks ke dalam CKEditor
-    if (editorInstance) {
+    if (editorInstance != null) {
         editorInstance.setData(product.description); // Misalnya product.description berisi teks yang ingin dimasukkan
     }
 
@@ -720,6 +855,13 @@ const findProductById = (id) => {
 const deleteProductModal = () => {
     $('#deleteConfirmationModal').modal('show');
     modalTitle.value = "Delete Product Confirmation";
+}
+
+const categories = ref([]);
+
+const showAllCategories = async () => {
+    let response = await axios.get(api_url + "/categories");
+    categories.value = response.data.data;
 }
 
 

@@ -24,8 +24,16 @@ class EnsureTokenIsValid
 
         if ($current_token) {
             $api_url = config('app.api_url');
-            $response = Http::withHeaders(['Authorization' => $current_token])->get($api_url . '/users/current');
-            if ($response->unauthorized()) {
+
+            try {
+                $response = Http::withHeaders(['Authorization' => $current_token])
+                    ->get($api_url . '/users/current');
+
+                if ($response->unauthorized()) {
+                    return redirect('login');
+                }
+            } catch (\Exception $e) {
+                // Tangani jika terjadi error koneksi
                 return redirect('login');
             }
         }
