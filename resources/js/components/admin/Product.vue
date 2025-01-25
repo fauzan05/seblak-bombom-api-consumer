@@ -35,13 +35,12 @@
                     <p class="section-lead">
                         You can manage all products in here such as add, edit, or remove them.
                     </p>
-                    <div class="alert alert-dismissible show fade"
-                        :class="[alertType, { 'd-none': showAlertMessage != true }]">
+                    <div id="myAlert" class="alert alert-dismissible fade d-none">
                         <div class="alert-body">
-                            <button class="close" data-dismiss="alert" @click="showAlertMessage = false">
+                            <button class="close" data-dismiss="alert">
                                 <span>&times;</span>
                             </button>
-                            <span style="padding-right: 30px;">
+                            <span style="padding-right: 25px;">
                                 {{ alertMessageContent }}
                             </span>
                         </div>
@@ -54,7 +53,7 @@
                                 <ul class="nav nav-pills">
                                     <li class="nav-item">
                                         <a class="nav-link active" href="#">All Products
-                                            <span class="badge badge-white">{{ products.length }}</span></a>
+                                            <span class="badge badge-white">{{ totalDatas }}</span></a>
                                     </li>
                                 </ul>
                             </div>
@@ -75,14 +74,14 @@
                                     </button>
                                 </div>
                                 <div class="float-right">
-                                    <form>
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" placeholder="Search">
-                                            <div class="input-group-append">
-                                                <button class="btn btn-primary"><i class="fas fa-search"></i></button>
-                                            </div>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="Search" v-model="searchInput"
+                                            @keyup.enter="actionSearch">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-primary" @click="actionSearch"><i
+                                                    class="fas fa-search"></i></button>
                                         </div>
-                                    </form>
+                                    </div>
                                 </div>
                                 <div class="clearfix mb-3"></div>
                                 <div class="table-responsive mb-4">
@@ -96,13 +95,53 @@
                                                 </div>
                                             </th>
                                             <th>No</th>
-                                            <th>Name</th>
-                                            <th>Category</th>
-                                            <th>Description</th>
-                                            <th>Images</th>
-                                            <th>Price</th>
-                                            <th>Stock</th>
-                                            <th>Updated At</th>
+                                            <th class="d-flex align-items-center justify-content-center">
+                                                <div class="d-flex align-items-center justify-content-center cursor-pointer sorting"
+                                                    id="products.name">
+                                                    <i class="fa-solid fa-arrow-up-wide-short me-1"></i>
+                                                    Name
+                                                </div>
+                                            </th>
+                                            <th>
+                                                <div class="d-flex align-items-center justify-content-center cursor-pointer sorting"
+                                                    id="categories.name">
+                                                    <i class="fa-solid fa-arrow-up-wide-short me-1"></i>
+                                                    Category
+                                                </div>
+                                            </th>
+                                            <th>
+                                                <div
+                                                    class="d-flex align-items-center justify-content-center cursor-pointer">
+                                                    Description
+                                                </div>
+                                            </th>
+                                            <th>
+                                                <div
+                                                    class="d-flex align-items-center justify-content-center cursor-pointer">
+                                                    Images
+                                                </div>
+                                            </th>
+                                            <th>
+                                                <div class="d-flex align-items-center justify-content-center cursor-pointer sorting"
+                                                    id="products.price">
+                                                    <i class="fa-solid fa-arrow-up-wide-short me-1"></i>
+                                                    Price
+                                                </div>
+                                            </th>
+                                            <th>
+                                                <div class="d-flex align-items-center justify-content-center cursor-pointer sorting"
+                                                    id="products.stock">
+                                                    <i class="fa-solid fa-arrow-up-wide-short me-1"></i>
+                                                    Stock
+                                                </div>
+                                            </th>
+                                            <th>
+                                                <div class="d-flex align-items-center justify-content-center cursor-pointer sorting"
+                                                    id="products.updated_at">
+                                                    <i class="fa-solid fa-arrow-up-wide-short me-1"></i>
+                                                    Updated At
+                                                </div>
+                                            </th>
                                             <th>Action</th>
                                         </tr>
                                         <!-- Mengubah object ke array menggunakan Object.values() -->
@@ -132,7 +171,7 @@
                                                     product.description
                                                 )
                                                     " class="btn btn-warning btn-sm">
-                                                    See Description
+                                                    <i class="fa-regular fa-rectangle-list"></i>
                                                 </button>
                                             </td>
                                             <td>
@@ -141,65 +180,74 @@
                                                         product.images
                                                     )
                                                     " class="btn btn-warning btn-sm">
-                                                    See All Images
+                                                    <i class="fa-solid fa-images"></i>
                                                 </button>
                                             </td>
-                                            <td>Rp{{ product.price }}</td>
+                                            <td>{{ formatRupiah(product.price) }}</td>
                                             <td>{{ product.stock }}</td>
-                                            <td>{{ product.updated_at }}</td>
+                                            <td>{{ formatDate(product.updated_at) }}</td>
                                             <td>
                                                 <div
                                                     class="d-flex flex-column align-items-start justify-content-center p-2">
                                                     <button @click="
                                                         editProduct(product)
                                                         " class="btn btn-warning btn-sm mt-1">
-                                                        Edit
+                                                        <i class="fa-regular fa-pen-to-square"></i>
                                                     </button>
                                                 </div>
                                             </td>
                                         </tr>
                                     </table>
                                 </div>
-                                <div class="float-left">
-                                    <select class="form-control selectric" name="per_page" id="selectPerPage">
-                                        <option value="5">5</option>
-                                        <option value="10">10</option>
-                                        <option value="25">25</option>
-                                        <option value="50">50</option>
-                                        <option value="100">100</option>
-                                    </select>
-                                </div>
-                                <div class="float-right">
-                                    <nav>
-                                        <ul class="pagination">
-                                            <!-- Tombol Previous -->
-                                            <li class="page-item"
-                                                @click.prevent="selectedPage > 1 && updatePage(selectedPage - 1)"
-                                                :class="{ disabled: selectedPage === 1 }">
-                                                <span class="page-link" aria-label="Previous">
-                                                    <span aria-hidden="true">&laquo;</span>
-                                                    <span class="sr-only">Previous</span>
-                                                </span>
-                                            </li>
+                                <div class="row align-items-center">
+                                    <!-- Dropdown dan teks -->
+                                    <div class="col-12 col-md-6 d-flex align-items-center mb-2 justify-content-between">
+                                        <select class="form-control selectric w-auto me-2" name="per_page"
+                                            id="selectPerPage">
+                                            <option value="5">5</option>
+                                            <option value="10">10</option>
+                                            <option value="25">25</option>
+                                            <option value="50">50</option>
+                                            <option value="100">100</option>
+                                        </select>
+                                        <span class="text-start ps-3">Showing {{ showingRange.start }} - {{ showingRange.end }}
+                                            of {{ totalDatas }}</span>
+                                    </div>
 
-                                            <!-- Tombol halaman lainnya (misalnya halaman 1 hingga totalPages) -->
-                                            <li v-for="i in totalPages" :key="i" :class="{ active: selectedPage === i }"
-                                                class="page-item" @click.prevent="updatePage(i)">
-                                                <span class="page-link">{{ i }}</span>
-                                            </li>
+                                    <!-- Pagination -->
+                                    <div class="col-12 col-md-6 text-md-end">
+                                        <nav>
+                                            <ul class="pagination justify-content-center justify-content-md-end mb-0">
+                                                <!-- Tombol Previous -->
+                                                <li class="page-item"
+                                                    @click.prevent="selectedPage > 1 && updatePage(selectedPage - 1)"
+                                                    :class="{ disabled: selectedPage === 1 }">
+                                                    <span class="page-link" aria-label="Previous">
+                                                        <span aria-hidden="true">&laquo;</span>
+                                                        <span class="sr-only">Previous</span>
+                                                    </span>
+                                                </li>
 
-                                            <!-- Tombol Next -->
-                                            <li class="page-item"
-                                                @click.prevent="selectedPage < totalPages && updatePage(selectedPage + 1)"
-                                                :class="{ disabled: selectedPage === totalPages }">
-                                                <span class="page-link" aria-label="Next">
-                                                    <span aria-hidden="true">&raquo;</span>
-                                                    <span class="sr-only">Next</span>
-                                                </span>
-                                            </li>
-                                        </ul>
-                                    </nav>
+                                                <!-- Tombol halaman -->
+                                                <li v-for="i in totalPages" :key="i" :class="{ active: selectedPage === i }"
+                                                    class="page-item" @click.prevent="updatePage(i)">
+                                                    <span class="page-link">{{ i }}</span>
+                                                </li>
+
+                                                <!-- Tombol Next -->
+                                                <li class="page-item"
+                                                    @click.prevent="selectedPage < totalPages && updatePage(selectedPage + 1)"
+                                                    :class="{ disabled: selectedPage === totalPages }">
+                                                    <span class="page-link" aria-label="Next">
+                                                        <span aria-hidden="true">&raquo;</span>
+                                                        <span class="sr-only">Next</span>
+                                                    </span>
+                                                </li>
+                                            </ul>
+                                        </nav>
+                                    </div>
                                 </div>
+
                             </div>
                         </div>
                     </div>
@@ -308,7 +356,7 @@
                             Close
                         </button>
                         <button type="submit" class="btn btn-primary" id="add-button">
-                            Add Product
+                            {{ modalTitle }}
                         </button>
                     </div>
                 </form>
@@ -316,7 +364,7 @@
         </div>
     </div>
     <div class="modal fade" tabindex="-1" role="dialog" id="showProductImages">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-dialog modal-dialog-centered modal-md" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Show All Product Images</h5>
@@ -324,10 +372,11 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body d-flex flex-column align-items-start justify-content-center">
+                <div class="modal-body d-flex flex-column align-items-center justify-content-center">
                     <!-- Menampilkan gambar jika ada -->
-                    <div v-if="selectedImages.length > 0">
-                        <div v-for="image in selectedImages" :key="image.id" class="d-flex flex-column align-items-center">
+                    <div v-if="selectedImages.length > 0" class="w-100">
+                        <div v-for="image in selectedImages" :key="image.id"
+                            class="d-flex flex-column align-items-center border rounded p-2 my-2">
                             <img :src="`${api_url}/image/${image.file_name}`" :alt="image.file_name" width="100%"
                                 style="padding: 10px" />
                             <span class="border rounded-sm bg-primary text-white p-2">Image Position : {{ image.position
@@ -411,6 +460,9 @@ const selectedPage = ref(1);
 const totalPages = ref(0);
 const totalDatas = ref(0);
 const dataPerPages = ref(5);
+const selectedColumnSorting = ref('')
+const sortBy = ref('')
+const searchInput = ref('')
 
 const updatePage = (pageSelected) => {
     if (pageSelected == 0) {
@@ -420,7 +472,11 @@ const updatePage = (pageSelected) => {
     } else {
         selectedPage.value = pageSelected;
     }
-    getAllProduct(selectedPage.value, dataPerPages.value);
+    getAllProduct(selectedPage.value, dataPerPages.value, '', selectedColumnSorting.value, sortBy.value);
+}
+
+const actionSearch = () => {
+    selectedPage.value = 1; getAllProduct(selectedPage.value, dataPerPages.value, searchInput.value, selectedColumnSorting.value, sortBy.value);
 }
 
 const previewImage = (event, imagesEdit = null) => {
@@ -456,11 +512,43 @@ const previewImage = (event, imagesEdit = null) => {
 };
 
 $(document).ready(function () {
+    $('#selectPerPage').selectric(); // Inisialisasi Selectric
     $('#selectPerPage').on('change', function () {
         var selectedValue = $(this).val();
         dataPerPages.value = selectedValue;
         selectedPage.value = 1;
-        getAllProduct(selectedPage.value, dataPerPages.value);
+        getAllProduct(selectedPage.value, dataPerPages.value, searchInput.value, selectedColumnSorting.value, sortBy.value);
+    });
+
+    $('.sorting').on('click', function () {
+        const icon = $(this).find('i'); // Cari elemen <i> di dalam elemen yang diklik
+        if (icon.hasClass('fa-arrow-up-wide-short')) {
+            icon.removeClass('fa-arrow-up-wide-short').addClass('fa-arrow-down-wide-short');
+            getAllProduct(1, dataPerPages.value, '', $(this).attr('id'), 'asc')
+            selectedColumnSorting.value = $(this).attr('id')
+            sortBy.value = 'asc'
+        } else {
+            icon.removeClass('fa-arrow-down-wide-short').addClass('fa-arrow-up-wide-short');
+            getAllProduct(1, dataPerPages.value, '', $(this).attr('id'), 'desc')
+            selectedColumnSorting.value = $(this).attr('id')
+            sortBy.value = 'desc'
+        }
+    });
+
+    // Menampilkan alert
+    $("#showAlert").click(function () {
+        $("#myAlert").removeClass("d-none").addClass("show");
+    });
+
+    // Menyembunyikan alert
+    $("#hideAlert").click(function () {
+        $("#myAlert").addClass("d-none").removeClass("show");
+    });
+
+    // Mencegah penghapusan elemen alert dari DOM saat tombol close ditekan
+    $("#myAlert").on("close.bs.alert", function (e) {
+        e.preventDefault(); // Mencegah perilaku default (penghapusan elemen)
+        $(this).addClass("d-none").removeClass("show");
     });
 });
 
@@ -514,7 +602,8 @@ const submitProduct = async () => {
 
         if (response.status === 200) {
             products.value = [];
-            getAllProduct();
+            searchInput.value = '';
+            getAllProduct(selectedPage.value, dataPerPages.value, searchInput.value, selectedColumnSorting.value, sortBy.value);
             $("#deleteConfirmationModal").modal("hide");
             $(".modal-loading").modal("hide");
         } else {
@@ -588,20 +677,19 @@ const submitProduct = async () => {
                     if (response.status === 201) {
                         images.value = [];
                         products.value = [];
-                        getAllProduct();
+                        searchInput.value = '';
+                        getAllProduct(selectedPage.value, dataPerPages.value, searchInput.value, selectedColumnSorting.value, sortBy.value);
                         $("#addProductModal").modal("hide");
                         $(".modal-loading").modal("hide");
 
                         alertMessageContent.value = 'Product was created successfully!';
-                        showAlertMessage.value = true;
-                        alertType.value = 'alert-success';
+                        $("#myAlert").removeClass("d-none").addClass("show alert-success");
                     } else {
                         $("#addProductModal").modal("show");
                         $(".modal-loading").modal("hide");
 
                         alertMessageContent.value = 'Product creation was unsuccessful!';
-                        showAlertMessage.value = true;
-                        alertType.value = 'alert-danger';
+                        $("#myAlert").removeClass("d-none").addClass("show alert-danger");
                     }
                 } else if (modalTitle.value == "Edit Product") {
                     response = await axios.put(
@@ -619,18 +707,17 @@ const submitProduct = async () => {
                     if (response.status === 200) {
                         products.value = [];
                         images.value = [];
-                        getAllProduct();
+                        searchInput.value = '';
+                        getAllProduct(selectedPage.value, dataPerPages.value, searchInput.value, selectedColumnSorting.value, sortBy.value);
                         $("#addProductModal").modal("hide");
                         $(".modal-loading").modal("hide");
                         alertMessageContent.value = 'Product was updated successfully!';
-                        showAlertMessage.value = true;
-                        alertType.value = 'alert-success';
+                        $("#myAlert").removeClass("d-none").addClass("show alert-success");
                     } else {
                         $("#addProductModal").modal("show");
                         $(".modal-loading").modal("hide");
                         alertMessageContent.value = 'Product updated was unsuccessful!';
-                        showAlertMessage.value = true;
-                        alertType.value = 'alert-danger';
+                        $("#myAlert").removeClass("d-none").addClass("show alert-danger");
                     }
                 }
             } catch (error) {
@@ -738,9 +825,9 @@ onMounted(() => {
 
 });
 
-async function getAllProduct(page = 1, perPage = 10) {
+async function getAllProduct(page = 1, perPage = 10, search = '', columnName = '', orderBy = '') {
     try {
-        const response = await axios.get(api_url + "/products?per_page=" + perPage + "&page=" + page);
+        const response = await axios.get(api_url + "/products?per_page=" + perPage + "&page=" + page + "&column=" + columnName + "&sort_by=" + orderBy + "&search=" + search);
         products.value = response.data.data; // Menimpa isi dengan data produk baru
         totalPages.value = response.data.total_pages;
         selectedPage.value = page;
@@ -827,7 +914,7 @@ function unformatRupiah(value) {
 const checkedProducts = ref([]);
 
 const isCheckAll = computed({
-    get: () => checkedProducts.value.length === products.value.length,
+    get: () => products.value.length != 0 && checkedProducts.value.length === products.value.length,
     set: (value) => {
         if (value) {
             // Centang semua checkbox
@@ -864,6 +951,18 @@ const showAllCategories = async () => {
     categories.value = response.data.data;
 }
 
+const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const options = { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' };
+    return date.toLocaleString('en-US', options).replace(',', ' at');
+};
+
+// Computed untuk menghitung range data
+const showingRange = computed(() => {
+    const start = (selectedPage.value - 1) * dataPerPages.value + 1;
+    const end = Math.min(selectedPage.value * dataPerPages.value, totalDatas.value);
+    return { start, end };
+});
 
 </script>
 
