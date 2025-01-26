@@ -63,8 +63,18 @@
                 <div class="row mt-4">
                     <div class="col-12">
                         <div class="card">
-                            <div class="card-header d-flex justify-content-between">
-                                <h4>All Products</h4>
+                            <div class="card-header d-flex justify-content-start">
+                                <ul class="nav nav-tabs" id="myTab2" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" id="home-tab2" data-toggle="tab" href="#home2" role="tab"
+                                            aria-controls="home" aria-selected="true" @click="changeTab(0)">All</a>
+                                    </li>
+                                    <li class="nav-item" v-for="(category, index) in categories" :key="category.id"
+                                        :value="category.id">
+                                        <a class="nav-link" id="profile-tab2" data-toggle="tab" href="#profile2" role="tab"
+                                            aria-controls="profile" aria-selected="false" @click="changeTab(category.id)">{{ category.name }}</a>
+                                    </li>
+                                </ul>
                             </div>
                             <div class="card-body">
                                 <div class="float-left">
@@ -210,10 +220,10 @@
                                             <option value="50">50</option>
                                             <option value="100">100</option>
                                         </select>
-                                        <span class="text-start ps-3">Showing {{ showingRange.start }} - {{ showingRange.end }}
+                                        <span class="text-start ps-3">Showing {{ showingRange.start }} - {{ showingRange.end
+                                        }}
                                             of {{ totalDatas }}</span>
                                     </div>
-
                                     <!-- Pagination -->
                                     <div class="col-12 col-md-6 text-md-end">
                                         <nav>
@@ -247,7 +257,6 @@
                                         </nav>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -460,9 +469,16 @@ const selectedPage = ref(1);
 const totalPages = ref(0);
 const totalDatas = ref(0);
 const dataPerPages = ref(5);
-const selectedColumnSorting = ref('')
-const sortBy = ref('')
-const searchInput = ref('')
+const selectedColumnSorting = ref('');
+const sortBy = ref('');
+const searchInput = ref('');
+const selectedCategoryTab = ref(0); // default 0 = all products
+
+const changeTab = (categoryId) => {
+    selectedPage.value = 1
+    selectedCategoryTab.value = categoryId
+    getAllProduct();
+}
 
 const updatePage = (pageSelected) => {
     if (pageSelected == 0) {
@@ -472,11 +488,11 @@ const updatePage = (pageSelected) => {
     } else {
         selectedPage.value = pageSelected;
     }
-    getAllProduct(selectedPage.value, dataPerPages.value, '', selectedColumnSorting.value, sortBy.value);
+    getAllProduct();
 }
 
 const actionSearch = () => {
-    selectedPage.value = 1; getAllProduct(selectedPage.value, dataPerPages.value, searchInput.value, selectedColumnSorting.value, sortBy.value);
+    selectedPage.value = 1; getAllProduct();
 }
 
 const previewImage = (event, imagesEdit = null) => {
@@ -517,21 +533,21 @@ $(document).ready(function () {
         var selectedValue = $(this).val();
         dataPerPages.value = selectedValue;
         selectedPage.value = 1;
-        getAllProduct(selectedPage.value, dataPerPages.value, searchInput.value, selectedColumnSorting.value, sortBy.value);
+        getAllProduct();
     });
 
     $('.sorting').on('click', function () {
         const icon = $(this).find('i'); // Cari elemen <i> di dalam elemen yang diklik
         if (icon.hasClass('fa-arrow-up-wide-short')) {
             icon.removeClass('fa-arrow-up-wide-short').addClass('fa-arrow-down-wide-short');
-            getAllProduct(1, dataPerPages.value, '', $(this).attr('id'), 'asc')
-            selectedColumnSorting.value = $(this).attr('id')
-            sortBy.value = 'asc'
+            selectedColumnSorting.value = $(this).attr('id');
+            sortBy.value = 'asc';
+            getAllProduct()
         } else {
             icon.removeClass('fa-arrow-down-wide-short').addClass('fa-arrow-up-wide-short');
-            getAllProduct(1, dataPerPages.value, '', $(this).attr('id'), 'desc')
-            selectedColumnSorting.value = $(this).attr('id')
-            sortBy.value = 'desc'
+            selectedColumnSorting.value = $(this).attr('id');
+            sortBy.value = 'desc';
+            getAllProduct()
         }
     });
 
@@ -603,7 +619,7 @@ const submitProduct = async () => {
         if (response.status === 200) {
             products.value = [];
             searchInput.value = '';
-            getAllProduct(selectedPage.value, dataPerPages.value, searchInput.value, selectedColumnSorting.value, sortBy.value);
+            getAllProduct();
             $("#deleteConfirmationModal").modal("hide");
             $(".modal-loading").modal("hide");
         } else {
@@ -678,7 +694,7 @@ const submitProduct = async () => {
                         images.value = [];
                         products.value = [];
                         searchInput.value = '';
-                        getAllProduct(selectedPage.value, dataPerPages.value, searchInput.value, selectedColumnSorting.value, sortBy.value);
+                        getAllProduct();
                         $("#addProductModal").modal("hide");
                         $(".modal-loading").modal("hide");
 
@@ -708,7 +724,7 @@ const submitProduct = async () => {
                         products.value = [];
                         images.value = [];
                         searchInput.value = '';
-                        getAllProduct(selectedPage.value, dataPerPages.value, searchInput.value, selectedColumnSorting.value, sortBy.value);
+                        getAllProduct();
                         $("#addProductModal").modal("hide");
                         $(".modal-loading").modal("hide");
                         alertMessageContent.value = 'Product was updated successfully!';
@@ -814,7 +830,7 @@ onMounted(() => {
             });
     };
     document.head.appendChild(script);
-    getAllProduct(selectedPage.value, dataPerPages.value);
+    getAllProduct();
 
     $("#addProductModal").on("hidden.bs.modal", function () {
         selectedImageDelete.value = [];
@@ -825,12 +841,12 @@ onMounted(() => {
 
 });
 
-async function getAllProduct(page = 1, perPage = 10, search = '', columnName = '', orderBy = '') {
+async function getAllProduct() {
     try {
-        const response = await axios.get(api_url + "/products?per_page=" + perPage + "&page=" + page + "&column=" + columnName + "&sort_by=" + orderBy + "&search=" + search);
+        const response = await axios.get(api_url + "/products?per_page=" + dataPerPages.value + "&page=" + selectedPage.value + "&column=" + selectedColumnSorting.value + "&sort_by=" + sortBy.value + "&search=" + searchInput.value + "&category_id=" + selectedCategoryTab.value);
         products.value = response.data.data; // Menimpa isi dengan data produk baru
         totalPages.value = response.data.total_pages;
-        selectedPage.value = page;
+        selectedPage.value = response.data.current_pages;
         totalDatas.value = response.data.total_datas;
     } catch (error) {
         // console.error('Gagal mengambil data produk:', error);
