@@ -28,6 +28,11 @@
                         <span>Categories</span>
                     </router-link>
                 </li>
+                <li class="dropdown" :class="{ active: currentPath === '/admin/discount' }">
+                    <router-link to="/admin/discount" class="nav-link"><i class="fas fa-solid fa-percent"></i>
+                        <span>Discount</span>
+                    </router-link>
+                </li>
                 <li class="dropdown" :class="{ active: currentPath === '/admin/setting' }">
                     <router-link to="/admin/setting" class="nav-link"><i class="fas fa-solid fa-sliders"></i>
                         <span>Setting</span>

@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Http;
 
@@ -47,4 +46,22 @@ class AdminController extends Controller
             return json_encode(false);
         }
     }
+
+    public function logout(Request $request) {
+        $api_url = config('app.api_url');
+        $cookie_token = Cookie::get('_token');
+    
+        $response = Http::withHeaders([
+            'Authorization' => $cookie_token,
+            'Content-Type' => 'application/json'
+        ])->delete($api_url . '/users/logout');
+    
+        if ($response->ok()) {
+            Cookie::forget('_token');
+            return response()->json(true); // Mengirimkan true dalam format JSON
+        } else {
+            return response()->json(false); // Mengirimkan false dalam format JSON
+        }
+    }
+    
 }

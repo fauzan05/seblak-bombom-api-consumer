@@ -281,7 +281,7 @@
                                 <div class="col-sm-12 col-md-7">
                                     <div class="image-preview">
                                         <label for="image-upload" class="cursor-pointer" id="image-label">
-                                            Pilih Gambar &nbsp;
+                                            Choose Image &nbsp;
                                             <i class="fa-solid fa-image"></i>
                                         </label>
                                         <input type="file" id="image-upload" @change="previewImage" multiple />
@@ -386,7 +386,7 @@
                     <div v-if="selectedImages.length > 0" class="w-100">
                         <div v-for="image in selectedImages" :key="image.id"
                             class="d-flex flex-column align-items-center border rounded p-2 my-2">
-                            <img :src="`${api_url}/image/${image.file_name}`" :alt="image.file_name" width="100%"
+                            <img :src="`${api_url}/image/products/${image.file_name}`" :alt="image.file_name" width="100%"
                                 style="padding: 10px" />
                             <span class="border rounded-sm bg-primary text-white p-2">Image Position : {{ image.position
                             }}</span>
@@ -501,7 +501,7 @@ const previewImage = (event, imagesEdit = null) => {
         for (let i = 0; i < imagesEdit.length; i++) {
             images.value.push({
                 id: imagesEdit[i].id, // ID unik untuk gambar
-                src: api_url + "/image/" + imagesEdit[i].file_name, // URL gambar
+                src: api_url + "/image/products/" + imagesEdit[i].file_name, // URL gambar
                 position: imagesEdit[i].position,
                 name: imagesEdit[i].file_name, // Atau bisa disesuaikan
             });
@@ -586,8 +586,6 @@ const form = reactive({
 
 const errors = ref({});
 const alertMessageContent = ref('');
-const showAlertMessage = ref(false);
-const alertType = ref('alert-danger');
 
 const submitProduct = async () => {
     if (modalTitle.value == "Delete Product Confirmation") {
@@ -602,7 +600,7 @@ const submitProduct = async () => {
         let response = await axios.get(base_url + "/token");
         let token = response.data.token;
         if (token === null) {
-            window.location.replace('http://localhost:8000/login');
+            window.location.replace(base_url + '/login');
         }
 
         response = await axios.delete(

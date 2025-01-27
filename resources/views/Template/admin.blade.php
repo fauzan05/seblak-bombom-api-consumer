@@ -5,6 +5,7 @@
 	<title>@yield('title')</title>
 	<meta charset="UTF-8">
 	<meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 	<!-- General CSS Files -->
 	<link rel="stylesheet" href="{{ asset('assets/auth/css/bootstrap.min.css') }}">

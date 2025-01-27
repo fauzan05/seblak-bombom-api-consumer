@@ -17,5 +17,6 @@ Route::get('/token', function (Request $request) {
 
 Route::middleware([EnsureTokenIsValid::class])->group(function () {
     Route::get('/admin/{any}', [AdminController::class, 'index']);
+    Route::delete('/admin/logout', [AdminController::class, 'logout']);
 });
 
