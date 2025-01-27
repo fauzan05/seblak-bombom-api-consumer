@@ -2,17 +2,13 @@
     <!-- SIDEBAR -->
     <div class="main-sidebar sidebar-style-2">
         <aside id="sidebar-wrapper">
-            <div class="sidebar-brand">
-                <a href="/stone-store/admin/dashboard">
-                    <img class="w-10" src="" alt="">
-                </a>
+            <div class="sidebar-brand mt-3">
+                <span class="w-100 d-flex align-items-center"><img class="w-25" :src="logoUrl" alt="">{{ appName }}</span>
             </div>
-            <div class="sidebar-brand sidebar-brand-sm">
-                <a href="/stone-store/admin/dashboard">
-                    <img class="w-75" src="" alt="">
-                </a>
+            <div class="sidebar-brand sidebar-brand-sm mt-3">
+                    <img :src="logoUrl" alt="">
             </div>
-            <ul class="sidebar-menu mt-3">
+            <ul class="sidebar-menu mt-1">
                 <li class="dropdown" :class="{ active: currentPath === '/admin/dashboard' }">
                     <router-link to="/admin/dashboard" class="nav-link"><i
                             class="fas fa-solid fa-house"></i><span>Dashboard</span>
@@ -44,23 +40,43 @@
 </template>
 
 <script>
-import { computed } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
+import axios from 'axios';
+const api_url = "http://localhost:8010/api";
 
 export default {
     setup() {
-        // Menggunakan useRoute untuk mendapatkan objek route
-        const route = useRoute();
+        const logoUrl = ref(''); // Data reaktif untuk URL logo
+        const appName = ref(''); // Data reaktif untuk URL logo
+        const route = useRoute(); // Menggunakan useRoute untuk mendapatkan objek route
+        const currentPath = computed(() => route.path); // Menggunakan computed untuk memantau perubahan path
 
-        // Menggunakan computed untuk memantau perubahan path
-        const currentPath = computed(() => route.path);
+        // Fungsi untuk memuat data aplikasi
+        const loadApplications = async () => {
+            try {
+                const response = await axios.get(api_url + "/applications");
+                const data = response.data.data;
+                logoUrl.value = api_url + "/image/application/" + data["logo_filename"];
+                appName.value = data["app_name"]
+            } catch (error) {
+                console.error("Error fetching applications:", error);
+            }
+        };
 
+        // Menggunakan onMounted untuk menjalankan fungsi loadApplications
+        onMounted(() => {
+            document.body.classList.add('sidebar-mini');
+            loadApplications();
+        });
+
+        // Pastikan logoUrl dikembalikan ke template
         return {
+            logoUrl,
+            appName,
             currentPath,
         };
-    },
-    mounted() {
-        $("body").addClass('sidebar-mini');
     }
 };
+
 </script>
