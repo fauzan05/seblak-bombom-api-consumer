@@ -24,6 +24,45 @@
     padding-left: 20px;
     /* Menambahkan padding agar terlihat lebih rapi */
 }
+
+.field-icon {
+    position: absolute;
+    right: 30px;
+    /* Jarak dari sisi kanan input */
+    top: 50%;
+    /* Posisikan vertikal di tengah */
+    transform: translateY(-50%);
+    /* Sesuaikan agar benar-benar tengah */
+    cursor: pointer;
+    /* Tampilkan pointer saat hover */
+    color: #aaa;
+    /* Warna default ikon */
+    z-index: 2;
+    /* Pastikan ikon muncul di atas */
+}
+
+.field-icon:hover {
+    color: #000;
+    /* Ubah warna saat hover */
+}
+
+.form-group .form-control {
+    padding-right: 35px;
+    /* Tambahkan ruang untuk ikon agar tidak tumpang tindih dengan teks */
+}
+
+/* Animasi fade */
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.2s ease;
+    /* Durasi dan gaya transisi */
+}
+
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+    /* Awal dan akhir animasi */
+}
 </style>
 
 <template>
@@ -76,144 +115,384 @@
                                     </li>
                                 </ul>
                             </div>
-                            <div v-if="(current_tab == 0)" class="card-body col-md-12">
-                                <form @submit.prevent="submitApp">
+                            <transition name="fade">
+                                <div v-if="(current_tab == 0)" class="card-body col-md-12">
+                                    <form @submit.prevent="submitApp">
+                                        <div class="card" id="settings-card">
+                                            <div class="card-header">
+                                                <h4>General Settings</h4>
+                                            </div>
+                                            <div class="px-4 my-2">
+                                                <p class="text-muted">General settings such as, site title, site
+                                                    description,
+                                                    address and so on.</p>
+                                            </div>
+                                            <div class="card-body row">
+                                                <div class="col-4">
+                                                    <div class="form-group row d-flex flex-column align-items-center">
+                                                        <label class="form-control-label col-sm-3 text-md-right mt-3">Site
+                                                            Logo</label>
+                                                        <!-- Preview Gambar -->
+                                                        <div v-if="previewLogo" class="mt-3 image-preview-container">
+                                                            <img :src="previewLogo" alt="Site Logo Preview"
+                                                                class="img-thumbnail image-preview" />
+                                                        </div>
+                                                        <div v-if="!previewLogo && hasLogo"
+                                                            class="mt-3 image-preview-container">
+                                                            <img :src="hasLogo" alt="Site Logo Preview"
+                                                                class="img-thumbnail image-preview" />
+                                                        </div>
+                                                        <div v-if="hasLogo == '' && !previewLogo"
+                                                            class="border rounded-sm mt-3"
+                                                            style="height: 150px; width: 150px;">
+                                                        </div>
+                                                        <div class="col-sm-6 col-md-9 mt-5">
+                                                            <div class="custom-file">
+                                                                <input type="file" name="site_logo"
+                                                                    class="custom-file-input" id="site-logo"
+                                                                    @change="handleFileUpload" />
+                                                                <label class="custom-file-label">Choose File</label>
+                                                            </div>
+                                                            <span v-if="errors.siteLogo" class="error">{{
+                                                                errors.siteLogo
+                                                            }}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-8">
+                                                    <div class="form-group row align-items-center">
+                                                        <label for="site-title"
+                                                            class="form-control-label col-sm-3 text-md-right">Site
+                                                            Title</label>
+                                                        <div class="col-sm-6 col-md-9">
+                                                            <input type="text" name="site_title" v-model="form.name"
+                                                                class="form-control" id="site-title">
+                                                            <span v-if="errors.name" class="error">{{
+                                                                errors.name
+                                                            }}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row align-items-center">
+                                                        <label for="site-description"
+                                                            class="form-control-label col-sm-3 text-md-right">Site
+                                                            Description</label>
+                                                        <div class="col-sm-6 col-md-9">
+                                                            <textarea class="form-control codeeditor"
+                                                                v-model="form.description" name="desc"></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <label
+                                                            class="form-control-label col-sm-3 mt-3 text-md-right">Address</label>
+                                                        <div class="col-sm-6 col-md-9">
+                                                            <textarea class="form-control codeeditor" v-model="form.address"
+                                                                name="address"></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row align-items-center">
+                                                        <label for="site-title"
+                                                            class="form-control-label col-sm-3 text-md-right">Phone
+                                                            Number</label>
+                                                        <div class="col-sm-6 col-md-9">
+                                                            <input type="text" name="phone_number"
+                                                                v-model="form.phoneNumber" class="form-control"
+                                                                id="site-title">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row align-items-center">
+                                                        <label for="site-title"
+                                                            class="form-control-label col-sm-3 text-md-right">Site
+                                                            Email</label>
+                                                        <div class="col-sm-6 col-md-9">
+                                                            <input type="text" name="email" v-model="form.email"
+                                                                class="form-control" id="site-title">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row align-items-end justify-content-end">
+                                                        <div class="col-5 d-flex">
+                                                            <label for="site-open-time"
+                                                                class="form-control-label text-md-right">Opening
+                                                                Hours</label>
+                                                            <div class="col-sm-6 col-md-9">
+                                                                <input type="time" class="form-control"
+                                                                    v-model="form.openingHours" id="exampleTime1"
+                                                                    name="exampleTime1">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-5 d-flex">
+                                                            <label for="site-open-time"
+                                                                class="form-control-label text-md-right">Closing
+                                                                Hours</label>
+                                                            <div class="col-sm-6 col-md-9">
+                                                                <input type="time" class="form-control"
+                                                                    v-model="form.closingHours" id="exampleTime1"
+                                                                    name="exampleTime1">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row align-items-end justify-content-end">
+                                                        <div class="col-5 d-flex">
+                                                            <label for="site-open-time"
+                                                                class="form-control-label text-md-right">Longitude
+                                                            </label>
+                                                            <div class="col-sm-6 col-md-9">
+                                                                <input type="text" class="form-control"
+                                                                    v-model="form.longitude" id="exampletext1"
+                                                                    name="exampleTime1">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-5 d-flex">
+                                                            <label for="site-open-time"
+                                                                class="form-control-label text-md-right">Latitude
+                                                            </label>
+                                                            <div class="col-sm-6 col-md-9">
+                                                                <input type="text" class="form-control"
+                                                                    v-model="form.latitude" id="exampletext2"
+                                                                    name="exampleTime1">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-footer text-md-right">
+                                                <button class="btn btn-primary me-3" id="save-btn">Save Changes</button>
+                                                <button class="btn btn-secondary" type="button">Reset</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </transition>
+                            <transition name="fade">
+                                <div v-if="(current_tab == 1)" class="card-body col-md-12">
                                     <div class="card" id="settings-card">
                                         <div class="card-header">
-                                            <h4>General Settings</h4>
+                                            <h4>Account Settings</h4>
                                         </div>
                                         <div class="px-4 my-2">
-                                            <p class="text-muted">General settings such as, site title, site
-                                                description,
-                                                address and so on.</p>
+                                            <p class="text-muted">Account settings such as, username, email, phone or
+                                                password.</p>
                                         </div>
-                                        <div class="card-body row">
-                                            <div class="col-4">
-                                                <div class="form-group row d-flex flex-column align-items-center">
-                                                    <label class="form-control-label col-sm-3 text-md-right mt-3">Site
-                                                        Logo</label>
-                                                    <!-- Preview Gambar -->
-                                                    <div v-if="previewLogo" class="mt-3 image-preview-container">
-                                                        <img :src="previewLogo" alt="Site Logo Preview"
-                                                            class="img-thumbnail image-preview" />
-                                                    </div>
-                                                    <div v-if="!previewLogo && hasLogo"
-                                                        class="mt-3 image-preview-container">
-                                                        <img :src="hasLogo" alt="Site Logo Preview"
-                                                            class="img-thumbnail image-preview" />
-                                                    </div>
-                                                    <div v-if="hasLogo == '' && !previewLogo" class="border rounded-sm mt-3"
-                                                        style="height: 150px; width: 150px;">
-                                                    </div>
-                                                    <div class="col-sm-6 col-md-9 mt-5">
-                                                        <div class="custom-file">
-                                                            <input type="file" name="site_logo" class="custom-file-input"
-                                                                id="site-logo" @change="handleFileUpload" />
-                                                            <label class="custom-file-label">Choose File</label>
+                                        <div class="card-body row justify-content-around">
+                                            <div class="col-5 border rounded-sm py-4">
+                                                <form @submit.prevent="submitAccountProfile">
+                                                    <div class="form-group row align-items-center">
+                                                        <label for="site-title"
+                                                            class="form-control-label col-sm-3 text-md-right">First
+                                                            Name</label>
+                                                        <div class="col-sm-6 col-md-9">
+                                                            <input type="text" name="first_name"
+                                                                v-model="formAccount.firstName" class="form-control"
+                                                                id="site-title">
+                                                            <span v-if="errors.firstName" class="error">{{
+                                                                errors.firstName
+                                                            }}</span>
                                                         </div>
-                                                        <span v-if="errors.siteLogo" class="error">{{
-                                                            errors.siteLogo
-                                                        }}</span>
                                                     </div>
-                                                </div>
+                                                    <div class="form-group row align-items-center">
+                                                        <label for="site-title"
+                                                            class="form-control-label col-sm-3 text-md-right">Last
+                                                            Name</label>
+                                                        <div class="col-sm-6 col-md-9">
+                                                            <input type="text" name="last_name"
+                                                                v-model="formAccount.lastName" class="form-control"
+                                                                id="site-title">
+                                                            <span v-if="errors.lastName" class="error">{{
+                                                                errors.lastName
+                                                            }}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row align-items-center">
+                                                        <label for="site-title"
+                                                            class="form-control-label col-sm-3 text-md-right">Phone
+                                                            Number</label>
+                                                        <div class="col-sm-6 col-md-9">
+                                                            <input type="text" name="phone_number"
+                                                                v-model="formAccount.personalPhoneNumber"
+                                                                class="form-control" id="site-title">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row align-items-center">
+                                                        <label for="site-title"
+                                                            class="form-control-label col-sm-3 text-md-right">Email</label>
+                                                        <div class="col-sm-6 col-md-9">
+                                                            <input type="email" name="personalEmail"
+                                                                v-model="formAccount.personalEmail" class="form-control"
+                                                                id="site-title">
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-footer text-md-center">
+                                                        <button class="btn btn-primary w-100" id="save-btn">Update
+                                                            Account</button>
+                                                    </div>
+                                                </form>
                                             </div>
-                                            <div class="col-8">
-                                                <div class="form-group row align-items-center">
-                                                    <label for="site-title"
-                                                        class="form-control-label col-sm-3 text-md-right">Site Title</label>
-                                                    <div class="col-sm-6 col-md-9">
-                                                        <input type="text" name="site_title" v-model="form.name"
-                                                            class="form-control" id="site-title">
-                                                        <span v-if="errors.name" class="error">{{
-                                                            errors.name
-                                                        }}</span>
+                                            <div class="col-5 border rounded-sm py-4">
+                                                <form @submit.prevent="submitAccountPassword">
+                                                    <div
+                                                        class="card-header w-100 justify-content-center border rounded-sm mb-2">
+                                                        <h4><i class="fa-solid fa-key me-2"></i>Change Password</h4>
                                                     </div>
-                                                </div>
-                                                <div class="form-group row align-items-center">
-                                                    <label for="site-description"
-                                                        class="form-control-label col-sm-3 text-md-right">Site
-                                                        Description</label>
-                                                    <div class="col-sm-6 col-md-9">
-                                                        <textarea class="form-control codeeditor" v-model="form.description"
-                                                            name="desc"></textarea>
+                                                    <div v-if="errors.newPasswordNotSameConfirm"
+                                                        class="alert alert-danger text-center" role="alert">
+                                                        {{ errors.newPasswordNotSameConfirm }}
                                                     </div>
-                                                </div>
-                                                <div class="form-group row">
-                                                    <label
-                                                        class="form-control-label col-sm-3 mt-3 text-md-right">Address</label>
-                                                    <div class="col-sm-6 col-md-9">
-                                                        <textarea class="form-control codeeditor" v-model="form.address"
-                                                            name="address"></textarea>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group row align-items-center">
-                                                    <label for="site-title"
-                                                        class="form-control-label col-sm-3 text-md-right">Phone
-                                                        Number</label>
-                                                    <div class="col-sm-6 col-md-9">
-                                                        <input type="text" name="phone_number" v-model="form.phoneNumber"
-                                                            class="form-control" id="site-title">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group row align-items-center">
-                                                    <label for="site-title"
-                                                        class="form-control-label col-sm-3 text-md-right">Site Email</label>
-                                                    <div class="col-sm-6 col-md-9">
-                                                        <input type="text" name="email" v-model="form.email"
-                                                            class="form-control" id="site-title">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group row align-items-end justify-content-end">
-                                                    <div class="col-5 d-flex">
-                                                        <label for="site-open-time"
-                                                            class="form-control-label text-md-right">Opening
-                                                            Hours</label>
-                                                        <div class="col-sm-6 col-md-9">
-                                                            <input type="time" class="form-control"
-                                                                v-model="form.openingHours" id="exampleTime1"
-                                                                name="exampleTime1">
+                                                    <div class="form-group row align-items-center mt-5">
+                                                        <label for="site-title"
+                                                            class="form-control-label col-sm-3 text-md-right">Current
+                                                            Password</label>
+                                                        <div class="form-group position-relative col-sm-6 col-md-9">
+                                                            <input :type="showPassword ? 'text' : 'password'"
+                                                                class="form-control" placeholder="Password"
+                                                                v-model="formAccount.currentPersonalPassword" />
+                                                            <span @click="togglePasswordVisibility"
+                                                                :class="showPassword ? 'fa fa-eye-slash' : 'fa fa-eye'"
+                                                                class="field-icon toggle-password">
+                                                            </span>
+                                                            <span v-if="errors.currentPersonalPassword" class="error">{{
+                                                                errors.currentPersonalPassword
+                                                            }}</span>
                                                         </div>
                                                     </div>
-                                                    <div class="col-5 d-flex">
-                                                        <label for="site-open-time"
-                                                            class="form-control-label text-md-right">Closing
-                                                            Hours</label>
-                                                        <div class="col-sm-6 col-md-9">
-                                                            <input type="time" class="form-control"
-                                                                v-model="form.closingHours" id="exampleTime1"
-                                                                name="exampleTime1">
+                                                    <div class="form-group row align-items-center">
+                                                        <label for="site-title"
+                                                            class="form-control-label col-sm-3 text-md-right">New
+                                                            Password</label>
+                                                        <div class="form-group position-relative col-sm-6 col-md-9">
+                                                            <input :type="showPassword ? 'text' : 'password'"
+                                                                class="form-control" placeholder="Password"
+                                                                v-model="formAccount.newPersonalPassword" />
+                                                            <span @click="togglePasswordVisibility"
+                                                                :class="showPassword ? 'fa fa-eye-slash' : 'fa fa-eye'"
+                                                                class="field-icon toggle-password">
+                                                            </span>
+                                                            <span v-if="errors.newPersonalPassword" class="error">{{
+                                                                errors.newPersonalPassword
+                                                            }}</span>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div class="form-group row align-items-end justify-content-end">
-                                                    <div class="col-5 d-flex">
-                                                        <label for="site-open-time"
-                                                            class="form-control-label text-md-right">Longitude
-                                                        </label>
-                                                        <div class="col-sm-6 col-md-9">
-                                                            <input type="text" class="form-control" v-model="form.longitude"
-                                                                id="exampletext1" name="exampleTime1">
+                                                    <div class="form-group row align-items-center">
+                                                        <label for="site-title"
+                                                            class="form-control-label col-sm-3 text-md-right">New
+                                                            Password Confirmation</label>
+                                                        <div class="form-group position-relative col-sm-6 col-md-9">
+                                                            <input :type="showPassword ? 'text' : 'password'"
+                                                                class="form-control" placeholder="Password"
+                                                                v-model="formAccount.newPersonalPasswordConfirm" />
+                                                            <span @click="togglePasswordVisibility"
+                                                                :class="showPassword ? 'fa fa-eye-slash' : 'fa fa-eye'"
+                                                                class="field-icon toggle-password">
+                                                            </span>
+                                                            <span v-if="errors.newPersonalPasswordConfirm" class="error">{{
+                                                                errors.newPersonalPasswordConfirm
+                                                            }}</span>
                                                         </div>
                                                     </div>
-                                                    <div class="col-5 d-flex">
-                                                        <label for="site-open-time"
-                                                            class="form-control-label text-md-right">Latitude
-                                                        </label>
-                                                        <div class="col-sm-6 col-md-9">
-                                                            <input type="text" class="form-control" v-model="form.latitude"
-                                                                id="exampletext2" name="exampleTime1">
-                                                        </div>
+                                                    <div class="card-footer text-md-center">
+                                                        <button class="btn btn-primary w-100" id="save-btn">Update
+                                                            Password</button>
                                                     </div>
-                                                </div>
+                                                </form>
                                             </div>
-                                        </div>
-                                        <div class="card-footer text-md-right">
-                                            <button class="btn btn-primary me-3" id="save-btn">Save Changes</button>
-                                            <button class="btn btn-secondary" type="button">Reset</button>
                                         </div>
                                     </div>
-                                </form>
-                            </div>
+                                </div>
+                            </transition>
+                            <transition name="fade">
+                                <div v-if="(current_tab == 2)" class="card-body col-md-12">
+                                    <form @submit.prevent="submitApp">
+                                        <div class="card" id="settings-card">
+                                            <div class="card-header">
+                                                <h4>Social Media Settings</h4>
+                                            </div>
+                                            <div class="px-4 my-2">
+                                                <p class="text-muted">Social Media settings such as, account name and link.
+                                                </p>
+                                            </div>
+                                            <div class="card-body row justify-content-around">
+                                                <div
+                                                    class="col-lg-5 col-md-5 col-sm-10 border d-flex flex-column rounded-sm justify-content-center mb-3">
+                                                    <div class="card-header w-50 justify-content-center mb-2">
+                                                        <h4><i class="fa-brands fa-instagram me-3"></i>Instagram</h4>
+                                                    </div>
+                                                    <div class="form-group row align-items-center">
+                                                        <label for="ig-name"
+                                                            class="form-control-label col-sm-3 text-md-right">Account
+                                                            Name</label>
+                                                        <div class="col-sm-6 col-md-7">
+                                                            <input type="text" name="account_name"
+                                                                v-model="form.instagramName" class="form-control"
+                                                                id="ig-name">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row align-items-center">
+                                                        <label for="site-description"
+                                                            class="form-control-label col-sm-3 text-md-right">Account
+                                                            Profile URL</label>
+                                                        <div class="col-sm-6 col-md-7">
+                                                            <textarea class="form-control codeeditor"
+                                                                v-model="form.instagramLink" name="desc"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="col-lg-5 col-md-5 col-sm-10 border d-flex flex-column rounded-sm justify-content-center mb-3">
+                                                    <div class="card-header w-50 justify-content-center mb-2">
+                                                        <h4><i class="fa-brands fa-facebook me-3"></i>Facebook</h4>
+                                                    </div>
+                                                    <div class="form-group row align-items-center">
+                                                        <label for="ig-name"
+                                                            class="form-control-label col-sm-3 text-md-right">Account
+                                                            Name</label>
+                                                        <div class="col-sm-6 col-md-7">
+                                                            <input type="text" name="account_name"
+                                                                v-model="form.facebookName" class="form-control"
+                                                                id="ig-name">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row align-items-center">
+                                                        <label for="site-description"
+                                                            class="form-control-label col-sm-3 text-md-right">Account
+                                                            Profile URL</label>
+                                                        <div class="col-sm-6 col-md-7">
+                                                            <textarea class="form-control codeeditor"
+                                                                v-model="form.facebookLink" name="desc"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="col-lg-5 col-md-5 col-sm-10 border d-flex flex-column rounded-sm justify-content-center mb-3">
+                                                    <div class="card-header w-50 justify-content-center mb-2">
+                                                        <h4><i class="fa-brands fa-x-twitter me-3"></i>Twitter</h4>
+                                                    </div>
+                                                    <div class="form-group row align-items-center">
+                                                        <label for="ig-name"
+                                                            class="form-control-label col-sm-3 text-md-right">Account
+                                                            Name</label>
+                                                        <div class="col-sm-6 col-md-7">
+                                                            <input type="text" name="account_name"
+                                                                v-model="form.twitterName" class="form-control"
+                                                                id="ig-name">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row align-items-center">
+                                                        <label for="site-description"
+                                                            class="form-control-label col-sm-3 text-md-right">Account
+                                                            Profile URL</label>
+                                                        <div class="col-sm-6 col-md-7">
+                                                            <textarea class="form-control codeeditor"
+                                                                v-model="form.twitterLink" name="desc"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-footer text-md-center">
+                                                <button class="btn btn-primary w-25" id="save-btn">
+                                                    Save Changes</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </transition>
                         </div>
                     </div>
                 </div>
@@ -229,10 +508,24 @@
 </template>
 
 <script setup>
-import { onMounted, ref, reactive } from "vue";
+import { onMounted, ref, reactive, watch } from "vue";
 const base_url = window.location.origin;
 const alertMessageContent = ref('')
 const current_tab = ref(0);
+const showPassword = ref(false);
+
+watch(current_tab, async (new_tab, old_tab) => {
+    if (new_tab == 0) {
+        getAllSetting();
+    }
+    if (new_tab == 1) {
+        getCurrentUserData();
+    }
+    if (new_tab == 2) {
+        getAllSetting();
+    }
+})
+
 const api_url = "http://localhost:8010/api";
 const form = reactive({
     id: 0,
@@ -251,7 +544,17 @@ const form = reactive({
     twitterName: "",
     twitterLink: "",
     facebookName: "",
-    facebookLink: ""
+    facebookLink: "",
+});
+
+const formAccount = reactive({
+    firstName: "",
+    lastName: "",
+    personalPhoneNumber: "",
+    personalEmail: "",
+    currentPersonalPassword: "",
+    newPersonalPassword: "",
+    newPersonalPasswordConfirm: ""
 });
 
 const hasLogo = ref('');
@@ -278,7 +581,7 @@ const handleFileUpload = (event) => {
 }
 
 const submitApp = async () => {
-    if (validateForm()) {
+    if (validateForm() || current_tab.value == 3) {
         $(".modal-loading").modal("show");
 
         let response = await axios.get(base_url + "/token");
@@ -286,6 +589,7 @@ const submitApp = async () => {
 
         if (token === null) {
             window.location.replace(base_url + '/login');
+            return;
         }
 
         const formData = new FormData();
@@ -333,12 +637,96 @@ const submitApp = async () => {
     }
 }
 
+const submitAccountProfile = async () => {
+    if (validateFormAccount()) {
+        $(".modal-loading").modal("show");
+
+        const formData = new FormData();
+        formData.append("first_name", formAccount.firstName);
+        formData.append("last_name", formAccount.lastName);
+        formData.append("email", formAccount.personalEmail);
+        formData.append("phone", formAccount.personalPhoneNumber);
+
+        let response = await axios.get(base_url + "/token");
+        let token = response.data.token;
+
+        if (token === null) {
+            window.location.replace(base_url + '/login');
+            return;
+        }
+
+        response = await axios.patch(
+            api_url + "/users/current", formData,
+            {
+                headers: {
+                    "Content-Type": "application/json", // Pastikan menggunakan tipe konten multipart
+                    Authorization: token,
+                },
+                withCredentials: true, // Mengizinkan pengiriman cookie bersama permintaan
+            }
+        );
+
+        if (response.status === 200) {
+            getCurrentUserData();
+            $(".modal-loading").modal("hide");
+
+            alertMessageContent.value = 'User account was updated successfully!';
+            $("#myAlert").removeClass("d-none").addClass("show alert-success");
+        } else {
+            $(".modal-loading").modal("hide");
+
+            alertMessageContent.value = 'The user account was updated unsuccessfully!';
+            $("#myAlert").removeClass("d-none").addClass("show alert-danger");
+        }
+    }
+}
+
+const submitAccountPassword = async () => {
+    if (validateFormPassword()) {
+        alert("lolos pw")
+    }
+}
+
 const errors = ref({});
 
 function validateForm() {
     errors.value = {};
     if (form.name == "") {
         errors.value.name = "Site name is required!";
+    }
+
+    return Object.keys(errors.value).length === 0;
+}
+
+function validateFormAccount() {
+    errors.value = {};
+    if (formAccount.firstName == "") {
+        errors.value.firstName = "First name is required!"
+    }
+
+    if (formAccount.personalEmail == "") {
+        errors.value.personalEmail = "Email is required!"
+    }
+
+    return Object.keys(errors.value).length === 0;
+}
+
+function validateFormPassword() {
+    errors.value = {};
+    if (formAccount.currentPersonalPassword == "") {
+        errors.value.currentPersonalPassword = "Current password is required!"
+    }
+
+    if (formAccount.newPersonalPassword == "") {
+        errors.value.newPersonalPassword = "New password is required!"
+    }
+
+    if (formAccount.newPersonalPasswordConfirm == "") {
+        errors.value.newPersonalPasswordConfirm = "New password confirmation is required!"
+    }
+
+    if (formAccount.newPersonalPassword != formAccount.newPersonalPasswordConfirm) {
+        errors.value.newPasswordNotSameConfirm = "New password and confirmation password must be the same!"
     }
 
     return Object.keys(errors.value).length === 0;
@@ -384,6 +772,39 @@ const getAllSetting = async () => {
         }
     }
 }
+
+const getCurrentUserData = async () => {
+    let response = await axios.get(base_url + "/token");
+    let token = response.data.token;
+
+    if (token === null) {
+        window.location.replace(base_url + '/login');
+        return;
+    }
+
+    response = await axios.get(
+        api_url + "/users/current",
+        {
+            headers: {
+                "Content-Type": "multipart/form-data", // Pastikan menggunakan tipe konten multipart
+                Authorization: token,
+            },
+            withCredentials: true, // Mengizinkan pengiriman cookie bersama permintaan
+        }
+    );
+
+    let data = response.data.data;
+
+    formAccount.firstName = data["first_name"];
+    formAccount.lastName = data["last_name"];
+    formAccount.personalEmail = data["email"];
+    formAccount.personalPhoneNumber = data["phone"]
+}
+
+// Toggle Password Visibility
+const togglePasswordVisibility = () => {
+    showPassword.value = !showPassword.value;
+};
 </script>
 
 <style>
