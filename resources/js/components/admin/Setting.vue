@@ -328,13 +328,12 @@
                                             </div>
                                             <div class="col-5 border rounded-sm py-4">
                                                 <form @submit.prevent="submitAccountPassword">
-                                                    <div
-                                                        class="card-header w-100 justify-content-center border rounded-sm mb-2">
+                                                    <div class="card-header w-100 justify-content-center mb-2">
                                                         <h4><i class="fa-solid fa-key me-2"></i>Change Password</h4>
                                                     </div>
-                                                    <div v-if="errors.newPasswordNotSameConfirm"
+                                                    <div v-if="errors.passwordUpdateAlert"
                                                         class="alert alert-danger text-center" role="alert">
-                                                        {{ errors.newPasswordNotSameConfirm }}
+                                                        {{ errors.passwordUpdateAlert }}
                                                     </div>
                                                     <div class="form-group row align-items-center mt-5">
                                                         <label for="site-title"
@@ -683,7 +682,61 @@ const submitAccountProfile = async () => {
 
 const submitAccountPassword = async () => {
     if (validateFormPassword()) {
-        alert("lolos pw")
+        try {
+            $(".modal-loading").modal("show");
+
+            let response = await axios.get(base_url + "/token");
+            let token = response.data.token;
+
+            if (token === null) {
+                window.location.replace(base_url + '/login');
+                return;
+            }
+
+            const formData = {
+                old_password: formAccount.currentPersonalPassword,
+                new_password: formAccount.newPersonalPassword,
+                new_password_confirm: formAccount.newPersonalPasswordConfirm,
+            };
+
+            response = await axios.patch(
+                api_url + "/users/current/password", formData,
+                {
+                    headers: {
+                        "Content-Type": "application/json", // Pastikan menggunakan tipe konten multipart
+                        Authorization: token,
+                    },
+                    withCredentials: true, // Mengizinkan pengiriman cookie bersama permintaan
+                }
+            );
+
+            if (response.status === 200) {
+                formAccount.currentPersonalPassword = "";
+                formAccount.newPersonalPassword = "";
+                formAccount.newPersonalPasswordConfirm = "";
+                
+                getCurrentUserData();
+                $(".modal-loading").modal("hide");
+                alertMessageContent.value = 'The user password was updated successfully!';
+                $("#myAlert").removeClass("d-none").addClass("show alert-success");
+            } else {
+                $(".modal-loading").modal("hide");
+                alertMessageContent.value = 'The user password was updated unsuccessfully!';
+                $("#myAlert").removeClass("d-none").addClass("show alert-danger");
+            }
+        } catch (error) {
+            $(".modal-loading").modal("hide");
+            if (error.response && error.response.status === 401) {
+                errors.value = {};
+                errors.value.passwordUpdateAlert = "Current password is wrong!"
+                return Object.keys(errors.value).length === 0;
+            } else {
+                // Penanganan untuk error lainnya
+                alertMessageContent.value = "Error:", error.response || error.message
+                $("#myAlert").removeClass("d-none").addClass("show alert-danger");
+                // console.error("Error:", error.response || error.message);
+            }
+        }
     }
 }
 
@@ -726,7 +779,7 @@ function validateFormPassword() {
     }
 
     if (formAccount.newPersonalPassword != formAccount.newPersonalPasswordConfirm) {
-        errors.value.newPasswordNotSameConfirm = "New password and confirmation password must be the same!"
+        errors.value.passwordUpdateAlert = "New password and confirmation password must be the same!"
     }
 
     return Object.keys(errors.value).length === 0;
