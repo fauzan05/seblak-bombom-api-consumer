@@ -14,6 +14,11 @@
                             class="fas fa-solid fa-house"></i><span>Dashboard</span>
                     </router-link>
                 </li>
+                <li class="dropdown" :class="{ active: currentPath === '/admin/order' }">
+                    <router-link to="/admin/order" class="nav-link"><i class="fas fa-solid fa-store"></i>
+                        <span>Orders</span>
+                    </router-link>
+                </li>
                 <li class="dropdown" :class="{ active: currentPath === '/admin/product' }">
                     <router-link to="/admin/product" class="nav-link"><i class="fas fa-solid fa-utensils"></i>
                         <span>Products</span>
@@ -24,9 +29,9 @@
                         <span>Categories</span>
                     </router-link>
                 </li>
-                <li class="dropdown" :class="{ active: currentPath === '/admin/discount' }">
-                    <router-link to="/admin/discount" class="nav-link"><i class="fas fa-solid fa-percent"></i>
-                        <span>Discount</span>
+                <li class="dropdown" :class="{ active: currentPath === '/admin/discount_coupon' }">
+                    <router-link to="/admin/discount_coupon" class="nav-link"><i class="fas fa-solid fa-percent"></i>
+                        <span>Discount Coupon</span>
                     </router-link>
                 </li>
                 <li class="dropdown" :class="{ active: currentPath === '/admin/setting' }">

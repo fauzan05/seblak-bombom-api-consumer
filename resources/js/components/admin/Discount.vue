@@ -17,23 +17,23 @@
     <div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h1>Product</h1>
+                <h1>Discount Coupon</h1>
                 <div class="section-header-button">
-                    <button href="features-post-create.html" class="btn btn-primary" @click="addProduct()">
-                        Add New Product
+                    <button href="features-post-create.html" class="btn btn-primary" @click="addDiscountCoupon()">
+                        Add New Coupon
                     </button>
                 </div>
                 <div class="section-header-breadcrumb">
                     <div class="breadcrumb-item active">
                         <a href="#">Dashboard</a>
                     </div>
-                    <div class="breadcrumb-item"><a href="#">Product</a></div>
+                    <div class="breadcrumb-item"><a href="#">Discount</a></div>
                 </div>
             </div>
             <div class="section-body">
                 <div class="d-flex flex-row justify-content-between align-items-center">
                     <p class="section-lead">
-                        You can manage all products in here such as add, edit, or remove them.
+                        You can manage all discounts in here such as add, edit, or remove them.
                     </p>
                     <div id="myAlert" class="alert alert-dismissible fade d-none">
                         <div class="alert-body">
@@ -52,7 +52,7 @@
                             <div class="card-body">
                                 <ul class="nav nav-pills">
                                     <li class="nav-item">
-                                        <a class="nav-link active" href="#">All Products
+                                        <a class="nav-link active" href="#">All Discount Coupons
                                             <span class="badge badge-white">{{ totalDatas }}</span></a>
                                     </li>
                                 </ul>
@@ -64,21 +64,11 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header d-flex justify-content-start">
-                                <ul class="nav nav-tabs" id="myTab2" role="tablist">
-                                    <li class="nav-item">
-                                        <a class="nav-link active" id="home-tab2" data-toggle="tab" href="#home2" role="tab"
-                                            aria-controls="home" aria-selected="true" @click="changeTab(0)">All</a>
-                                    </li>
-                                    <li class="nav-item" v-for="(category, index) in categories" :key="category.id"
-                                        :value="category.id">
-                                        <a class="nav-link" id="profile-tab2" data-toggle="tab" href="#profile2" role="tab"
-                                            aria-controls="profile" aria-selected="false" @click="changeTab(category.id)">{{ category.name }}</a>
-                                    </li>
-                                </ul>
+                                <h4>Show Discounts Coupon on Table</h4>
                             </div>
                             <div class="card-body">
                                 <div class="float-left">
-                                    <button v-if="checkedProducts.length > 0" @click="deleteProductModal"
+                                    <button v-if="checkedDiscountCoupons.length > 0" @click="deleteDiscountCouponModal"
                                         class="btn btn-danger btn-sm mt-1">
                                         Delete
                                     </button>
@@ -97,7 +87,7 @@
                                 <div class="table-responsive mb-4">
                                     <table class="table table-striped">
                                         <tr>
-                                            <th class="text-center pt-2">
+                                            <th class="text-start pt-2">
                                                 <div class="custom-checkbox custom-checkbox-table custom-control">
                                                     <input type="checkbox" class="custom-control-input" id="checkbox-all"
                                                         v-model="isCheckAll" />
@@ -107,47 +97,82 @@
                                             <th>No</th>
                                             <th>
                                                 <div class="d-flex align-items-center cursor-pointer sorting"
-                                                    id="products.name">
+                                                    id="discount_coupons.name">
                                                     <i class="fa-solid fa-arrow-up-wide-short me-1"></i>
                                                     Name
                                                 </div>
                                             </th>
                                             <th>
                                                 <div class="d-flex align-items-center cursor-pointer sorting"
-                                                    id="categories.name">
+                                                    id="discount_coupons.code">
                                                     <i class="fa-solid fa-arrow-up-wide-short me-1"></i>
-                                                    Category
+                                                    Code
                                                 </div>
                                             </th>
                                             <th>
-                                                <div
-                                                    class="d-flex align-items-center cursor-pointer">
+                                                <div class="d-flex align-items-center cursor-pointer sorting">
                                                     Description
                                                 </div>
                                             </th>
                                             <th>
-                                                <div
-                                                    class="d-flex align-items-center cursor-pointer">
-                                                    Images
-                                                </div>
-                                            </th>
-                                            <th>
                                                 <div class="d-flex align-items-center cursor-pointer sorting"
-                                                    id="products.price">
+                                                    id="discount_coupons.value">
                                                     <i class="fa-solid fa-arrow-up-wide-short me-1"></i>
-                                                    Price
+                                                    Value
                                                 </div>
                                             </th>
                                             <th>
                                                 <div class="d-flex align-items-center cursor-pointer sorting"
-                                                    id="products.stock">
+                                                    id="discount_coupons.type">
                                                     <i class="fa-solid fa-arrow-up-wide-short me-1"></i>
-                                                    Stock
+                                                    Type
                                                 </div>
                                             </th>
                                             <th>
                                                 <div class="d-flex align-items-center cursor-pointer sorting"
-                                                    id="products.updated_at">
+                                                    id="discount_coupons.total_max_usage">
+                                                    <i class="fa-solid fa-arrow-up-wide-short me-1"></i>
+                                                    Total Max Usage
+                                                </div>
+                                            </th>
+                                            <th>
+                                                <div class="d-flex align-items-center cursor-pointer sorting"
+                                                    id="discount_coupons.max_usage_per_user">
+                                                    <i class="fa-solid fa-arrow-up-wide-short me-1"></i>
+                                                    Max Usage per User
+                                                </div>
+                                            </th>
+                                            <th>
+                                                <div class="d-flex align-items-center cursor-pointer sorting"
+                                                    id="discount_coupons.min_order_value">
+                                                    <i class="fa-solid fa-arrow-up-wide-short me-1"></i>
+                                                    Min Order Per User
+                                                </div>
+                                            </th>
+                                            <th>
+                                                <div class="d-flex align-items-center cursor-pointer sorting"
+                                                    id="discount_coupons.start">
+                                                    <i class="fa-solid fa-arrow-up-wide-short me-1"></i>
+                                                    Start Date
+                                                </div>
+                                            </th>
+                                            <th>
+                                                <div class="d-flex align-items-center cursor-pointer sorting"
+                                                    id="discount_coupons.end">
+                                                    <i class="fa-solid fa-arrow-up-wide-short me-1"></i>
+                                                    End Date
+                                                </div>
+                                            </th>
+                                            <th>
+                                                <div class="d-flex align-items-center cursor-pointer sorting"
+                                                    id="discount_coupons.status">
+                                                    <i class="fa-solid fa-arrow-up-wide-short me-1"></i>
+                                                    Status
+                                                </div>
+                                            </th>
+                                            <th>
+                                                <div class="d-flex align-items-center cursor-pointer sorting"
+                                                    id="discount_coupons.updated_at">
                                                     <i class="fa-solid fa-arrow-up-wide-short me-1"></i>
                                                     Updated At
                                                 </div>
@@ -156,51 +181,43 @@
                                         </tr>
                                         <!-- Mengubah object ke array menggunakan Object.values() -->
                                         <tr v-for="(
-                                                product, index
-                                            ) in Object.values(products)" :key="product.id">
+                                                discount, index
+                                            ) in Object.values(discounts)" :key="discount.id">
                                             <td>
                                                 <div class="custom-checkbox custom-control">
                                                     <input type="checkbox" class="custom-control-input"
-                                                        :id="'checkbox-' + product.id" :value="product.id"
-                                                        v-model="checkedProducts" @click="selectOne(product.id)" />
-                                                    <label :for="'checkbox-' + product.id"
+                                                        :id="'checkbox-' + discount.id" :value="discount.id"
+                                                        v-model="checkedDiscountCoupons" @click="selectOne(discount.id)" />
+                                                    <label :for="'checkbox-' + discount.id"
                                                         class="custom-control-label">&nbsp;</label>
                                                 </div>
                                             </td>
                                             <td>{{ (selectedPage - 1) * dataPerPages + index + 1 }}</td>
-                                            <td>{{ product.name }}</td>
-                                            <td>
-                                                {{
-                                                    product.category?.name ||
-                                                    "-"
-                                                }}
-                                            </td>
+                                            <td>{{ discount.name }}</td>
+                                            <td>{{ discount.code }}</td>
                                             <td>
                                                 <button @click="
-                                                showProductDescription(
-                                                    product.description
-                                                )
+                                                    showdiscountDescription(
+                                                        discount.description
+                                                    )
                                                     " class="btn btn-warning btn-sm">
                                                     <i class="fa-regular fa-rectangle-list"></i>
                                                 </button>
                                             </td>
-                                            <td>
-                                                <button v-if="product.images" @click="
-                                                    showProductImages(
-                                                        product.images
-                                                    )
-                                                    " class="btn btn-warning btn-sm">
-                                                    <i class="fa-solid fa-images"></i>
-                                                </button>
-                                            </td>
-                                            <td>{{ formatRupiah(product.price) }}</td>
-                                            <td>{{ product.stock }}</td>
-                                            <td>{{ formatDate(product.updated_at) }}</td>
+                                            <td>{{ discount.value }}</td>
+                                            <td>{{ discount.type }}</td>
+                                            <td>{{ discount.total_max_usage }}</td>
+                                            <td>{{ discount.max_usage_per_user }}</td>
+                                            <td>{{ formatRupiah(discount.min_order_value) }}</td>
+                                            <td><div style="width: 165px;">{{ formatDate(discount.start) }}</div></td>
+                                            <td><div style="width: 165px;">{{ formatDate(discount.end) }}</div></td>
+                                            <td><i class="fa-solid fa-circle-check" :class="discount.status == 1 ? 'fa-circle-check text-green-500' : 'fa-circle-xmark text-red-500'"></i></td>
+                                            <td>{{ formatDate(discount.updated_at) }}</td>
                                             <td>
                                                 <div
                                                     class="d-flex flex-column align-items-start justify-content-center p-2">
                                                     <button @click="
-                                                        editProduct(product)
+                                                        editDiscountCoupon(discount)
                                                         " class="btn btn-warning btn-sm mt-1">
                                                         <i class="fa-regular fa-pen-to-square"></i>
                                                     </button>
@@ -264,8 +281,8 @@
             </div>
         </section>
     </div>
-    <div class="modal fade" tabindex="-1" role="dialog" id="addProductModal">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal fade" tabindex="-1" role="dialog" id="discountModal">
+        <div class="modal-dialog modal-dialog-centered modal-md" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">{{ modalTitle }}</h5>
@@ -273,91 +290,126 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form @submit.prevent="submitProduct">
+                <div class="col-12 d-flex justify-content-center align-items-center">
+                    <div v-if="errors.discountCoupon" class="alert alert-danger text-center col-10 mt-3" role="alert">
+                        {{ errors.discountCoupon }}
+                    </div>
+                </div>
+                <form @submit.prevent="submitDiscountCoupon">
                     <div class="modal-body d-flex flex-column align-items-start justify-content-center">
-                        <div class="row d-flex align-items-center justify-content-around w-100 mb-3">
-                            <!-- Input Upload Gambar -->
-                            <div class="form-group row mb-4 col-5 d-flex flex-column">
-                                <div class="col-sm-12 col-md-7">
-                                    <div class="image-preview">
-                                        <label for="image-upload" class="cursor-pointer" id="image-label">
-                                            Choose Image &nbsp;
-                                            <i class="fa-solid fa-image"></i>
-                                        </label>
-                                        <input type="file" id="image-upload" @change="previewImage" multiple />
-                                    </div>
-                                </div>
-                                <span v-if="errors.images" class="error text-center">{{ errors.images }}</span>
-                            </div>
-
-                            <!-- Preview Gambar dengan Drag & Drop -->
-                            <div class="form-group border row mb-4 col-5 image-preview-wrapper">
-                                <Draggable v-model="images" group="images" item-key="id" class="image-preview-container"
-                                    @end="onDragEnd">
-                                    <template #item="{ element }">
-                                        <div class="image-preview-item">
-                                            <img :src="element.src" alt="Preview Image" />
-                                            <div class="d-flex align-items-center justify-content-between">
-                                                <p class="image-position">
-                                                    Image Position:
-                                                    {{ element.position }}
-                                                </p>
-                                                <i class="fa-solid fa-trash text-danger cursor-pointer" @click="
-                                                    handleImageRemover(
-                                                        element.id, element.file
-                                                    )
-                                                    "></i>
-                                            </div>
-                                        </div>
-                                    </template>
-                                </Draggable>
-                            </div>
-                        </div>
                         <div class="mb-3 col-12">
-                            <label for="product_name" class="form-label">Product Name</label>
-                            <input class="form-control" v-model="form.productName" name="product_name" type="text"
-                                placeholder="Product Name" />
+                            <label for="product_name" class="form-label">Name</label>
+                            <input class="form-control" v-model="form.name" name="discount_name" type="text"
+                                placeholder="Flash Sale" />
                             <span v-if="errors.name" class="error">{{
                                 errors.name
                             }}</span>
                         </div>
                         <div class="mb-3 col-12">
-                            <label for="product_category" class="form-label">Category</label>
-                            <select class="form-control selectric" name="product_category" id="product_category">
-                                <option disabled selected value="">
-                                    Choose one
-                                </option>
-                                <option v-for="(category, index) in categories" :key="category.id" :value="category.id">
-                                    {{ category.name }}
-                                </option>
-                            </select>
-                            <span v-if="errors.category" class="error">{{
-                                errors.category
-                            }}</span>
-                        </div>
-                        <div class="mb-3 col-12">
-                            <label for="product_price" class="form-label">Price</label>
-                            <input class="form-control" v-model="form.productPrice" name="product_price" type="text"
-                                placeholder="Rp 15.000" @input="formatRupiahByEvent" />
-                            <span v-if="errors.price" class="error">{{
-                                errors.price
-                            }}</span>
-                        </div>
-                        <div class="mb-3 col-12">
-                            <label for="product_stock" class="form-label">Stock</label>
-                            <input class="form-control" v-model="form.productStock" name="product_stock" type="number"
-                                placeholder="100" />
-                            <span v-if="errors.stock" class="error">{{
-                                errors.stock
+                            <label for="product_name" class="form-label">Code</label>
+                            <input class="form-control" v-model="form.code" name="discount_code" type="text"
+                                placeholder="XYZ1234" />
+                            <span v-if="errors.code" class="error">{{
+                                errors.code
                             }}</span>
                         </div>
                         <div class="mb-3 col-12">
                             <label for="product_desc" class="form-label">Description</label>
-                            <div id="ckeditor_description" class="p-3" name="product_desc"></div>
-                            <textarea type="text" id="ckeditor_description_input" hidden></textarea>
+                            <div id="ckeditor_discount_description" class="p-3" name="discount_desc"></div>
+                            <textarea type="text" id="ckeditor_discount_description_input" v-model="form.desc"
+                                hidden></textarea>
                             <span v-if="errors.desc" class="error">{{
                                 errors.desc
                             }}</span>
+                        </div>
+                        <div class="mb-3 col-12">
+                            <label for="discount_type" class="form-label">Value Type</label>
+                            <select class="form-control selectric" name="discount_type" id="discount_type">
+                                <option disabled selected value="">
+                                    Choose one
+                                </option>
+                                <option value="percent">
+                                    Percent (%)
+                                </option>
+                                <option value="nominal">
+                                    Nominal (0)
+                                </option>
+                            </select>
+                            <span v-if="errors.type" class="error">{{
+                                errors.type
+                            }}</span>
+                        </div>
+                        <div class="mb-3 col-12" v-if="(form.type != '' && form.type == 'percent')">
+                            <label for="discount_percent" class="form-label">Value</label>
+                            <input class="form-control" v-model="form.value" name="discount_percent" type="number" />
+                            <span v-if="errors.value" class="error">{{
+                                errors.value
+                            }}</span>
+                        </div>
+                        <div class="mb-3 col-12" v-if="(form.type != '' && form.type == 'nominal')">
+                            <label for="discount_nominal" class="form-label">Value</label>
+                            <input class="form-control" v-model="form.value" name="discount_nominal" type="text"
+                                @input="formatRupiahByEvent($event, 'value')" />
+                            <span v-if="errors.value" class="error">{{
+                                errors.value
+                            }}</span>
+                        </div>
+                        <div class="mb-3 col-12">
+                            <label for="product_name" class="form-label">Total Max Usage</label>
+                            <input class="form-control" v-model="form.total_max_usage" name="discount_total_max_usage"
+                                type="number" />
+                            <span v-if="errors.total_max_usage" class="error">{{
+                                errors.total_max_usage
+                            }}</span>
+                        </div>
+                        <div class="mb-3 col-12">
+                            <label for="product_name" class="form-label">Max Usage Per User</label>
+                            <input class="form-control" v-model="form.max_usage_per_user" name="discount_max_usage_per_user"
+                                type="number" />
+                            <span v-if="errors.max_usage_per_user" class="error">{{
+                                errors.max_usage_per_user
+                            }}</span>
+                        </div>
+                        <div class="mb-3 col-12">
+                            <label for="product_name" class="form-label">Min Order Per User</label>
+                            <input class="form-control" v-model="form.min_order_value" name="discount_min_order_value_per_user"
+                                type="text" placeholder="Rp 25.000" @input="formatRupiahByEvent($event, 'min_order_value')" />
+                            <span v-if="errors.min_order_value" class="error">{{
+                                errors.min_order_value
+                            }}</span>
+                        </div>
+                        <div class="mb-3 col-12">
+                            <label for="discount_start_date" class="form-label">Start</label>
+                            <input class="form-control" v-model="form.start" name="discount_start_date"
+                                type="datetime-local" />
+                            <span v-if="errors.start" class="error">{{
+                                errors.start
+                            }}</span>
+                        </div>
+                        <div class="mb-3 col-12">
+                            <label for="discount_end_date" class="form-label">End</label>
+                            <input class="form-control" v-model="form.end" name="discount_end_date" type="datetime-local" />
+                            <span v-if="errors.end" class="error">{{
+                                errors.end
+                            }}</span>
+                        </div>
+                        <div class="mb-3 col-12">
+                            <label class="form-label">Status</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" v-model="form.status" :value="true"
+                                    id="usageUnlimited">
+                                <label class="form-check-label" for="usageUnlimited">
+                                    Active
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" v-model="form.status" :value="false"
+                                    id="usageCustom">
+                                <label class="form-check-label" for="usageCustom">
+                                    Non Active
+                                </label>
+                            </div>
+                            <span v-if="errors.status" class="error">{{ errors.status }}</span>
                         </div>
                     </div>
                     <div class="modal-footer bg-whitesmoke br">
@@ -372,36 +424,11 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" tabindex="-1" role="dialog" id="showProductImages">
-        <div class="modal-dialog modal-dialog-centered modal-md" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Show All Product Images</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body d-flex flex-column align-items-center justify-content-center">
-                    <!-- Menampilkan gambar jika ada -->
-                    <div v-if="selectedImages.length > 0" class="w-100">
-                        <div v-for="image in selectedImages" :key="image.id"
-                            class="d-flex flex-column align-items-center border rounded p-2 my-2">
-                            <img :src="`${api_url}/image/products/${image.file_name}`" :alt="image.file_name" width="100%"
-                                style="padding: 10px" />
-                            <span class="border rounded-sm bg-primary text-white p-2">Image Position : {{ image.position
-                            }}</span>
-                        </div>
-                    </div>
-                    <span v-else>This Product Has No Image</span>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade" tabindex="-1" role="dialog" id="showProductDescription">
+    <div class="modal fade" tabindex="-1" role="dialog" id="showdiscountDescription">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Product Description</h5>
+                    <h5 class="modal-title">discount Description</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -428,12 +455,12 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form @submit.prevent="submitProduct">
+                <form @submit.prevent="submitDiscountCoupon">
                     <div class="modal-body d-flex flex-column align-items-start justify-content-center">
-                        <span class="mb-3">Do you want to delete permanently these product below?</span>
+                        <span class="mb-3">Do you want to delete permanently these discount below?</span>
                         <ul class="dot">
-                            <li v-for="itemSelected in checkedProducts" :key="itemSelected">
-                                {{ findProductById(itemSelected)?.name || 'Product Not Found' }}
+                            <li v-for="itemSelected in checkedDiscountCoupons" :key="itemSelected">
+                                {{ findProductById(itemSelected)?.name || 'discount Not Found' }}
                             </li>
                         </ul>
                     </div>
@@ -452,18 +479,14 @@
 </template>
 
 <script setup>
-import { onMounted, ref, reactive, computed, watch } from "vue";
-import Draggable from "vuedraggable";
+import { onMounted, ref, reactive, computed } from "vue";
 const base_url = window.location.origin;
 
 const api_url = "http://localhost:8010/api";
 
-const products = ref([]);
+const discounts = ref([]);
 
-// State untuk Menyimpan Gambar
-const images = ref([]);
-
-const modalTitle = ref("Add Product");
+const modalTitle = ref("Add discount");
 
 const selectedPage = ref(1);
 const totalPages = ref(0);
@@ -472,13 +495,6 @@ const dataPerPages = ref(5);
 const selectedColumnSorting = ref('');
 const sortBy = ref('');
 const searchInput = ref('');
-const selectedCategoryTab = ref(0); // default 0 = all products
-
-const changeTab = (categoryId) => {
-    selectedPage.value = 1
-    selectedCategoryTab.value = categoryId
-    getAllProduct();
-}
 
 const updatePage = (pageSelected) => {
     if (pageSelected == 0) {
@@ -488,44 +504,12 @@ const updatePage = (pageSelected) => {
     } else {
         selectedPage.value = pageSelected;
     }
-    getAllProduct();
+    getAllDiscountCoupon();
 }
 
 const actionSearch = () => {
-    selectedPage.value = 1; getAllProduct();
+    selectedPage.value = 1; getAllDiscountCoupon();
 }
-
-const previewImage = (event, imagesEdit = null) => {
-    // Jika imageUrl diberikan, tambahkan gambar langsung dari URL
-    if (imagesEdit) {
-        for (let i = 0; i < imagesEdit.length; i++) {
-            images.value.push({
-                id: imagesEdit[i].id, // ID unik untuk gambar
-                src: api_url + "/image/products/" + imagesEdit[i].file_name, // URL gambar
-                position: imagesEdit[i].position,
-                name: imagesEdit[i].file_name, // Atau bisa disesuaikan
-            });
-        }
-    } else {
-        // Jika file dipilih, lakukan preview seperti biasa
-        const files = event.target.files;
-        for (let i = 0; i < files.length; i++) {
-            const file = files[i];
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                images.value.push({
-                    id: Date.now() + i, // ID unik untuk setiap gambar
-                    src: e.target.result, // Untuk preview gambar
-                    file: file, // Simpan file asli untuk dikirim ke server
-                    position: images.value.length + 1,
-                    name: file.name,
-                });
-            };
-            reader.readAsDataURL(file);
-        }
-        event.target.value = null; // Reset input file setelah selesai
-    }
-};
 
 $(document).ready(function () {
     $('#selectPerPage').selectric(); // Inisialisasi Selectric
@@ -533,7 +517,13 @@ $(document).ready(function () {
         var selectedValue = $(this).val();
         dataPerPages.value = selectedValue;
         selectedPage.value = 1;
-        getAllProduct();
+        getAllDiscountCoupon();
+    });
+
+    $('#discount_type').selectric(); // Inisialisasi Selectric
+    $('#discount_type').on('change', function () {
+        var selectedValue = $(this).val();
+        form.type = selectedValue;
     });
 
     $('.sorting').on('click', function () {
@@ -542,12 +532,12 @@ $(document).ready(function () {
             icon.removeClass('fa-arrow-up-wide-short').addClass('fa-arrow-down-wide-short');
             selectedColumnSorting.value = $(this).attr('id');
             sortBy.value = 'asc';
-            getAllProduct()
+            getAllDiscountCoupon()
         } else {
             icon.removeClass('fa-arrow-down-wide-short').addClass('fa-arrow-up-wide-short');
             selectedColumnSorting.value = $(this).attr('id');
             sortBy.value = 'desc';
-            getAllProduct()
+            getAllDiscountCoupon()
         }
     });
 
@@ -568,32 +558,32 @@ $(document).ready(function () {
     });
 });
 
-// Event Setelah Drag & Drop
-const onDragEnd = () => {
-    images.value.forEach((img, index) => {
-        img.position = index + 1;
-    });
-};
-
 const form = reactive({
-    productId: "",
-    productName: "",
-    productCategory: "",
-    productPrice: "",
-    productStock: "",
-    productDescription: "",
+    id: 0,
+    name: "",
+    desc: "",
+    code: "",
+    value: 0,
+    type: "",
+    start: "",
+    end: "",
+    total_max_usage: 0,
+    max_usage_per_user: 0,
+    used_count: 0,
+    min_order_value: 0,
+    status: true
 });
 
 const errors = ref({});
 const alertMessageContent = ref('');
 
-const submitProduct = async () => {
-    if (modalTitle.value == "Delete Product Confirmation") {
+const submitDiscountCoupon = async () => {
+    if (modalTitle.value == "Delete Discount Coupon Confirmation") {
         $("#deleteConfirmationModal").modal("hide");
         $(".modal-loading").modal("show");
 
         let listDeleteProduct = 'ids=';
-        checkedProducts.value.forEach((value) => {
+        checkedDiscountCoupons.value.forEach((value) => {
             listDeleteProduct += value + ','
         })
 
@@ -604,10 +594,10 @@ const submitProduct = async () => {
         }
 
         response = await axios.delete(
-            api_url + "/products?" + listDeleteProduct,
+            api_url + "/discount_coupons?" + listDeleteProduct,
             {
                 headers: {
-                    "Content-Type": "multipart/form-data", // Pastikan menggunakan tipe konten multipart
+                    "Content-Type": "application/json", // Pastikan menggunakan tipe konten multipart
                     Authorization: token,
                 },
                 withCredentials: true, // Mengizinkan pengiriman cookie bersama permintaan
@@ -615,105 +605,84 @@ const submitProduct = async () => {
         );
 
         if (response.status === 200) {
-            products.value = [];
+            discounts.value = [];
             searchInput.value = '';
-            getAllProduct();
+            getAllDiscountCoupon();
             $("#deleteConfirmationModal").modal("hide");
             $(".modal-loading").modal("hide");
 
-            alertMessageContent.value = 'The selected product was deleted successfully!';
+            alertMessageContent.value = 'The selected discount coupon was deleted successfully!';
             $("#myAlert").removeClass("d-none").addClass("show alert-success");
         } else {
             $("#deleteConfirmationModal").modal("show");
             $(".modal-loading").modal("hide");
 
-            alertMessageContent.value = 'The selected product was deleted unsuccessfully!';
+            alertMessageContent.value = 'The selected discount coupon was deleted unsuccessfully!';
             $("#myAlert").removeClass("d-none").addClass("show alert-danger");
         }
-        checkedProducts.value = [];
+
+        checkedDiscountCoupons.value = [];
         $('#checkbox-all').prop('checked', false)
 
-    } else if (modalTitle.value == "Add Product" || modalTitle.value == "Edit Product") {
+    } else if (modalTitle.value == "Add Discount Coupon" || modalTitle.value == "Edit Discount Coupon") {
         if (validateForm()) {
-            $("#addProductModal").modal("hide");
+            $("#discountModal").modal("hide");
             $(".modal-loading").modal("show");
             // Proses add product (e.g., kirim ke API)
             try {
-                const formData = new FormData();
-                formData.append("category_id", $("#product_category").val());
-                formData.append("name", form.productName);
-                formData.append(
-                    "description",
-                    $("#ckeditor_description_input").val()
-                );
-                formData.append("stock", form.productStock);
-                formData.append("price", unformatRupiah(form.productPrice));
-
-                if (modalTitle.value == "Add Product") {
-                    // Tambahkan setiap gambar ke FormData
-                    images.value.forEach((image, index) => {
-                        // console.log(image.file);
-                        formData.append(`images`, image.file);
-                        formData.append(`positions`, image.position); // Kirim posisi gambar
-                    });
-                } else if (modalTitle.value == "Edit Product") {
-                    images.value.forEach((image, index) => {
-                        if (!image.file) {
-                            formData.append(`current_images`, image.id);
-                            formData.append(`current_positions`, image.position);
-                        } else {
-                            formData.append(`new_images`, image.file);
-                            formData.append(`new_positions`, image.position); // Kirim posisi gambar
-                        }
-                    });
-
-                    if (selectedImageDelete.value.length > 0) {
-                        formData.append(
-                            "images_deleted",
-                            selectedImageDelete.value
-                        ); // isinya id gambar
-                    }
-                }
-
                 let response = await axios.get(base_url + "/token");
                 let token = response.data.token;
                 if (token === null) {
                     window.location.replace(base_url + '/login');
                 }
 
-                if (modalTitle.value == "Add Product") {
-                    response = await axios.post(api_url + "/products", formData, {
+                const data = {
+                    name: form.name,
+                    description: form.desc,
+                    code: form.code,
+                    value: form.type == 'nominal' ? unformatRupiah(form.value) : form.value,
+                    type: form.type,
+                    start: form.start.replace("T", " "),
+                    end: form.end.replace("T", " "),
+                    max_usage_per_user: form.max_usage_per_user,
+                    total_max_usage: form.total_max_usage,
+                    used_count: form.used_count,
+                    min_order_value: unformatRupiah(form.min_order_value),
+                    status:  Boolean(form.status)
+                }
+
+                if (modalTitle.value == "Add Discount Coupon") {
+                    response = await axios.post(api_url + "/discount_coupons", data, {
                         headers: {
-                            "Content-Type": "multipart/form-data", // Pastikan menggunakan tipe konten multipart
+                            "Content-Type": "application/json", // Pastikan menggunakan tipe konten multipart
                             Authorization: token,
                         },
                         withCredentials: true, // Mengizinkan pengiriman cookie bersama permintaan
                     });
 
                     if (response.status === 201) {
-                        images.value = [];
-                        products.value = [];
+                        discounts.value = [];
                         searchInput.value = '';
-                        getAllProduct();
-                        $("#addProductModal").modal("hide");
+                        getAllDiscountCoupon();
+                        $("#discountModal").modal("hide");
                         $(".modal-loading").modal("hide");
 
-                        alertMessageContent.value = 'Product was created successfully!';
+                        alertMessageContent.value = 'Discount coupon was created successfully!';
                         $("#myAlert").removeClass("d-none").addClass("show alert-success");
                     } else {
-                        $("#addProductModal").modal("show");
+                        $("#discountModal").modal("show");
                         $(".modal-loading").modal("hide");
 
-                        alertMessageContent.value = 'Product creation was unsuccessful!';
+                        alertMessageContent.value = 'Discount coupon creation was unsuccessful!';
                         $("#myAlert").removeClass("d-none").addClass("show alert-danger");
                     }
-                } else if (modalTitle.value == "Edit Product") {
+                } else if (modalTitle.value == "Edit Discount Coupon") {
                     response = await axios.put(
-                        api_url + "/products/" + form.productId,
-                        formData,
+                        api_url + "/discount_coupons/" + form.id,
+                        data,
                         {
                             headers: {
-                                "Content-Type": "multipart/form-data", // Pastikan menggunakan tipe konten multipart
+                                "Content-Type": "application/json", // Pastikan menggunakan tipe konten multipart
                                 Authorization: token,
                             },
                             withCredentials: true, // Mengizinkan pengiriman cookie bersama permintaan
@@ -721,88 +690,87 @@ const submitProduct = async () => {
                     );
 
                     if (response.status === 200) {
-                        products.value = [];
-                        images.value = [];
+                        discounts.value = [];
                         searchInput.value = '';
-                        getAllProduct();
-                        $("#addProductModal").modal("hide");
+                        getAllDiscountCoupon();
+                        $("#discountModal").modal("hide");
                         $(".modal-loading").modal("hide");
-                        alertMessageContent.value = 'Product was updated successfully!';
+                        alertMessageContent.value = 'Discount coupon was updated successfully!';
                         $("#myAlert").removeClass("d-none").addClass("show alert-success");
                     } else {
-                        $("#addProductModal").modal("show");
+                        $("#discountModal").modal("show");
                         $(".modal-loading").modal("hide");
-                        alertMessageContent.value = 'Product updated was unsuccessful!';
+                        alertMessageContent.value = 'Discount coupon updated was unsuccessful!';
                         $("#myAlert").removeClass("d-none").addClass("show alert-danger");
                     }
                 }
             } catch (error) {
+                $("#discountModal").modal("show");
+                $(".modal-loading").modal("hide");
                 console.error("Error:", error);
+                if (error.response) {
+                    errors.value.discountCoupon = error.response.data.errors;
+                } else {
+                    errors.value.discountCoupon = error.response;
+                }
             }
         }
     }
 };
 
-const selectedImageDelete = ref([]);
-
-function handleImageRemover(imageId, file) {
-    if (!selectedImageDelete.value.includes(imageId) && typeof file === 'undefined') {
-        selectedImageDelete.value.push(imageId);
-    }
-    images.value = images.value.filter((item) => item.id !== imageId);
-    images.value.forEach(function (item, index) {
-        item.position = ++index;
-    });
-}
-
-const selectedImages = ref([]); // Variabel reaktif untuk menyimpan gambar yang dipilih
-
-function showProductImages(images) {
-    selectedImages.value = images; // Menyimpan gambar yang dipilih ke dalam selectedImages
-    $("#showProductImages").modal("show"); // Menampilkan modal
-}
-
 const selectedDescription = ref('');
 
-function showProductDescription(description) {
+function showdiscountDescription(description) {
     selectedDescription.value = description;
-    $('#showProductDescription').modal("show");
+    $('#showdiscountDescription').modal("show");
 }
 
 function validateForm() {
     errors.value = {};
-    if (images.value.length == 0) {
-        errors.value.images = "Images is required!";
+    if (!form.name) {
+        errors.value.name = "Coupon Name is Required!";
     }
-    if (!form.productName) {
-        errors.value.name = "Product Name is Required!";
+    if (!form.desc) {
+        errors.value.desc = "Coupon Description is Required!";
     }
-    if (!$("#product_category").val()) {
-        errors.value.category = "Category is Required!";
+    if (!form.code) {
+        errors.value.code = "Coupon Code is Required"
     }
-    if (!form.productPrice) {
-        errors.value.price = "Price is Required!";
+    if (!form.value) {
+        errors.value.value = "Coupon Value is Required"
     }
-    if (!form.productStock) {
-        errors.value.stock = "Stock is Required!";
+    if (!form.type) {
+        errors.value.type = "Coupon Value Type is Required"
     }
-    if (!$("#ckeditor_description_input").val()) {
-        errors.value.desc = "Description is Required!";
+    if (!form.start) {
+        errors.value.start = "Coupon Start Date is Required"
+    }
+    if (!form.end) {
+        errors.value.end = "Coupon End Date is Required"
+    }
+    if (!form.total_max_usage) {
+        errors.value.total_max_usage = "Total Max Usage Coupon is Required"
+    }
+    if (!form.min_order_value) {
+        errors.value.min_order_value = "Min Order is Required"
+    }
+    if (!form.max_usage_per_user) {
+        errors.value.max_usage_per_user = "Max Usage Coupon per User is Required"
     }
 
     return Object.keys(errors.value).length === 0;
 }
 
-let editorInstance = null;
+let editorDiscountInstance = null;
 
 onMounted(() => {
     const script = document.createElement("script");
     script.src = "/assets/admin/modules/ckeditor5/build/ckeditor.js"; // Pastikan path benar
     script.onload = () => {
-        ClassicEditor.create(document.querySelector("#ckeditor_description"))
+        ClassicEditor.create(document.querySelector("#ckeditor_discount_description"))
             .then((editor) => {
                 // Menyimpan editor instance
-                editorInstance = editor;
+                editorDiscountInstance = editor;
 
                 // Menambahkan padding ke area editable CKEditor
                 editor.editing.view.change((writer) => {
@@ -821,8 +789,9 @@ onMounted(() => {
                 editor.model.document.on("change:data", () => {
                     let body_content = editor.getData();
                     document.querySelector(
-                        "#ckeditor_description_input"
+                        "#ckeditor_discount_description_input"
                     ).value = body_content;
+                    form.desc = body_content;
                 });
             })
             .catch((error) => {
@@ -830,21 +799,15 @@ onMounted(() => {
             });
     };
     document.head.appendChild(script);
-    getAllProduct();
-
-    $("#addProductModal").on("hidden.bs.modal", function () {
-        selectedImageDelete.value = [];
-    });
+    getAllDiscountCoupon();
 
     $('#checkbox-all').prop('checked', false);
-    showAllCategories();
-
 });
 
-async function getAllProduct() {
+async function getAllDiscountCoupon() {
     try {
-        const response = await axios.get(api_url + "/products?per_page=" + dataPerPages.value + "&page=" + selectedPage.value + "&column=" + selectedColumnSorting.value + "&sort_by=" + sortBy.value + "&search=" + searchInput.value + "&category_id=" + selectedCategoryTab.value);
-        products.value = response.data.data; // Menimpa isi dengan data produk baru
+        const response = await axios.get(api_url + "/discount_coupons?per_page=" + dataPerPages.value + "&page=" + selectedPage.value + "&column=" + selectedColumnSorting.value + "&sort_by=" + sortBy.value + "&search=" + searchInput.value);
+        discounts.value = response.data.data; // Menimpa isi dengan data produk baru
         totalPages.value = response.data.total_pages;
         selectedPage.value = response.data.current_pages;
         totalDatas.value = response.data.total_datas;
@@ -854,54 +817,115 @@ async function getAllProduct() {
     }
 }
 
-function addProduct() {
-    images.value = [];
-    form.productName = '';
-    $('#product_category').val('').selectric('refresh');
-    form.productPrice = '';
-    form.productStock = '';
-    if (editorInstance != null) {
-        editorInstance.setData(''); // Misalnya product.description berisi teks yang ingin dimasukkan
+function addDiscountCoupon() {
+    modalTitle.value = "Add Discount Coupon";
+    form.id = 0;
+    form.name = "";
+    form.desc = "";
+    form.code = "";
+    form.value = "";
+    form.type = "";
+    form.start = "";
+    form.end = "";
+    form.total_max_usage = 0;
+    form.max_usage_per_user = 0;
+    form.used_count = 0;
+    form.min_order_value = 0;
+    form.status = true;
+
+    if (editorDiscountInstance != null) {
+        editorDiscountInstance.setData(''); // Misalnya discount.description berisi teks yang ingin dimasukkan
     }
-    $("#addProductModal").modal("show");
-    modalTitle.value = "Add Product";
+
+    $('#discount_type').val('').selectric('refresh');
+    $("#discountModal").modal("show");
 }
 
-const selectedImagesEdit = ref([]); // Variabel reaktif untuk menyimpan gambar yang dipilih
-
-function editProduct(product) {
-    form.productId = product.id;
-    images.value = [];
-    modalTitle.value = "Edit Product";
-    $("#addProductModal").modal("show");
-    form.productName = product.name;
-    $("#product_category").val(product.category.id);
-    $("#product_category").selectric("refresh");
-    form.productPrice = formatRupiah(product.price);
-    form.productStock = product.stock;
+function editDiscountCoupon(discount) {
+    form.id = discount.id;
+    modalTitle.value = "Edit Discount Coupon";
+    $("#discountModal").modal("show");
+    form.name = discount.name;
+    form.desc = discount.description;
+    form.code = discount.code;
+    form.type = discount.type;
+    if (form.type == 'nominal') {
+        form.value = formatRupiah(discount.value)
+    } else {
+        form.value = discount.value;
+    }
+    form.start = discount.start;
+    form.end = discount.end;
+    form.total_max_usage = discount.total_max_usage;
+    form.max_usage_per_user = discount.max_usage_per_user;
+    form.min_order_value = formatRupiah(discount.min_order_value);
+    form.status = discount.status;
+    $("#discount_type").val(discount.type);
+    $("#discount_type").selectric("refresh");
 
     // Memasukkan teks ke dalam CKEditor
-    if (editorInstance != null) {
-        editorInstance.setData(product.description); // Misalnya product.description berisi teks yang ingin dimasukkan
-    }
-
-    if (product.images) {
-        selectedImagesEdit.value = product.images;
-        previewImage(null, selectedImagesEdit.value);
+    if (editorDiscountInstance != null) {
+        editorDiscountInstance.setData(discount.description); // Misalnya discount.description berisi teks yang ingin dimasukkan
     }
 }
 
-function formatRupiahByEvent(event) {
-    let value = event.target.value.replace(/[^,\d]/g, ""); // Hapus semua kecuali angka dan koma
-    value = value ? parseInt(value, 10) : 0; // Konversi ke integer untuk memformat angka
+const checkedDiscountCoupons = ref([])
 
-    // Format angka menggunakan Intl.NumberFormat
+const isCheckAll = computed({
+    get: () => discounts.value.length != 0 && checkedDiscountCoupons.value.length === discounts.value.length,
+    set: (value) => {
+        if (value) {
+            // Centang semua checkbox
+            checkedDiscountCoupons.value = discounts.value.map((discount) => discount.id);
+        } else {
+            // Kosongkan semua checkbox
+            checkedDiscountCoupons.value = [];
+        }
+    },
+});
+
+const selectOne = (discountId) => {
+    if (checkedDiscountCoupons.value.includes(discountId)) {
+        checkedDiscountCoupons.value = checkedDiscountCoupons.value.filter(id => id != discountId)
+    } else {
+        checkedDiscountCoupons.value.push(discountId)
+    }
+}
+
+// Fungsi untuk menemukan produk berdasarkan ID
+const findProductById = (id) => {
+    return discounts.value.find((item) => item.id === id);
+};
+
+const deleteDiscountCouponModal = () => {
+    $('#deleteConfirmationModal').modal('show');
+    modalTitle.value = "Delete Discount Coupon Confirmation";
+}
+
+const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const options = { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' };
+    return date.toLocaleString('en-US', options).replace(',', ' at');
+};
+
+// Computed untuk menghitung range data
+const showingRange = computed(() => {
+    const start = (selectedPage.value - 1) * dataPerPages.value + 1;
+    const end = Math.min(selectedPage.value * dataPerPages.value, totalDatas.value);
+    return { start, end };
+});
+
+function formatRupiahByEvent(event, property) {
+    let value = event.target.value.replace(/[^,\d]/g, ""); // Hapus semua karakter kecuali angka dan koma
+    value = value ? parseInt(value, 10) : 0; // Konversi ke integer
+
+    // Format angka ke Rupiah
     event.target.value = value
         ? `Rp ${new Intl.NumberFormat("id-ID").format(value)}`
         : "";
 
-    // Perbarui v-model setelah pemformatan
-    form.productPrice = event.target.value;
+    // Perbarui properti di dalam form
+    form[property] = event.target.value;
 }
 
 function formatRupiah(value) {
@@ -926,59 +950,6 @@ function unformatRupiah(value) {
 
     return unformattedValue;
 }
-
-const checkedProducts = ref([]);
-
-const isCheckAll = computed({
-    get: () => products.value.length != 0 && checkedProducts.value.length === products.value.length,
-    set: (value) => {
-        if (value) {
-            // Centang semua checkbox
-            checkedProducts.value = products.value.map((product) => product.id);
-        } else {
-            // Kosongkan semua checkbox
-            checkedProducts.value = [];
-        }
-    },
-});
-
-const selectOne = (productId) => {
-    if (checkedProducts.value.includes(productId)) {
-        checkedProducts.value = checkedProducts.value.filter(id => id != productId)
-    } else {
-        checkedProducts.value.push(productId)
-    }
-}
-
-// Fungsi untuk menemukan produk berdasarkan ID
-const findProductById = (id) => {
-    return products.value.find((item) => item.id === id);
-};
-
-const deleteProductModal = () => {
-    $('#deleteConfirmationModal').modal('show');
-    modalTitle.value = "Delete Product Confirmation";
-}
-
-const categories = ref([]);
-
-const showAllCategories = async () => {
-    let response = await axios.get(api_url + "/categories");
-    categories.value = response.data.data;
-}
-
-const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const options = { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' };
-    return date.toLocaleString('en-US', options).replace(',', ' at');
-};
-
-// Computed untuk menghitung range data
-const showingRange = computed(() => {
-    const start = (selectedPage.value - 1) * dataPerPages.value + 1;
-    const end = Math.min(selectedPage.value * dataPerPages.value, totalDatas.value);
-    return { start, end };
-});
 
 </script>
 

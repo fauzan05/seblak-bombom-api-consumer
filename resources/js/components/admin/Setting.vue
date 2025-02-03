@@ -714,7 +714,7 @@ const submitAccountPassword = async () => {
                 formAccount.currentPersonalPassword = "";
                 formAccount.newPersonalPassword = "";
                 formAccount.newPersonalPasswordConfirm = "";
-                
+
                 getCurrentUserData();
                 $(".modal-loading").modal("hide");
                 alertMessageContent.value = 'The user password was updated successfully!';

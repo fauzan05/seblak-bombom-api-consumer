@@ -379,14 +379,13 @@ $(document).ready(function () {
 });
 
 const form = reactive({
-    categoryId: "",
+    categoryId: 0,
     categoryName: "",
     categoryDescription: "",
 });
 
 const errors = ref({});
 const alertMessageContent = ref('');
-const alertType = ref('alert-danger');
 
 const submitCategory = async () => {
     if (modalTitle.value == "Delete Category Confirmation") {
@@ -401,7 +400,7 @@ const submitCategory = async () => {
         let response = await axios.get(base_url + "/token");
         let token = response.data.token;
         if (token === null) {
-            window.location.replace('http://localhost:8000/login');
+            window.location.replace(base_url + '/login');
         }
 
         response = await axios.delete(
@@ -451,7 +450,7 @@ const submitCategory = async () => {
                 let response = await axios.get(base_url + "/token");
                 let token = response.data.token;
                 if (token === null) {
-                    window.location.replace('http://localhost:8000/login');
+                    window.location.replace(base_url + '/login');
                 }
 
                 if (modalTitle.value == "Add Category") {
@@ -593,7 +592,9 @@ async function getAllCategory() {
 }
 
 function addCategory() {
+    form.categoryId = 0;
     form.categoryName = '';
+    form.categoryDescription = '';
     if (editorInstance != null) {
         editorInstance.setData(''); // Misalnya category.description berisi teks yang ingin dimasukkan
     }
