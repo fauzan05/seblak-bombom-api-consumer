@@ -172,6 +172,13 @@
                                             </th>
                                             <th>
                                                 <div class="d-flex align-items-center cursor-pointer sorting"
+                                                    id="discount_coupons.used_count">
+                                                    <i class="fa-solid fa-arrow-up-wide-short me-1"></i>
+                                                    Used Count
+                                                </div>
+                                            </th>
+                                            <th>
+                                                <div class="d-flex align-items-center cursor-pointer sorting"
                                                     id="discount_coupons.updated_at">
                                                     <i class="fa-solid fa-arrow-up-wide-short me-1"></i>
                                                     Updated At
@@ -212,6 +219,7 @@
                                             <td><div style="width: 165px;">{{ formatDate(discount.start) }}</div></td>
                                             <td><div style="width: 165px;">{{ formatDate(discount.end) }}</div></td>
                                             <td><i class="fa-solid fa-circle-check" :class="discount.status == 1 ? 'fa-circle-check text-green-500' : 'fa-circle-xmark text-red-500'"></i></td>
+                                            <td>{{ discount.used_count }}</td>
                                             <td>{{ formatDate(discount.updated_at) }}</td>
                                             <td>
                                                 <div
