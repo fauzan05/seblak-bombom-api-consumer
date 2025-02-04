@@ -34,6 +34,11 @@
                         <span>Discount Coupon</span>
                     </router-link>
                 </li>
+                <li class="dropdown" :class="{ active: currentPath === '/admin/delivery' }">
+                    <router-link to="/admin/delivery" class="nav-link"><i class="fas fa-solid fa-truck"></i>
+                        <span>Delivery</span>
+                    </router-link>
+                </li>
                 <li class="dropdown" :class="{ active: currentPath === '/admin/setting' }">
                     <router-link to="/admin/setting" class="nav-link"><i class="fas fa-solid fa-sliders"></i>
                         <span>Setting</span>

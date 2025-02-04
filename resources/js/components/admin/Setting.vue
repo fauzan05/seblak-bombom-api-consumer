@@ -185,8 +185,16 @@
                                                         <label
                                                             class="form-control-label col-sm-3 mt-3 text-md-right">Address</label>
                                                         <div class="col-sm-6 col-md-9">
-                                                            <textarea class="form-control codeeditor" v-model="form.address"
+                                                            <textarea class="form-control" v-model="form.address"
                                                                 name="address"></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <label
+                                                            class="form-control-label col-sm-3 mt-3 text-md-right">Google Maps Link</label>
+                                                        <div class="col-sm-6 col-md-9">
+                                                            <textarea class="form-control" v-model="form.google_maps_link"
+                                                                name="google_maps_link"></textarea>
                                                         </div>
                                                     </div>
                                                     <div class="form-group row align-items-center">
@@ -230,28 +238,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="form-group row align-items-end justify-content-end">
-                                                        <div class="col-5 d-flex">
-                                                            <label for="site-open-time"
-                                                                class="form-control-label text-md-right">Longitude
-                                                            </label>
-                                                            <div class="col-sm-6 col-md-9">
-                                                                <input type="text" class="form-control"
-                                                                    v-model="form.longitude" id="exampletext1"
-                                                                    name="exampleTime1">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-5 d-flex">
-                                                            <label for="site-open-time"
-                                                                class="form-control-label text-md-right">Latitude
-                                                            </label>
-                                                            <div class="col-sm-6 col-md-9">
-                                                                <input type="text" class="form-control"
-                                                                    v-model="form.latitude" id="exampletext2"
-                                                                    name="exampleTime1">
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                    
                                                 </div>
                                             </div>
                                             <div class="card-footer text-md-right">
@@ -534,8 +521,6 @@ const form = reactive({
     closingHours: "",
     description: "",
     address: "",
-    longitude: 0,
-    latitude: 0,
     phoneNumber: "",
     email: "",
     instagramName: "",
@@ -598,8 +583,7 @@ const submitApp = async () => {
         formData.append("closing_hours", form.closingHours);
         formData.append("logo_filename", form.siteLogo);
         formData.append("address", form.address);
-        formData.append("longitude", form.longitude);
-        formData.append("latitude", form.latitude);
+        formData.append("google_maps_link", form.google_maps_link);
         formData.append("description", form.description);
         formData.append("phone_number", form.phoneNumber);
         formData.append("email", form.email);
@@ -803,8 +787,7 @@ const getAllSetting = async () => {
         form.closingHours = data["closing_hours"]
         form.closingHours = data["closing_hours"]
         form.address = data["address"]
-        form.longitude = data["longitude"]
-        form.latitude = data["latitude"]
+        form.google_maps_link = data["google_maps_link"]
         form.description = data["description"]
         form.phoneNumber = data["phone_number"]
         form.email = data["email"]

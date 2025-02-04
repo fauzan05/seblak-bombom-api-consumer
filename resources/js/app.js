@@ -14,6 +14,7 @@ import Dashboard from "./components/admin/Dashboard.vue";
 import Product from "./components/admin/Product.vue";
 import Category from "./components/admin/Category.vue";
 import Discount_Coupon from "./components/admin/Discount.vue";
+import Delivery from "./components/admin/Delivery.vue";
 import Setting from "./components/admin/Setting.vue";
 
 // Buat Aplikasi Vue
@@ -25,6 +26,7 @@ const routes = [
     { path: '/admin/discount_coupon', component: Discount_Coupon }, 
     { path: '/admin/product', component: Product }, 
     { path: '/admin/category', component: Category }, 
+    { path: '/admin/delivery', component: Delivery }, 
     { path: '/admin/setting', component: Setting }, 
 ];
 
@@ -36,6 +38,7 @@ app.component("Product", Product);  // Pastikan komponen ini terdaftar
 app.component("Discount", Discount_Coupon);  // Pastikan komponen ini terdaftar
 app.component("Category", Category);  // Pastikan komponen ini terdaftar
 app.component("Setting", Setting);  // Pastikan komponen ini terdaftar
+app.component("Delivery", Delivery);  // Pastikan komponen ini terdaftar
 
 // Buat Router
 const router = createRouter({
