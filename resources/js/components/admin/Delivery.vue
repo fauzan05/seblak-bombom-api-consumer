@@ -228,6 +228,11 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
+                <div class="col-12 d-flex justify-content-center align-items-center">
+                    <div v-if="errors.deliveryError" class="alert alert-danger text-center col-10 mt-3" role="alert">
+                        {{ errors.deliveryError }}
+                    </div>
+                </div>
                 <form @submit.prevent="submitDelivery">
                     <div class="modal-body d-flex flex-column align-items-start justify-content-center">
                         <div class="mb-3 col-12">
@@ -548,7 +553,14 @@ const submitDelivery = async () => {
                     }
                 }
             } catch (error) {
+                $("#discountModal").modal("show");
+                $(".modal-loading").modal("hide");
                 console.error("Error:", error);
+                if (error.response) {
+                    errors.value.deliveryError = error.response.data.errors;
+                } else {
+                    errors.value.deliveryError = error.response;
+                }
             }
         }
     }
