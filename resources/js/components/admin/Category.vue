@@ -218,6 +218,11 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
+                <div class="col-12 d-flex justify-content-center align-items-center">
+                    <div v-if="errors.categoryError" class="alert alert-danger text-center col-10 mt-3" role="alert">
+                        {{ errors.categoryError }}
+                    </div>
+                </div>
                 <form @submit.prevent="submitCategory">
                     <div class="modal-body d-flex flex-column align-items-start justify-content-center">
                         <div class="mb-3 col-12">
@@ -504,7 +509,21 @@ const submitCategory = async () => {
                     }
                 }
             } catch (error) {
+                $(".modal-loading").modal("hide");
+
+                $("#categoryModal").modal("hide"); // Pastikan modal ditutup dulu
+                setTimeout(() => {
+                    $(".modal-backdrop").remove();  // Hapus backdrop jika masih ada
+                    $("#categoryModal").modal("show");
+                    $("body").addClass("modal-open");
+                }, 300); // Tambahkan delay agar transisi selesai
                 console.error("Error:", error);
+
+                if (error.response) {
+                    errors.value.categoryError = error.response.data.errors;
+                } else {
+                    errors.value.categoryError = error.response;
+                }
             }
         }
     }

@@ -216,9 +216,15 @@
                                             <td>{{ discount.total_max_usage }}</td>
                                             <td>{{ discount.max_usage_per_user }}</td>
                                             <td>{{ formatRupiah(discount.min_order_value) }}</td>
-                                            <td><div style="width: 165px;">{{ formatDate(discount.start) }}</div></td>
-                                            <td><div style="width: 165px;">{{ formatDate(discount.end) }}</div></td>
-                                            <td><i class="fa-solid fa-circle-check" :class="discount.status == 1 ? 'fa-circle-check text-green-500' : 'fa-circle-xmark text-red-500'"></i></td>
+                                            <td>
+                                                <div style="width: 165px;">{{ formatDate(discount.start) }}</div>
+                                            </td>
+                                            <td>
+                                                <div style="width: 165px;">{{ formatDate(discount.end) }}</div>
+                                            </td>
+                                            <td><i class="fa-solid fa-circle-check"
+                                                    :class="discount.status == 1 ? 'fa-circle-check text-green-500' : 'fa-circle-xmark text-red-500'"></i>
+                                            </td>
                                             <td>{{ discount.used_count }}</td>
                                             <td>{{ formatDate(discount.updated_at) }}</td>
                                             <td>
@@ -336,10 +342,10 @@
                                 <option disabled selected value="">
                                     Choose one
                                 </option>
-                                <option value="percent">
+                                <option value="2">
                                     Percent (%)
                                 </option>
-                                <option value="nominal">
+                                <option value="1">
                                     Nominal (0)
                                 </option>
                             </select>
@@ -347,14 +353,14 @@
                                 errors.type
                             }}</span>
                         </div>
-                        <div class="mb-3 col-12" v-if="(form.type != '' && form.type == 'percent')">
+                        <div class="mb-3 col-12" v-if="(form.type != '' && form.type == 2)">
                             <label for="discount_percent" class="form-label">Value</label>
                             <input class="form-control" v-model="form.value" name="discount_percent" type="number" />
                             <span v-if="errors.value" class="error">{{
                                 errors.value
                             }}</span>
                         </div>
-                        <div class="mb-3 col-12" v-if="(form.type != '' && form.type == 'nominal')">
+                        <div class="mb-3 col-12" v-if="(form.type != '' && form.type == 1)">
                             <label for="discount_nominal" class="form-label">Value</label>
                             <input class="form-control" v-model="form.value" name="discount_nominal" type="text"
                                 @input="formatRupiahByEvent($event, 'value')" />
@@ -380,8 +386,9 @@
                         </div>
                         <div class="mb-3 col-12">
                             <label for="product_name" class="form-label">Min Order Per User</label>
-                            <input class="form-control" v-model="form.min_order_value" name="discount_min_order_value_per_user"
-                                type="text" placeholder="Rp 25.000" @input="formatRupiahByEvent($event, 'min_order_value')" />
+                            <input class="form-control" v-model="form.min_order_value"
+                                name="discount_min_order_value_per_user" type="text" placeholder="Rp 25.000"
+                                @input="formatRupiahByEvent($event, 'min_order_value')" />
                             <span v-if="errors.min_order_value" class="error">{{
                                 errors.min_order_value
                             }}</span>
@@ -572,7 +579,7 @@ const form = reactive({
     desc: "",
     code: "",
     value: 0,
-    type: "",
+    type: 0,
     start: "",
     end: "",
     total_max_usage: 0,
@@ -648,15 +655,15 @@ const submitDiscountCoupon = async () => {
                     name: form.name,
                     description: form.desc,
                     code: form.code,
-                    value: form.type == 'nominal' ? unformatRupiah(form.value) : form.value,
-                    type: form.type,
+                    value: form.type == 1 ? unformatRupiah(form.value) : form.value,
+                    type: Number(form.type),
                     start: form.start.replace("T", " "),
                     end: form.end.replace("T", " "),
                     max_usage_per_user: form.max_usage_per_user,
                     total_max_usage: form.total_max_usage,
                     used_count: form.used_count,
                     min_order_value: unformatRupiah(form.min_order_value),
-                    status:  Boolean(form.status)
+                    status: Boolean(form.status)
                 }
 
                 if (modalTitle.value == "Add Discount Coupon") {
@@ -713,8 +720,15 @@ const submitDiscountCoupon = async () => {
                     }
                 }
             } catch (error) {
-                $("#discountModal").modal("show");
                 $(".modal-loading").modal("hide");
+
+                $("#discountModal").modal("hide"); // Pastikan modal ditutup dulu
+                setTimeout(() => {
+                    $(".modal-backdrop").remove();  // Hapus backdrop jika masih ada
+                    $("#discountModal").modal("show");
+                    $("body").addClass("modal-open");
+                }, 300); // Tambahkan delay agar transisi selesai
+
                 console.error("Error:", error);
                 if (error.response) {
                     errors.value.discountCoupon = error.response.data.errors;

@@ -311,7 +311,7 @@
         </div>
     </div>
     <div class="modal fade" tabindex="-1" role="dialog" id="deleteConfirmationModal">
-        <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+        <div class="modal-dialog modal-dialog-centered modal-md" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">{{ modalTitle }}</h5>
@@ -324,7 +324,7 @@
                         <span class="mb-3">Do you want to delete permanently these delivery below?</span>
                         <ul class="dot">
                             <li v-for="itemSelected in checkedDeliveries" :key="itemSelected">
-                                {{ findProductById(itemSelected)?.name || 'Delivery Not Found' }}
+                                {{ findProductById(itemSelected)?.city + ', ' + findProductById(itemSelected)?.district + ', ' + findProductById(itemSelected)?.village + ', ' + findProductById(itemSelected)?.hamlet + ' with Cost : ' + formatRupiah(findProductById(itemSelected)?.cost) || 'Delivery Not Found' }}
                             </li>
                         </ul>
                     </div>
@@ -553,8 +553,15 @@ const submitDelivery = async () => {
                     }
                 }
             } catch (error) {
-                $("#discountModal").modal("show");
                 $(".modal-loading").modal("hide");
+
+                $("#deliveryModal").modal("hide"); // Pastikan modal ditutup dulu
+                setTimeout(() => {
+                    $(".modal-backdrop").remove();  // Hapus backdrop jika masih ada
+                    $("#deliveryModal").modal("show");
+                    $("body").addClass("modal-open");
+                }, 300); // Tambahkan delay agar transisi selesai
+
                 console.error("Error:", error);
                 if (error.response) {
                     errors.value.deliveryError = error.response.data.errors;

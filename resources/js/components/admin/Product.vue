@@ -273,6 +273,11 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
+                <div class="col-12 d-flex justify-content-center align-items-center">
+                    <div v-if="errors.productError" class="alert alert-danger text-center col-10 mt-3" role="alert">
+                        {{ errors.productError }}
+                    </div>
+                </div>
                 <form @submit.prevent="submitProduct">
                     <div class="modal-body d-flex flex-column align-items-start justify-content-center">
                         <div class="row d-flex align-items-center justify-content-around w-100 mb-3">
@@ -737,7 +742,22 @@ const submitProduct = async () => {
                     }
                 }
             } catch (error) {
+                $(".modal-loading").modal("hide");
+
+                $("#discountModal").modal("hide"); // Pastikan modal ditutup dulu
+                setTimeout(() => {
+                    $(".modal-backdrop").remove();  // Hapus backdrop jika masih ada
+                    $("#discountModal").modal("show");
+                    $("body").addClass("modal-open");
+                }, 300); // Tambahkan delay agar transisi selesai
                 console.error("Error:", error);
+
+                console.error("Error:", error);
+                if (error.response) {
+                    errors.value.productError = error.response.data.errors;
+                } else {
+                    errors.value.productError = error.response;
+                }
             }
         }
     }
