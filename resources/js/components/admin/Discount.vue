@@ -475,7 +475,7 @@
                         <span class="mb-3">Do you want to delete permanently these discount below?</span>
                         <ul class="dot">
                             <li v-for="itemSelected in checkedDiscountCoupons" :key="itemSelected">
-                                {{ findProductById(itemSelected)?.name || 'discount Not Found' }}
+                                {{ findDiscountById(itemSelected)?.name || 'discount Not Found' }}
                             </li>
                         </ul>
                     </div>
@@ -915,7 +915,7 @@ const selectOne = (discountId) => {
 }
 
 // Fungsi untuk menemukan produk berdasarkan ID
-const findProductById = (id) => {
+const findDiscountById = (id) => {
     return discounts.value.find((item) => item.id === id);
 };
 

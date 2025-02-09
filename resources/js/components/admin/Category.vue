@@ -290,7 +290,7 @@
                         <span class="mb-3">Do you want to delete permanently these category below?</span>
                         <ul class="dot">
                             <li v-for="itemSelected in checkedCategories" :key="itemSelected">
-                                {{ findProductById(itemSelected)?.name || 'Category Not Found' }}
+                                {{ findCategoryById(itemSelected)?.name || 'Category Not Found' }}
                             </li>
                         </ul>
                     </div>
@@ -654,7 +654,7 @@ const selectOne = (categoryId) => {
 }
 
 // Fungsi untuk menemukan produk berdasarkan ID
-const findProductById = (id) => {
+const findCategoryById = (id) => {
     return categories.value.find((item) => item.id === id);
 };
 
