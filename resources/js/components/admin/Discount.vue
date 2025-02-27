@@ -497,7 +497,7 @@
 import { onMounted, ref, reactive, computed } from "vue";
 const base_url = window.location.origin;
 
-const api_url = "http://localhost:8010/api";
+const api_url = import.meta.env.VITE_API_URL;
 
 const discounts = ref([]);
 

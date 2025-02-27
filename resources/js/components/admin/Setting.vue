@@ -512,7 +512,7 @@ watch(current_tab, async (new_tab, old_tab) => {
     }
 })
 
-const api_url = "http://localhost:8010/api";
+const api_url = import.meta.env.VITE_API_URL;
 const form = reactive({
     id: 0,
     name: "",

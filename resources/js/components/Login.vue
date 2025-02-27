@@ -95,6 +95,7 @@ const forgotPassword = ref(false);
 const rememberMe = ref(false);
 const showPassword = ref(false);
 const errorMessage = ref('');
+const app_url = import.meta.env.VITE_APP_URL;
 
 // Toggle between Login and Forgot Password forms
 const toggleForgotPassword = () => {
@@ -123,7 +124,7 @@ const submitLogin = async () => {
             errorMessage.value = 'Email or Password is wrong!';
             $('.modal-loading').modal('hide');
         } else {
-            window.location.replace('http://localhost:8000/admin/dashboard');
+            window.location.replace(app_url + '/admin/dashboard');
         }
     } catch (error) {
         $('.modal-loading').modal('hide');

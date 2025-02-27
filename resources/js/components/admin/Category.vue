@@ -312,7 +312,7 @@
 import { onMounted, ref, reactive, computed } from "vue";
 const base_url = window.location.origin;
 
-const api_url = "http://localhost:8010/api";
+const api_url = import.meta.env.VITE_API_URL;
 
 const categories = ref([]);
 
@@ -518,7 +518,7 @@ const submitCategory = async () => {
                     $("body").addClass("modal-open");
                 }, 300); // Tambahkan delay agar transisi selesai
                 console.error("Error:", error);
-
+                console.log(error.response.data.errors)
                 if (error.response) {
                     errors.value.categoryError = error.response.data.errors;
                 } else {
@@ -585,11 +585,7 @@ onMounted(() => {
             });
     };
     document.head.appendChild(script);
-    getAllCategory();
-
-    $("#categoryModal").on("hidden.bs.modal", function () {
-        selectedImageDelete.value = [];
-    });
+    // getAllCategory();
 
     $('#checkbox-all').prop('checked', false);
 });

@@ -53,7 +53,7 @@
 import { computed, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import axios from 'axios';
-const api_url = "http://localhost:8010/api";
+const api_url = import.meta.env.VITE_API_URL;
 
 export default {
     setup() {

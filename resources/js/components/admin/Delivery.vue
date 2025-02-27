@@ -351,7 +351,7 @@ onMounted(() => {
     $('#checkbox-all').prop('checked', false);
 });
 
-const api_url = "http://localhost:8010/api";
+const api_url = import.meta.env.VITE_API_URL;
 
 const deliveries = ref([]);
 
