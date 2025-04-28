@@ -585,7 +585,7 @@ onMounted(() => {
             });
     };
     document.head.appendChild(script);
-    // getAllCategory();
+    getAllCategory();
 
     $('#checkbox-all').prop('checked', false);
 });

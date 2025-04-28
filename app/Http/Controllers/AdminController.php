@@ -16,6 +16,13 @@ class AdminController extends Controller
         return view('auth.login', $data);
     }
 
+    public function register() {
+        $data = [
+            'title_page' => 'Register User Customer'
+        ];
+        return view('register', $data);
+    }
+
     public function index() {
         $data = [
             'title_page' => 'Admin Dashboard'

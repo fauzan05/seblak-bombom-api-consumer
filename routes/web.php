@@ -10,6 +10,7 @@ Route::get('/', function () {
 });
 
 Route::get('/login', [AdminController::class, 'login']);
+Route::get('/register', [AdminController::class, 'register']);
 Route::post('/login', [AdminController::class, 'post_login']);
 Route::get('/token', function (Request $request) {
     return response()->json(['token' => $request->cookie('_token')]);
