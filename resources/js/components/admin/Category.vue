@@ -444,7 +444,6 @@ const submitCategory = async () => {
             // Proses add product (e.g., kirim ke API)
             try {
                 let data = {
-                    category_id: $("#product_category").val(),
                     name: form.categoryName,
                     description: $("#ckeditor_description_input").val()
                 }

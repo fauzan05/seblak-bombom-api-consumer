@@ -31,6 +31,7 @@ class AdminController extends Controller
     }
 
     public function post_login(Request $request) {
+
         $email = $request->email;
         $password = $request->password;
 

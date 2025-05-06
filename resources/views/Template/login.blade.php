@@ -14,9 +14,9 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<!-- <body class="img js-fullheight" style="background-image: url({{ asset('assets/auth/images/bg.jpg') }});"> -->
+<body class="img js-fullheight" style="background-image: url({{ asset('assets/auth/images/bg.jpg') }});">
     @yield('content')
     @include('Template.Auth.footer')
-<!-- </body> -->
+</body>
 
 </html>
