@@ -1,43 +1,22 @@
-# Set the base image for subsequent instructions
-FROM php:8.2-fpm
-
-# Install dependencies
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    libpng-dev \
-    libonig-dev \
-    libxml2-dev \
-    zip \
-    curl \
-    unzip \
-    git \
-    libzip-dev \
-    libfreetype6-dev \
-    libjpeg62-turbo-dev \
-    libpng-dev && \
-    docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
-
-# Clear cache
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
-
-# Install Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+# Base image pakai node-alpine
+FROM node:20-alpine
 
 # Set working directory
-WORKDIR /var/www
+WORKDIR /app
 
-# Remove default server definition
-RUN rm -rf /var/www/html
+# Salin file dependency dan install dulu (agar cache efektif)
+COPY package.json package-lock.json* ./
 
-# Copy existing application directory contents
-COPY . /var/www
+# Install dependencies
+RUN npm install
 
-# Copy existing application directory permissions
-COPY --chown=www-data:www-data . /var/www
+# Salin semua source code
+COPY . .
 
-# Change current user to www
-USER www-data
+# Expose port default Nuxt
+EXPOSE 3000
 
-# Expose port 9000 and start php-fpm server
-EXPOSE 9000
-CMD ["php-fpm"]
+# Jalankan Nuxt di mode production
+RUN npm run build
+
+CMD ["npm", "run", "dev"]
