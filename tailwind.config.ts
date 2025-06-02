@@ -13,9 +13,6 @@ module.exports = {
         // Tambahkan custom variant untuk group
         variants: {
           extend: {
-            scale: ['group-hover'],
-            translate: ['group-hover'],
-            opacity: ['group-hover']
           }
         }
       }
