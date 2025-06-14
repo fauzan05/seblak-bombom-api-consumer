@@ -1147,7 +1147,7 @@ const comments = [
 </script>
 
 <style>
-.swiper-pagination-bullet-active {
+/* .swiper-pagination-bullet-active {
     background-color: var(--color-orange-500) !important;
 }
 
@@ -1160,7 +1160,7 @@ const comments = [
 
 .swiper-pagination-2 .swiper-pagination-bullet-active {
     background-color: var(--color-white) !important;
-}
+} */
 
 /* @keyframes blob {
     0% {
