@@ -2,9 +2,15 @@
     <div class="w-full max-w-md mx-auto lg:mx-0">
         <div class="bg-white rounded-2xl shadow-2xl p-8 backdrop-blur-sm bg-opacity-95">
             <form class="space-y-6" @submit.prevent="handleLogin">
-                <!-- Email/Username Input -->
+                <!-- Email Input -->
                 <div>
-                    <label for="email" class="sr-only">Email atau Username</label>
+                    <h1 class="text-4xl text-orange-400 mb-7">Login</h1>
+                    <div v-if="error" class="bg-orange-100 my-5 border-l-4 border-orange-500 text-orange-700 p-4 rounded"
+                        role="alert">
+                        <p>{{ error }}</p>
+                    </div>
+
+                    <label for="email" class="sr-only">Email</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -14,7 +20,7 @@
                         </div>
                         <input id="email" v-model="loginForm.email" name="email" type="text" required
                             class="appearance-none relative block w-full px-10 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:z-10 transition-all duration-200"
-                            placeholder="Email atau Username" />
+                            placeholder="Email" />
                     </div>
                 </div>
 
@@ -51,8 +57,9 @@
                 <!-- Remember Me & Forgot Password -->
                 <div class="flex items-center justify-between">
                     <div class="flex items-center">
-                        <input id="remember-me" v-model="loginForm.remember" name="remember-me" type="checkbox"
-                            class="h-4 w-4 text-orange-500 focus:ring-orange-500 border-gray-300 rounded" />
+                        <input @click="loginForm.remember = !loginForm.remember" type="checkbox"
+                            v-model="loginForm.remember"
+                            class="h-4 w-4 accent-orange-500 focus:ring-orange-500 border-gray-300 rounded" />
                         <label for="remember-me" class="ml-2 block text-sm text-gray-700">
                             Ingat saya
                         </label>
@@ -69,7 +76,7 @@
                 <!-- Login Button -->
                 <div>
                     <button type="submit" :disabled="loading"
-                        class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105">
+                        class="group cursor-pointer relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105">
                         <span v-if="!loading">Masuk</span>
                         <span v-else class="flex items-center">
                             <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg"
@@ -99,9 +106,17 @@
                 <div class="text-center">
                     <p class="text-sm text-gray-600">
                         Belum punya akun?
-                        <NuxtLink to="/register"
+                        <NuxtLink to="/auth/register"
                             class="font-medium text-orange-500 hover:text-orange-600 transition-colors duration-200">
                             Daftar sekarang
+                        </NuxtLink>
+                    </p>
+                </div>
+                <div class="text-center">
+                    <p class="text-sm text-gray-600">
+                        <NuxtLink to="/home"
+                            class="font-medium text-orange-500 hover:text-orange-600 transition-colors duration-200">
+                            Kembali ke halaman utama
                         </NuxtLink>
                     </p>
                 </div>
@@ -113,14 +128,16 @@
 <script setup>
 import Pusher from "pusher-js";
 import { ref, onMounted } from "vue";
+const { $axios } = useNuxtApp()
 
 definePageMeta({
     layout: "auth",
 });
+const appSetting = useState('appSetting')
 
 // Meta tags
 useHead({
-    title: "Login - Warung Seblak Mantap",
+    title: `Login - ${appSetting.value.app_name}`,
     meta: [
         {
             name: "description",
@@ -135,95 +152,130 @@ const loginForm = ref({
     password: "",
     remember: false,
 });
+const error = ref('')
 
 const showPassword = ref(false);
 const loading = ref(false);
+const data = ref(null)
 
 // Methods
 const handleLogin = async () => {
-    loading.value = true;
-    console.log(loginForm.password);
-    // try {
-    //     // Simulasi API call - ganti dengan logic login sesungguhnya
-    //     await new Promise(resolve => setTimeout(resolve, 2000))
+    loading.value = true
+    error.value = null
 
-    //     // Redirect ke dashboard atau halaman utama setelah login berhasil
-    //     await navigateTo('/dashboard')
+    try {
+        const res = await $axios.post('/users/login', loginForm.value, {
+            withCredentials: true
+        })
 
-    // } catch (error) {
-    //     console.error('Login error:', error)
-    //     // Handle error - bisa tambahkan notifikasi error
-    // } finally {
-    //     loading.value = false
-    // }
-};
+        data.value = res.data.data
+        console.log('Login berhasil:', data.value)
+    } catch (err) {
+        if (err.status !== 500) {
+            error.value = 'Email atau password yang kamu masukkan tidak cocok. Silakan periksa kembali.'
+            return
+        }
+        error.value = 'Internal server error 500'
+    } finally {
+        loading.value = false
+    }
+}
+
 
 var pusher = null;
 
 // Lifecycle
-onMounted(() => {
-    pusher = new Pusher("cf5b4709d689d1228001", {
-        // Bukan 'rahasia'
-        cluster: "ap1",
-        // Tambahkan untuk debugging
-        enabledTransports: ["ws", "wss"],
-        forceTLS: true,
-    });
+// onMounted(() => {
+//     pusher = new Pusher("cf5b4709d689d1228001", {
+//         // Bukan 'rahasia'
+//         cluster: "ap1",
+//         // Tambahkan untuk debugging
+//         enabledTransports: ["ws", "wss"],
+//         forceTLS: true,
+//     });
 
-    // Event untuk debugging koneksi
-    pusher.connection.bind("connected", () => {
-        console.log("Pusher Connected!");
-    });
+//     // Event untuk debugging koneksi
+//     pusher.connection.bind("connected", () => {
+//         console.log("Pusher Connected!");
+//     });
 
-    pusher.connection.bind("error", (err) => {
-        console.error("Pusher Connection Error:", err);
-    });
+//     pusher.connection.bind("error", (err) => {
+//         console.error("Pusher Connection Error:", err);
+//     });
 
-    const channel = pusher.subscribe("seblak_bombom_api_channel");
-    // Event saat berhasil subscribe
-    channel.bind("pusher:subscription_succeeded", () => {
-        console.log("Successfully subscribed to channel!");
-    });
+//     const channel = pusher.subscribe("seblak_bombom_api_channel");
+//     // Event saat berhasil subscribe
+//     channel.bind("pusher:subscription_succeeded", () => {
+//         console.log("Successfully subscribed to channel!");
+//     });
 
-    // Event saat error subscribe
-    channel.bind("pusher:subscription_error", (status) => {
-        console.error("Subscription error:", status);
-    });
+//     // Event saat error subscribe
+//     channel.bind("pusher:subscription_error", (status) => {
+//         console.error("Subscription error:", status);
+//     });
 
-    channel.bind("event_testing1", (data) => {
-        console.log("DATANYA : ", data.message);
-    });
-});
+//     channel.bind("event_testing1", (data) => {
+//         console.log("DATANYA : ", data.message);
+//     });
+// });
 
 // Jangan lupa cleanup saat component unmount
-
 onUnmounted(() => {
-    if (pusher) {
-        pusher.unsubscribe("seblak_bombom_api_channel");
+    // if (pusher) {
+    //     pusher.unsubscribe("seblak_bombom_api_channel");
 
-        pusher.disconnect();
-    }
-});
-
-watch(showPassword, (val) => {
-    console.log("Show password:", val);
+    //     pusher.disconnect();
+    // }
+    document.body.style.overflow = "";
 });
 </script>
 <style scoped>
-/* Custom animations yang sama seperti login page */
-@keyframes float {
-
-    0%,
-    100% {
-        transform: translateY(0px);
-    }
-
-    50% {
-        transform: translateY(-10px);
-    }
+/* Modal Fade Animation */
+.modal-fade-enter-active,
+.modal-fade-leave-active {
+    transition: opacity 0.3s ease;
 }
 
-.animate-float {
-    animation: float 6s ease-in-out infinite;
+.modal-fade-enter-from,
+.modal-fade-leave-to {
+    opacity: 0;
+}
+
+/* Modal Scale Animation */
+.modal-scale-enter-active {
+    transition: all 0.3s ease;
+}
+
+.modal-scale-leave-active {
+    transition: all 0.2s ease;
+}
+
+.modal-scale-enter-from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+}
+
+.modal-scale-leave-to {
+    opacity: 0;
+    transform: scale(0.95) translateY(-10px);
+}
+
+/* Custom Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
 }
 </style>

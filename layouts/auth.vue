@@ -1,8 +1,18 @@
 <template>
-    <div
-        class="min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-100 flex items-center justify-center px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Fullscreen Loading Overlay -->
+    <div v-if="loading" class="fixed inset-0 z-50 flex items-center justify-center bg-white/80 backdrop-blur-sm">
+        <svg class="animate-spin h-12 w-12 text-orange-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+            viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z">
+            </path>
+        </svg>
+    </div>
+
+    <div v-if="!loading"
+        class="relative max-h-max overflow-y-auto w-full min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-100 flex flex-col items-center justify-between px-4 sm:px-6 lg:px-8 py-12">
         <!-- Background Pattern -->
-        <div class="absolute inset-0 overflow-hidden">
+        <div class="absolute inset-0 -z-10 overflow-hidden">
             <div
                 class="absolute -top-40 -right-40 w-80 h-80 bg-orange-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse">
             </div>
@@ -12,24 +22,22 @@
         </div>
 
         <!-- Container utama dengan responsive layout -->
-        <div class="w-full max-w-6xl relative z-10">
+        <div class="w-full max-w-6xl relative z-10 h-full flex justify-center items-center">
+            <!-- class="max-h-[80vh] overflow-y-auto w-full relative" -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
 
                 <!-- Left Side - Header & Info (Desktop) / Top (Mobile) -->
                 <div class="text-center lg:text-left space-y-6">
                     <div class="flex justify-center lg:justify-start">
                         <div class="h-20 w-20 bg-orange-500 rounded-full flex items-center justify-center shadow-lg">
-                            <svg class="h-10 w-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
-                            </svg>
+                            <img v-if="logoUrl" :src="logoUrl" alt="Logo Seblak" />
                         </div>
                     </div>
 
                     <div>
                         <h2 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
                             Bergabung dengan
-                            <span class="text-orange-500">Warung Seblak</span>
+                            <span class="text-orange-500">{{ data.app_name != null ? data.app_name : "" }}</span>
                         </h2>
                         <p class="text-xl text-gray-600 mb-6">Daftar sekarang dan nikmati seblak terbaik!</p>
 
@@ -69,11 +77,69 @@
                     <slot />
                 </div>
             </div>
-
-            <!-- Footer -->
-            <div class="text-center text-sm text-gray-500 mt-8">
-                <p>&copy; 2024 Warung Seblak Mantap. All rights reserved.</p>
-            </div>
+        </div>
+        <!-- Footer -->
+        <div class="text-center text-sm text-gray-500 mt-20">
+            <p>&copy; {{ yearNow }} {{ data.app_name != null ? data.app_name : "" }}. All rights reserved.</p>
         </div>
     </div>
 </template>
+
+<script setup>
+import { ref, onMounted, onUnmounted } from "vue";
+const config = useRuntimeConfig()
+const apiUrl = config.public.apiUrl
+
+const { $axios } = useNuxtApp()
+const data = ref('')
+const loading = ref(true)
+const error = ref('')
+const logoUrl = ref('')
+const appSetting = ref(null)
+
+onMounted(async () => {
+    try {
+        const res = await $axios.get('/applications')
+        data.value = res.data.data
+        logoUrl.value = `${apiUrl}/image/application/${data.value.logo_filename}`
+        appSetting = useState('appSetting', () => data.value)
+    } catch (err) {
+        error.value = err.message || 'Error Unknown'
+    } finally {
+        setTimeout(() => {
+            loading.value = false
+        }, 300)
+    }
+})
+
+const yearNow = new Date().getFullYear()
+
+</script>
+
+<style>
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.3s;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+}
+
+.animate-fade-in-up {
+    animation: fadeInUp 0.3s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+</style>

@@ -203,7 +203,7 @@ definePageMeta({
 
 // Meta tags
 useHead({
-    title: 'Register - Warung Seblak Mantap',
+    title: 'Check Email - Warung Seblak Mantap',
     meta: [
         { name: 'description', content: 'Daftar di Warung Seblak Mantap untuk menikmati seblak terbaik' }
     ]
