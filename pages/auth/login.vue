@@ -129,6 +129,7 @@
 import Pusher from "pusher-js";
 import { ref, onMounted } from "vue";
 const { $axios } = useNuxtApp()
+const router = useRouter()
 
 definePageMeta({
     layout: "auth",
@@ -170,6 +171,11 @@ const handleLogin = async () => {
         })
 
         data.value = res.data.data
+        if (data.value.role === 'admin') {
+            router.push('/admin/dashboard')
+        } else {
+            router.push('/')
+        }
     } catch (err) {
         if (err.status !== 500) {
             error.value = 'The email or password you entered does not match. Please check again.'

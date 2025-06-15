@@ -104,18 +104,17 @@ const config = useRuntimeConfig()
 const apiUrl = config.public.apiUrl
 
 const { $axios } = useNuxtApp()
-const data = ref('')
+const data = ref(null)
 const loading = ref(true)
 const error = ref('')
 const logoUrl = ref('')
-const appSetting = ref(null)
 
 onMounted(async () => {
     try {
         const res = await $axios.get('/applications')
         data.value = res.data.data
         logoUrl.value = `${apiUrl}/image/application/${data.value.logo_filename}`
-        appSetting = useState('appSetting', () => data.value)
+        useState('appSetting', () => data.value)
     } catch (err) {
         error.value = err.message || 'Error Unknown'
     } finally {

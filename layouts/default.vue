@@ -1,4 +1,13 @@
 <template>
+    <!-- Fullscreen Loading Overlay -->
+    <div v-if="loading" class="fixed inset-0 z-50 flex items-center justify-center bg-white/80 backdrop-blur-sm">
+        <svg class="animate-spin h-12 w-12 text-orange-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+            viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z">
+            </path>
+        </svg>
+    </div>
     <!-- Notifikasi -->
     <Transition name="fade-slide">
         <div v-if="showNotification"
@@ -21,7 +30,7 @@
             </div>
         </div>
     </Transition>
-    <div>
+    <div v-if="!loading">
         <!-- Tombol Scroll to up (Pojok kanan Bawah) -->
         <div class="fixed bottom-6 right-6 z-[1000] w-12 h-12 rounded-full flex items-center justify-center transition-colors duration-300 cursor-pointer group"
             @click="scrollToTop">
@@ -49,160 +58,310 @@
         </a>
         <div>
             <nav :class="[
-                'h-[70px] content-center fixed top-0 w-full z-50 transition-all duration-300',
-                isScrolled ? 'bg-white text-orange-400 shadow-md' : 'bg-transparent text-white'
+                'h-auto fixed top-0 w-full z-50 transition-all duration-300 backdrop-blur-sm',
+                isScrolled ? 'bg-white/90 text-orange-400 shadow-md' : 'bg-transparent text-white'
             ]">
-                <div class="container mx-auto px-4 flex justify-between items-center">
-                    <!-- Logo -->
-                    <div class="flex items-center">
-                        <img src="/images/seblak-logo.png" alt="Logo" class="h-10 mr-2" />
-                        <h1 class="text-[30px] font-comic">Seblak BomBom</h1>
-                    </div>
-
-                    <!-- Desktop Menu -->
-                    <div class="hidden md:flex items-center space-x-10 h-[70px]">
-                        <!-- Dropdown: Home -->
-                        <div class="relative group h-max">
-                            <button class="flex items-center h-[70px] hover:text-orange-600 text-[18px] cursor-pointer">
-                                Home
-                            </button>
+                <div class="container mx-auto px-4">
+                    <div class="flex justify-between items-center h-20">
+                        <!-- Logo Section -->
+                        <div class="flex items-center space-x-2">
+                            <img :src="logoUrl" alt="Logo" class="h-10 transition-transform hover:scale-105" />
+                            <h1
+                                class="text-lg md:text-xl font-bold truncate max-w-[300px] hover:text-orange-500 transition-colors">
+                                {{ appSetting.app_name }}
+                            </h1>
                         </div>
 
-                        <!-- Links biasa -->
-                        <div class="relative group h-max">
-                            <button class="flex items-center h-[70px] hover:text-orange-600 text-[18px] cursor-pointer">
-                                Menu
-                                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M19 9l-7 7-7-7" />
-                                </svg>
-                            </button>
-                            <div
-                                class="absolute top-full left-0 mt-0 w-48 text-gray-500 pointer-events-none bg-white shadow-lg
-                                rounded-md opacity-0 translate-y-2 scale-y-95 group-hover:opacity-100 group-hover:translate-y-0
-                                group-hover:scale-y-100 group-hover:pointer-events-auto transition-all duration-200 ease-in-out z-30">
-                                <a href="#" class="block px-4 py-2 hover:rounded-md hover:bg-gray-100">Seblak Kuah</a>
-                                <a href="#" class="block px-4 py-2 hover:rounded-md hover:bg-gray-100">Seblak Kering</a>
-                                <a href="#" class="block px-4 py-2 hover:rounded-md hover:bg-gray-100">Topping</a>
-                                <a href="#" class="block px-4 py-2 hover:rounded-md hover:bg-gray-100">Minuman</a>
+                        <!-- Desktop Menu -->
+                        <div class="hidden md:flex items-center space-x-6">
+                            <!-- Main Navigation -->
+                            <div class="flex items-center space-x-6">
+                                <!-- Home -->
+                                <a href="#" class="nav-link group">
+                                    <span class="relative">
+                                        Home
+                                        <span class="absolute -bottom-3 left-0 w-full h-0.5 bg-orange-500 transform scale-x-0 transition-transform group-hover:scale-x-100"></span>
+                                    </span>
+                                </a>
+
+                                <!-- Menu Dropdown -->
+                                <div class="relative group">
+                                    <button class="nav-link flex items-center space-x-1">
+                                        <span>Menu</span>
+                                        <svg class="w-4 h-4 transition-transform group-hover:rotate-180" fill="none"
+                                            stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </button>
+                                    <div
+                                        class="absolute top-full -left-2 mt-2 w-48 bg-white rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 translate-y-2">
+                                        <div class="py-2 px-3">
+                                            <a href="#"
+                                                class="block px-3 py-2 rounded-lg hover:bg-orange-50 text-gray-700 hover:text-orange-500 transition-colors">Seblak
+                                                Kuah</a>
+                                            <a href="#"
+                                                class="block px-3 py-2 rounded-lg hover:bg-orange-50 text-gray-700 hover:text-orange-500 transition-colors">Seblak
+                                                Kering</a>
+                                            <a href="#"
+                                                class="block px-3 py-2 rounded-lg hover:bg-orange-50 text-gray-700 hover:text-orange-500 transition-colors">Topping</a>
+                                            <a href="#"
+                                                class="block px-3 py-2 rounded-lg hover:bg-orange-50 text-gray-700 hover:text-orange-500 transition-colors">Minuman</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <a href="#" class="nav-link group">
+                                    <span class="relative">
+                                        My Orders
+                                        <span class="absolute -bottom-3 left-0 w-full h-0.5 bg-orange-500 transform scale-x-0 transition-transform group-hover:scale-x-100"></span>
+                                    </span>
+                                </a>
+                                <a href="#" class="nav-link group">
+                                    <span class="relative">
+                                        FAQ
+                                        <span class="absolute -bottom-3 left-0 w-full h-0.5 bg-orange-500 transform scale-x-0 transition-transform group-hover:scale-x-100"></span>
+                                    </span>
+                                </a>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="flex items-center space-x-4">
+                                <!-- Notification -->
+                                <div class="relative group">
+                                    <button class="relative p-2 hover:bg-white/10 rounded-full transition-colors">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                                        </svg>
+                                        <span
+                                            class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] rounded-full h-5 w-5 flex items-center justify-center">
+                                            99+
+                                        </span>
+                                    </button>
+                                    <!-- Notification Dropdown -->
+                                    <div
+                                        class="absolute top-full right-0 mt-2 w-80 bg-white rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 translate-y-2">
+                                        <div class="p-4">
+                                            <h3 class="text-lg font-semibold text-gray-800 mb-2">Notifications</h3>
+                                            <div class="space-y-3">
+                                                <div
+                                                    class="p-3 hover:bg-orange-50 rounded-lg transition-colors cursor-pointer">
+                                                    <div class="flex items-start">
+                                                        <div
+                                                            class="h-8 w-8 rounded-full bg-orange-100 flex items-center justify-center text-orange-500">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4"
+                                                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                            </svg>
+                                                        </div>
+                                                        <div class="ml-3">
+                                                            <p class="text-sm font-medium text-gray-800">Order #123
+                                                                Completed</p>
+                                                            <p class="text-xs text-gray-500 mt-1">Your order has been
+                                                                delivered successfully.</p>
+                                                            <p class="text-xs text-gray-400 mt-1">2 minutes ago</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- More notification items -->
+                                            </div>
+                                            <a href="#"
+                                                class="block text-center text-orange-500 hover:text-orange-600 text-sm font-medium mt-4 py-2">
+                                                View All Notifications
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Cart -->
+                                <div class="relative group">
+                                    <button class="relative p-2 hover:bg-white/10 rounded-full transition-colors">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                                        </svg>
+                                        <span
+                                            class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] rounded-full h-5 w-5 flex items-center justify-center">
+                                            3
+                                        </span>
+                                    </button>
+                                    <!-- Cart Dropdown -->
+                                    <div
+                                        class="absolute top-full right-0 mt-2 w-96 bg-white rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 translate-y-2">
+                                        <div class="p-4">
+                                            <h3 class="text-lg font-semibold text-gray-800 mb-2">Shopping Cart</h3>
+                                            <div class="space-y-3">
+                                                <div
+                                                    class="flex items-center p-3 hover:bg-orange-50 rounded-lg transition-colors">
+                                                    <img src="" alt="Food" class="h-16 w-16 object-cover rounded-lg" />
+                                                    <div class="ml-4 flex-1">
+                                                        <h4 class="text-sm font-medium text-gray-800">Seblak Special</h4>
+                                                        <p class="text-xs text-gray-500">2x | Level 3</p>
+                                                        <p class="text-sm font-medium text-orange-500 mt-1">Rp 25.000</p>
+                                                    </div>
+                                                    <button class="text-gray-400 hover:text-red-500">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                                                            viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                stroke-width="2"
+                                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                                <!-- More cart items -->
+                                            </div>
+                                            <div class="mt-4 pt-4 border-t">
+                                                <div class="flex justify-between text-sm font-medium text-gray-800">
+                                                    <span>Total</span>
+                                                    <span>Rp 75.000</span>
+                                                </div>
+                                                <button
+                                                    class="w-full mt-4 bg-orange-500 text-white py-2 rounded-lg hover:bg-orange-600 transition-colors">
+                                                    Checkout
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Language -->
+                                <div class="relative group">
+                                    <button
+                                        class="flex items-center space-x-1 p-2 hover:bg-white/10 rounded-full transition-colors">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+                                        </svg>
+                                        <span class="text-sm">EN</span>
+                                    </button>
+                                    <!-- Language Dropdown -->
+                                    <div
+                                        class="absolute top-full right-0 mt-2 w-48 bg-white rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 translate-y-2">
+                                        <div class="py-2">
+                                            <a href="#"
+                                                class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-500">
+                                                <img src="" alt="ID" class="w-5 h-5 rounded-full mr-3" />
+                                                Bahasa Indonesia
+                                            </a>
+                                            <a href="#"
+                                                class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-500">
+                                                <img src="" alt="EN" class="w-5 h-5 rounded-full mr-3" />
+                                                English
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Auth Buttons -->
+                                <div v-if="!currentUser" class="flex items-center space-x-3">
+                                    <button :class="[
+                                        'px-4 py-2 rounded-full border transition-all duration-300 hover:scale-105',
+                                        isScrolled ? 'border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white' : 'border-white text-white hover:bg-white hover:text-orange-500'
+                                    ]">
+                                        Login
+                                    </button>
+                                    <button :class="[
+                                        'px-4 py-2 rounded-full transition-all duration-300 hover:scale-105',
+                                        isScrolled ? 'bg-orange-500 text-white hover:bg-orange-600' : 'bg-white text-orange-500 hover:bg-orange-50'
+                                    ]">
+                                        Register
+                                    </button>
+                                </div>
+
+                                <!-- Profile (Visible when logged in) -->
+                                <div v-if="currentUser" class="relative group">
+                                    <button
+                                        class="flex items-center space-x-2 p-2 hover:bg-white/10 rounded-full transition-colors">
+                                        <svg width="100" height="100" class="h-8 w-8 rounded-full object-cover"
+                                            viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <circle cx="50" cy="50" r="48" fill="#F3F4F6" stroke="#E5E7EB"
+                                                stroke-width="4" />
+                                            <circle cx="50" cy="38" r="14" fill="#D1D5DB" />
+                                            <path
+                                                d="M24 78C24 65.2975 35.2975 56 48 56H52C64.7025 56 76 65.2975 76 78V80H24V78Z"
+                                                fill="#D1D5DB" />
+                                        </svg>
+
+                                        <span class="text-sm font-medium">John Doe</span>
+                                    </button>
+                                    <!-- Profile Dropdown -->
+                                    <div
+                                        class="absolute top-full right-0 mt-2 w-56 bg-white rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 translate-y-2">
+                                        <div class="p-3">
+                                            <div class="flex items-center px-3 py-2">
+                                                <svg width="100" height="100" class="h-10 w-10 rounded-full object-cover"
+                                                    viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <circle cx="50" cy="50" r="48" fill="#F3F4F6" stroke="#E5E7EB"
+                                                        stroke-width="4" />
+                                                    <circle cx="50" cy="38" r="14" fill="#D1D5DB" />
+                                                    <path
+                                                        d="M24 78C24 65.2975 35.2975 56 48 56H52C64.7025 56 76 65.2975 76 78V80H24V78Z"
+                                                        fill="#D1D5DB" />
+                                                </svg>
+                                                <div class="ml-3">
+                                                    <p class="text-sm font-medium text-gray-800">John Doe</p>
+                                                    <p class="text-xs text-gray-500">john@example.com</p>
+                                                </div>
+                                            </div>
+                                            <div class="mt-3 space-y-1">
+                                                <a href="#"
+                                                    class="flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-500 rounded-lg">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none"
+                                                        viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                                    </svg>
+                                                    My Profile
+                                                </a>
+                                                <a href="#"
+                                                    class="flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-500 rounded-lg">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none"
+                                                        viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                                                    </svg>
+                                                    My Orders
+                                                </a>
+                                                <a href="#"
+                                                    class="flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-500 rounded-lg">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none"
+                                                        viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                    </svg>
+                                                    Settings
+                                                </a>
+                                                <hr class="my-2" />
+                                                <button
+                                                    class="flex items-center px-3 py-2 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 rounded-lg w-full">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none"
+                                                        viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                                    </svg>
+                                                    Logout
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <a href="#" class="hover:text-orange-600 flex items-center text-[18px] h-[70px]">My Orders</a>
-                        <a href="#" class="hover:text-orange-600 flex items-center text-[18px] h-[70px]">FAQ</a>
 
-                        <!-- Language Dropdown -->
-                        <div class="relative group">
-                            <button class="flex items-center hover:text-orange-600 h-[70px] text-[18px] cursor-pointer">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                    stroke="currentColor" class="size-5">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="m10.5 21 5.25-11.25L21 21m-9-3h7.5M3 5.621a48.474 48.474 0 0 1 6-.371m0 0c1.12 0 2.233.038 3.334.114M9 5.25V3m3.334 2.364C11.176 10.658 7.69 15.08 3 17.502m9.334-12.138c.896.061 1.785.147 2.666.257m-4.589 8.495a18.023 18.023 0 0 1-3.827-5.802" />
-                                </svg>
-                                <span class="ms-1">EN</span>
-                                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M19 9l-7 7-7-7" />
-                                </svg>
-                            </button>
-                            <div
-                                class="absolute top-full left-0 mt-0 w-48 group-hover:pointer-events-auto text-gray-500
-                                pointer-events-none bg-white shadow-lg rounded-md opacity-0 translate-y-2 scale-y-95
-                                group-hover:opacity-100 group-hover:translate-y-0 group-hover:scale-y-100 transition-all duration-200 ease-in-out z-30">
-                                <a href="#" class="block px-4 py-2 hover:rounded-md hover:bg-gray-100">Bahasa Indonesia</a>
-                                <a href="#" class="block px-4 py-2 hover:rounded-md hover:bg-gray-100">Bahasa Inggris</a>
-                            </div>
-                        </div>
-
-                        <a href="#" class="hover:text-orange-600 flex items-center text-[18px] h-[70px]">About</a>
-
-                        <!-- Notification Dropdown -->
-                        <div class="relative group">
-                            <button class="relative flex items-center hover:text-orange-600 cursor-pointer h-[70px]">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                    stroke="currentColor" class="size-6">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
-                                </svg>
-                                <span
-                                    class="absolute top-0 right-0 translate-x-4 translate-y-4 bg-red-500 text-white text-[10px] rounded-full px-1.5 py-[2px] leading-none">
-                                    99+
-                                </span>
-                            </button>
-                            <div
-                                class="absolute top-full left-1/2 transform -translate-x-1/2 mt-0 w-80 text-gray-500 group-hover:pointer-events-auto
-                                bg-white shadow-lg rounded-md opacity-0 translate-y-2 pointer-events-none scale-y-95 group-hover:opacity-100
-                                group-hover:translate-y-0 group-hover:scale-y-100 transition-all duration-200 ease-in-out z-30">
-                                <a href="#" class="block px-4 py-2 hover:rounded-md hover:bg-gray-100">
-                                    <span class="font-bold text-[15px]">Makan Gratis (Title) 1</span>
-                                    <p class="text-[15px] line-clamp-2 text-gray-500">Lorem ipsum dolor sit amet consectetur
-                                        adipisicing elit.</p>
-                                </a>
-                                <a href="#" class="block px-4 py-2 hover:rounded-md hover:bg-gray-100">
-                                    <span class="font-bold text-[15px]">Makan Gratis (Title) 2</span>
-                                    <p class="text-[15px] line-clamp-2 text-gray-500">Lorem ipsum dolor sit amet consectetur
-                                        adipisicing elit.</p>
-                                </a>
-                                <a href="#"
-                                    class="block px-4 py-2 hover:rounded-md hover:bg-gray-100 text-center text-orange-400">Show
-                                    More...</a>
-                            </div>
-                        </div>
-
-                        <!-- Cart -->
-                        <div class="relative group">
-                            <button class="flex items-center hover:text-orange-600 cursor-pointer h-[70px]">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                    stroke="currentColor" class="size-6">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
-                                </svg>
-                                <span
-                                    class="absolute top-0 right-0 translate-x-4 translate-y-4 bg-red-500 text-white text-[10px] rounded-full px-1.5 py-[2px] leading-none">
-                                    99+
-                                </span>
-                            </button>
-                            <div
-                                class="absolute top-full left-1/2 transform -translate-x-[80%] mt-0 w-80 text-gray-500 group-hover:pointer-events-auto
-                                bg-white shadow-lg rounded-md opacity-0 translate-y-2 pointer-events-none scale-y-95 group-hover:opacity-100
-                                group-hover:translate-y-0 group-hover:scale-y-100 transition-all duration-200 ease-in-out z-30">
-                                <a href="#" class="block px-4 py-2 hover:rounded-md hover:bg-gray-100">
-                                    <span class="font-bold text-[15px]">Makan Gratis (Title) 1</span>
-                                    <p class="text-[15px] line-clamp-2 text-gray-500">Lorem ipsum dolor sit amet consectetur
-                                        adipisicing elit.</p>
-                                </a>
-                                <a href="#" class="block px-4 py-2 hover:rounded-md hover:bg-gray-100">
-                                    <span class="font-bold text-[15px]">Makan Gratis (Title) 2</span>
-                                    <p class="text-[15px] line-clamp-2 text-gray-500">Lorem ipsum dolor sit amet consectetur
-                                        adipisicing elit.</p>
-                                </a>
-                                <a href="#"
-                                    class="block px-4 py-2 hover:rounded-md hover:bg-gray-100 text-center text-orange-400">Show
-                                    More...</a>
-                            </div>
-                        </div>
-
-                        <div class="flex gap-2">
-                            <!-- Tombol Login (outline-style) -->
-                            <button :class="[
-                                'border font-bold py-2 px-4 rounded-md transition-colors duration-200 cursor-pointer',
-                                isScrolled ? 'border-orange-500 text-orange-500 hover:text-orange-600 hover:border-orange-600' : 'border-white text-white hover:text-orange-600 hover:border-orange-600'
-                            ]">
-                                Login
-                            </button>
-
-                            <!-- Tombol Register (filled light style) -->
-                            <button :class="[
-                                'font-bold py-2 px-4 rounded-md border border-transparent transition-colors duration-200 cursor-pointer',
-                                isScrolled ? 'bg-orange-500 text-white hover:bg-orange-600' : 'bg-white text-orange-400 hover:bg-orange-50 hover:text-orange-600'
-                            ]">
-                                Register
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Hamburger Button -->
-                    <div class="md:hidden">
-                        <button @click="toggleMenu" class="p-2 hover:bg-white hover:text-black rounded-full">
+                        <!-- Mobile Menu Button -->
+                        <button @click="toggleMenu" class="md:hidden p-2 rounded-lg hover:bg-white/10 transition-colors">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M4 6h16M4 12h16M4 18h16" />
@@ -328,7 +487,7 @@
 
                 <!-- Footer Bottom -->
                 <div class="border-t border-orange-300 pt-8 text-sm text-center text-gray-500">
-                    &copy; 2025 Seblak BomBom. All rights reserved.
+                    &copy; {{ yearNow }} {{ appSetting.app_name }}. All rights reserved.
                 </div>
             </div>
         </footer>
@@ -338,45 +497,33 @@
 <script setup>
 const config = useRuntimeConfig();
 import { ref, onMounted, onBeforeUnmount } from 'vue'
-import { useHead } from 'nuxt/app';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+const { $axios } = useNuxtApp()
 
 const isMenuOpen = ref(false)
 const toggleMenu = () => {
     isMenuOpen.value = !isMenuOpen.value
 }
 
-useHead({
-    link: [
-        {
-            rel: 'stylesheet',
-            href: 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css'
-        },
-        {
-            rel: 'stylesheet',
-            href: 'https://unpkg.com/aos@2.3.1/dist/aos.css'
-        },
-    ],
-    script: [
-        {
-            src: 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js',
-            tagPosition: 'bodyClose'
-        },
-        {
-            src: 'https://unpkg.com/aos@2.3.1/dist/aos.js',
-            tagPosition: 'bodyClose'
-        },
-    ]
-})
-
-const api_url = config.public.apiUrl
+const apiUrl = config.public.apiUrl
+const data = ref(null)
 
 const isScrolled = ref(false)
 
 const handleScroll = () => {
     isScrolled.value = window.scrollY > 10 // kamu bisa ubah angka 10 ke 0 jika ingin langsung efek
 }
+const error = ref('')
+const logoUrl = ref('')
+const loading = ref(true)
+const appSetting = useState('appSetting', () => null)
+const currentUser = useState('currentUser', () => null)
 
-onMounted(() => {
+onMounted(async () => {
+    await getAppSetting()
+    await getCurrentUser()
+
     window.addEventListener('scroll', handleScroll)
     window.addEventListener('scroll', updateProgress)
     updateProgress()
@@ -433,14 +580,50 @@ watch(showNotification, (val) => {
     }
 })
 
+const yearNow = new Date().getFullYear()
+
+async function getAppSetting() {
+    try {
+        const res = await $axios.get('/applications')
+        data.value = res.data.data
+        logoUrl.value = `${apiUrl}/image/application/${data.value.logo_filename}`
+        appSetting.value = data.value
+    } catch (err) {
+        alert(err.message)
+    } finally {
+        setTimeout(() => {
+            loading.value = false
+        }, 300)
+    }
+}
+
+async function getCurrentUser() {
+    try {
+        const res = await $axios.get('/users/current', {
+            withCredentials: true
+        })
+        useState('currentUser', () => res.data.data)
+        currentUser.value = res.data.data
+    } catch (err) {
+        alert(err.message)
+    } finally {
+    }
+}
+
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Comic+Relief:wght@400;700&family=Fredoka:wght@300..700&family=WDXL+Lubrifont+TC&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Comic+Relief:wght@400;700&family=Fredoka:wght@300..700&family=WDXL+Lubrifont+TC&display=swap');
 
 * {
     font-family: 'Comic Relief', cursive;
+} */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+body {
+  font-family: 'Poppins', sans-serif;
 }
+
 
 circle {
     transition: stroke-dashoffset 0.3s;
@@ -455,4 +638,5 @@ circle {
 .fade-slide-leave-to {
     opacity: 0;
     transform: translateY(20px);
-}</style>
+}
+</style>

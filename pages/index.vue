@@ -3,29 +3,99 @@
         <div class="swiper-1 w-full h-full">
             <div class="swiper-wrapper">
                 <div class="swiper-slide relative w-full h-full" v-for="(slide, index) in slides" :key="index">
-                    <img :src="`/images/seblak-${index}.png`" alt="Seblak" class="w-full h-full object-cover" />
+                    <!-- Background Image with Zoom Effect -->
+                    <div class="absolute inset-0 scale-105 transition-transform duration-[20s]"
+                        :class="{ 'scale-125': activeIndex === index }">
+                        <img :src="`/images/seblak-${index}.png`" alt="Seblak" class="w-full h-full object-cover" />
+                    </div>
 
-                    <!-- Gradient Overlay -->
-                    <div class="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent"></div>
+                    <!-- Enhanced Gradient Overlays -->
+                    <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent"></div>
+                    <div class="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/50"></div>
 
-                    <!-- Text Content -->
-                    <div class="absolute inset-0 flex flex-col justify-center px-10 md:px-20 text-white z-10">
-                        <h2 class="text-4xl md:text-6xl font-bold mb-4 drop-shadow-lg">
-                            {{ slide.title }}
-                        </h2>
-                        <p class="text-lg md:text-xl mb-6 max-w-xl drop-shadow-lg">
-                            {{ slide.desc }}
-                        </p>
-                        <button
-                            class="bg-white cursor-pointer text-orange-500 hover:bg-orange-500 hover:text-white transition-all px-6 py-3 rounded-full font-semibold w-fit">
-                            Pesan Sekarang
-                        </button>
+                    <!-- Animated Pattern Overlay -->
+                    <div class="absolute inset-0 bg-[url('/pattern.png')] opacity-20"></div>
+
+                    <!-- Text Content with Animations -->
+                    <div class="absolute inset-0 flex flex-col justify-center px-6 sm:px-10 md:px-20 text-white z-10">
+                        <div class="max-w-4xl" :class="{ 'opacity-100': activeIndex === index }">
+                            <!-- Badge -->
+                            <div class="slide-down-fade-in mb-6">
+                                <span class="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-medium
+                                    bg-orange-500/80 backdrop-blur-sm">
+                                    <span class="animate-pulse mr-2">🔥</span>
+                                    Trending Now
+                                </span>
+                            </div>
+
+                            <!-- Title -->
+                            <h2 class="slide-up-fade-in text-4xl sm:text-5xl md:text-7xl font-bold mb-6
+                                leading-tight tracking-tight">
+                                {{ slide.title }}
+                                <span class="block mt-2 text-orange-400">Special</span>
+                            </h2>
+
+                            <!-- Description -->
+                            <p class="slide-up-fade-in delay-200 text-lg sm:text-xl md:text-2xl mb-8
+                                text-gray-300 max-w-xl leading-relaxed">
+                                {{ slide.desc }}
+                            </p>
+
+                            <!-- Action Buttons -->
+                            <div class="slide-up-fade-in delay-400 flex flex-wrap gap-4">
+                                <button class="group relative overflow-hidden px-8 py-4 bg-orange-500
+                                    rounded-full transition-all duration-300 hover:bg-orange-600
+                                    focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">
+                                    <span class="relative z-10 flex items-center font-semibold">
+                                        Pesan Sekarang
+                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                            class="h-5 w-5 ml-2 transform group-hover:translate-x-1 transition-transform"
+                                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                        </svg>
+                                    </span>
+                                </button>
+                                <button class="px-8 py-4 rounded-full border-2 border-white/80
+                                    hover:bg-white hover:text-orange-500 transition-all duration-300 font-semibold">
+                                    Lihat Menu
+                                </button>
+                            </div>
+
+                            <!-- Additional Info -->
+                            <div class="slide-up-fade-in delay-600 mt-12 flex items-center space-x-8">
+                                <div class="flex items-center space-x-2">
+                                    <span class="flex h-8 w-8 items-center justify-center rounded-full bg-orange-500/20">
+                                        ⭐️
+                                    </span>
+                                    <div class="flex flex-col">
+                                        <span class="text-sm text-gray-300">Rating</span>
+                                        <span class="font-semibold">4.9/5.0</span>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <span class="flex h-8 w-8 items-center justify-center rounded-full bg-orange-500/20">
+                                        ⏱️
+                                    </span>
+                                    <div class="flex flex-col">
+                                        <span class="text-sm text-gray-300">Delivery Time</span>
+                                        <span class="font-semibold">20-30 min</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Pagination -->
-            <div class="swiper-pagination"></div>
+            <!-- Custom Navigation -->
+            <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 flex space-x-3">
+                <button v-for="(_, index) in slides" :key="index" @click="swiper?.slideTo(index)" :class="[
+                    'w-3 h-3 rounded-full transition-all duration-300',
+                    activeIndex === index ? 'bg-orange-500 w-8' : 'bg-white/50 hover:bg-white/70'
+                ]">
+                </button>
+            </div>
         </div>
     </div>
 
@@ -453,8 +523,9 @@
                                             }}</span>
                                             <button @click="copyCode(promo.code, index)"
                                                 class="group/btn bg-orange-500 hover:bg-orange-600 cursor-pointer text-white p-2 rounded-lg transition-all duration-300 transform hover:scale-110 shadow-md hover:shadow-lg">
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" class="w-5 h-5 size-6 group-hover/btn:scale-110 transition-transform duration-200" viewBox="0 0 24 24"
-                                                    stroke-width="1.5" stroke="currentColor">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                    class="w-5 h-5 size-6 group-hover/btn:scale-110 transition-transform duration-200"
+                                                    viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                                     <path stroke-linecap="round" stroke-linejoin="round"
                                                         d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75" />
                                                 </svg>
@@ -999,6 +1070,9 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { useHead } from "nuxt/app";
+import Swiper from "swiper/bundle";
+import "swiper/css/bundle";
+
 const copiedIndex = ref(null);
 function copyCode(code, index) {
     navigator.clipboard.writeText(code).then(() => {
@@ -1035,19 +1109,25 @@ useHead({
     meta: [{ name: "default page", content: "seblak bombom ya" }],
 });
 
+const activeIndex = ref(0);
+const swiper = ref(null);
+
 onMounted(() => {
-    new Swiper(".swiper-1", {
+    swiper.value = new Swiper(".swiper-1", {
         loop: true,
         autoplay: {
-            delay: 3000,
-        },
-        pagination: {
-            el: ".swiper-pagination",
-            clickable: true,
+            delay: 5000,
+            disableOnInteraction: false,
         },
         effect: "fade",
         fadeEffect: {
             crossFade: true,
+        },
+        speed: 1000,
+        on: {
+            slideChange: (swiper) => {
+                activeIndex.value = swiper.realIndex;
+            },
         },
     });
 
@@ -1147,7 +1227,7 @@ const comments = [
 </script>
 
 <style>
-/* .swiper-pagination-bullet-active {
+.swiper-pagination-bullet-active {
     background-color: var(--color-orange-500) !important;
 }
 
@@ -1160,7 +1240,55 @@ const comments = [
 
 .swiper-pagination-2 .swiper-pagination-bullet-active {
     background-color: var(--color-white) !important;
-} */
+}
+
+.slide-up-fade-in {
+    animation: slideUpFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.slide-down-fade-in {
+    animation: slideDownFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    opacity: 0;
+    transform: translateY(-20px);
+}
+
+.delay-200 {
+    animation-delay: 0.2s;
+}
+
+.delay-400 {
+    animation-delay: 0.4s;
+}
+
+.delay-600 {
+    animation-delay: 0.6s;
+}
+
+@keyframes slideUpFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideDownFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 
 /* @keyframes blob {
     0% {
