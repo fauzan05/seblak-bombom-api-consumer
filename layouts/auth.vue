@@ -20,6 +20,19 @@
                 class="absolute -bottom-40 -left-40 w-80 h-80 bg-orange-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse">
             </div>
         </div>
+        <!-- Language Toggle Switch -->
+        <div class="flex justify-end w-full max-w-6xl mb-4 px-2">
+            <label class="inline-flex items-center cursor-pointer">
+                <span class="mr-3 text-sm font-medium text-gray-700">🇮🇩 ID</span>
+                <div class="relative">
+                    <input type="checkbox" class="sr-only peer" :checked="currentLang === 'en'" @change="toggleLang" />
+                    <div
+                        class="w-11 h-6 bg-white border border-orange-500 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-orange-500 rounded-full peer  peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-orange-500 after:border-orange-500 after:border after:rounded-full after:h-5 after:w-5 after:transition-all">
+                    </div>
+                </div>
+                <span class="ml-3 text-sm font-medium text-gray-700">EN 🇺🇸</span>
+            </label>
+        </div>
 
         <!-- Container utama dengan responsive layout -->
         <div class="w-full max-w-6xl relative z-10 h-full flex justify-center items-center">
@@ -36,10 +49,10 @@
 
                     <div>
                         <h2 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-                            Bergabung dengan
+                            {{ currentLang === 'id' ? 'Bergabung dengan' : 'Join' }}
                             <span class="text-orange-500">{{ data.app_name != null ? data.app_name : "" }}</span>
                         </h2>
-                        <p class="text-xl text-gray-600 mb-6">Daftar sekarang dan nikmati seblak terbaik!</p>
+                        <p class="text-xl text-gray-600 mb-6">{{ currentLang === 'id' ? 'Daftar sekarang dan nikmati seblak terbaik' : 'Register now and enjoy the best seblak' }}!</p>
 
                         <!-- Benefits List (Desktop only) -->
                         <div class="hidden lg:block space-y-4 text-left">
@@ -50,7 +63,7 @@
                                             d="M5 13l4 4L19 7"></path>
                                     </svg>
                                 </div>
-                                <span class="text-gray-700">Seblak dengan cita rasa autentik</span>
+                                <span class="text-gray-700">{{ currentLang === 'id' ? 'Seblak dengan cita rasa autentik' : 'Seblak with authentic taste' }}</span>
                             </div>
                             <div class="flex items-center space-x-3">
                                 <div class="w-6 h-6 bg-orange-500 rounded-full flex items-center justify-center">
@@ -59,7 +72,7 @@
                                             d="M5 13l4 4L19 7"></path>
                                     </svg>
                                 </div>
-                                <span class="text-gray-700">Promo dan diskon khusus member</span>
+                                <span class="text-gray-700">{{ currentLang === 'id' ? 'Promo dan diskon khusus member' : 'Special member promotions and discounts' }}</span>
                             </div>
                             <div class="flex items-center space-x-3">
                                 <div class="w-6 h-6 bg-orange-500 rounded-full flex items-center justify-center">
@@ -68,7 +81,7 @@
                                             d="M5 13l4 4L19 7"></path>
                                     </svg>
                                 </div>
-                                <span class="text-gray-700">Notifikasi menu terbaru</span>
+                                <span class="text-gray-700">{{ currentLang === 'id' ? 'Notifikasi menu terbaru' : 'Latest menu notification' }}</span>
                             </div>
                         </div>
                     </div>
@@ -113,6 +126,12 @@ onMounted(async () => {
 })
 
 const yearNow = new Date().getFullYear()
+
+const currentLang = useState('lang', () => 'id') // default ke Bahasa Indonesia
+
+function toggleLang() {
+    currentLang.value = currentLang.value === 'id' ? 'en' : 'id'
+}
 
 </script>
 

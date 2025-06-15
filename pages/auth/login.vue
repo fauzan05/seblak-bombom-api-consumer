@@ -4,7 +4,7 @@
             <form class="space-y-6" @submit.prevent="handleLogin">
                 <!-- Email Input -->
                 <div>
-                    <h1 class="text-4xl text-orange-400 mb-7">Login</h1>
+                    <h1 class="text-4xl text-orange-400 mb-7">{{ currentLang === 'id' ? 'Masuk' : 'Login' }}</h1>
                     <div v-if="error" class="bg-orange-100 my-5 border-l-4 border-orange-500 text-orange-700 p-4 rounded"
                         role="alert">
                         <p>{{ error }}</p>
@@ -25,7 +25,7 @@
                 </div>
 
                 <!-- Password Input -->
-                <label for="password" class="sr-only">Password</label>
+                <label for="password" class="sr-only">{{ currentLang === 'id' ? 'Kata Sandi' : 'Password' }}</label>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -36,7 +36,7 @@
                     <input id="password" v-model="loginForm.password" name="password"
                         :type="showPassword ? 'text' : 'password'" required
                         class="appearance-none relative block w-full px-10 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:z-10 transition-all duration-200"
-                        placeholder="Password" />
+                        :placeholder="currentLang === 'id' ? 'Kata Sandi' : 'Password'" />
                     <button type="button" @click="showPassword = !showPassword"
                         class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer z-20">
                         <svg v-if="!showPassword" class="h-5 w-5 text-gray-400 z-20" fill="none" stroke="currentColor"
@@ -61,14 +61,14 @@
                             v-model="loginForm.remember"
                             class="h-4 w-4 accent-orange-500 focus:ring-orange-500 border-gray-300 rounded" />
                         <label for="remember-me" class="ml-2 block text-sm text-gray-700">
-                            Ingat saya
+                            {{ currentLang === 'id' ? 'Ingat saya' : 'Remember me' }}
                         </label>
                     </div>
 
                     <div class="text-sm">
                         <NuxtLink to="/forgot-password"
                             class="font-medium text-orange-500 hover:text-orange-600 transition-colors duration-200">
-                            Lupa password?
+                            {{ currentLang === 'id' ? 'Lupa password?' : 'Forget password?' }}
                         </NuxtLink>
                     </div>
                 </div>
@@ -77,7 +77,7 @@
                 <div>
                     <button type="submit" :disabled="loading"
                         class="group cursor-pointer relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105">
-                        <span v-if="!loading">Masuk</span>
+                        <span v-if="!loading">{{ currentLang === 'id' ? 'Masuk' : 'Login' }}</span>
                         <span v-else class="flex items-center">
                             <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg"
                                 fill="none" viewBox="0 0 24 24">
@@ -87,7 +87,7 @@
                                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
                                 </path>
                             </svg>
-                            Memproses...
+                            {{ currentLang === 'id' ? 'Memproses...' : 'Processing...' }}
                         </span>
                     </button>
                 </div>
@@ -98,17 +98,17 @@
                         <div class="w-full border-t border-gray-300" />
                     </div>
                     <div class="relative flex justify-center text-sm">
-                        <span class="px-2 bg-white text-gray-500">atau</span>
+                        <span class="px-2 bg-white text-gray-500">{{ currentLang === 'id' ? 'atau' : 'or' }}</span>
                     </div>
                 </div>
 
                 <!-- Register Link -->
                 <div class="text-center">
                     <p class="text-sm text-gray-600">
-                        Belum punya akun?
+                        {{ currentLang === 'id' ? 'Belum punya akun?' : `Don't have an account yet?` }}
                         <NuxtLink to="/auth/register"
                             class="font-medium text-orange-500 hover:text-orange-600 transition-colors duration-200">
-                            Daftar sekarang
+                            {{ currentLang === 'id' ? 'Daftar Sekarang' : 'Register Now' }}
                         </NuxtLink>
                     </p>
                 </div>
@@ -116,7 +116,7 @@
                     <p class="text-sm text-gray-600">
                         <NuxtLink to="/home"
                             class="font-medium text-orange-500 hover:text-orange-600 transition-colors duration-200">
-                            Kembali ke halaman utama
+                            {{ currentLang === 'id' ? 'Kembali ke halaman utama' : 'Back to main page' }}
                         </NuxtLink>
                     </p>
                 </div>
@@ -134,6 +134,7 @@ definePageMeta({
     layout: "auth",
 });
 const appSetting = useState('appSetting')
+const currentLang = useState('lang')
 
 // Meta tags
 useHead({
@@ -169,10 +170,12 @@ const handleLogin = async () => {
         })
 
         data.value = res.data.data
-        console.log('Login berhasil:', data.value)
     } catch (err) {
         if (err.status !== 500) {
-            error.value = 'Email atau password yang kamu masukkan tidak cocok. Silakan periksa kembali.'
+            error.value = 'The email or password you entered does not match. Please check again.'
+            if (currentLang.value === 'id') {
+                error.value = 'Email atau password yang kamu masukkan tidak cocok. Silakan periksa kembali.'
+            }
             return
         }
         error.value = 'Internal server error 500'
