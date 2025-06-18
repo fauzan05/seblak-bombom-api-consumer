@@ -17,7 +17,8 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <!-- First Name Input -->
                     <div>
-                        <label for="firstName" class="sr-only">{{ currentLang === 'id' ? 'Nama Depan' : 'First Name' }}</label>
+                        <label for="firstName" class="sr-only">{{ currentLang === 'id' ? 'Nama Depan' : 'First Name'
+                        }}</label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -33,7 +34,8 @@
 
                     <!-- Last Name Input -->
                     <div>
-                        <label for="lastName" class="sr-only">{{ currentLang === 'id' ? 'Nama Belakang' : 'Last Name' }}</label>
+                        <label for="lastName" class="sr-only">{{ currentLang === 'id' ? 'Nama Belakang' : 'Last Name'
+                        }}</label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -66,7 +68,8 @@
 
                 <!-- Phone Number Input -->
                 <div>
-                    <label for="phoneNumber" class="sr-only">{{ currentLang === 'id' ? 'Nomor Telepon' : 'Phone Number' }}</label>
+                    <label for="phoneNumber" class="sr-only">{{ currentLang === 'id' ? 'Nomor Telepon' : 'Phone Number'
+                    }}</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -114,7 +117,8 @@
 
                 <!-- Password Confirmation Input -->
                 <div>
-                    <label for="passwordConfirmation" class="sr-only">{{ currentLang === 'id' ? 'Konfirmasi Password' : 'Password Confirmation' }}</label>
+                    <label for="passwordConfirmation" class="sr-only">{{ currentLang === 'id' ? 'Konfirmasi Password' :
+                        'Password Confirmation' }}</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -203,7 +207,8 @@
   
 <script setup>
 import { ref, onMounted } from "vue";
-const { $axios } = useNuxtApp()
+const config = useRuntimeConfig()
+const apiUrl = config.public.apiUrl
 
 definePageMeta({
     layout: 'auth'
@@ -252,28 +257,36 @@ const handleRegister = async () => {
             return
         }
 
-        await $axios.post(`/users/register?lang=${currentLang.value}`, registerForm.value, {
-            withCredentials: true
+        await $fetch(`/users/register?lang=${currentLang.value}`, {
+            method: 'POST',
+            body: registerForm.value,
+            credentials: 'include', // untuk withCredentials:true seperti di axios
+            baseURL: apiUrl // opsional, jika kamu pakai apiUrl global
         })
 
         success.value = `Registration successful. Please check your email ${registerForm.value.email} for verification.`
         if (currentLang.value === 'id') {
-            success.value = `Registrasi berhasil. Silahkan cek email ${registerForm.value.email} untuk verifikasi.`
+            success.value = `Registrasi berhasil. Silakan cek email ${registerForm.value.email} untuk verifikasi.`
         }
+
     } catch (err) {
-        console.error("Registration error:", err); // Untuk debugging
-        if (err.status === 409) {
+        console.error('Registration error:', err)
+
+        if (err?.response?.status === 409 || err?.status === 409) {
             error.value = 'Email already in use, please use another email address.'
             if (currentLang.value === 'id') {
                 error.value = 'Email sudah digunakan, tolong gunakan alamat email yang lain.'
             }
             return
         }
-        if (err.status === 400) {
-            error.value = err.response.data.errors
+
+        if (err?.response?._data?.errors || err?.status === 400) {
+            error.value = err.response._data.errors || 'Invalid input'
             return
         }
+
         error.value = 'Internal server error 500'
+
     } finally {
         loading.value = false
     }
@@ -301,5 +314,4 @@ onMounted(() => {
 
 .animate-float {
     animation: float 6s ease-in-out infinite;
-}
-</style>
+}</style>

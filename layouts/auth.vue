@@ -52,7 +52,9 @@
                             {{ currentLang === 'id' ? 'Bergabung dengan' : 'Join' }}
                             <span class="text-orange-500">{{ data.app_name != null ? data.app_name : "" }}</span>
                         </h2>
-                        <p class="text-xl text-gray-600 mb-6">{{ currentLang === 'id' ? 'Daftar sekarang dan nikmati seblak terbaik' : 'Register now and enjoy the best seblak' }}!</p>
+                        <p class="text-xl text-gray-600 mb-6">
+                        {{ currentLang === 'id' ? 'Daftar sekarang dan nikmati seblak terbaik' : 'Register now and enjoy the best seblak' }} !
+                        </p>
 
                         <!-- Benefits List (Desktop only) -->
                         <div class="hidden lg:block space-y-4 text-left">
@@ -63,7 +65,8 @@
                                             d="M5 13l4 4L19 7"></path>
                                     </svg>
                                 </div>
-                                <span class="text-gray-700">{{ currentLang === 'id' ? 'Seblak dengan cita rasa autentik' : 'Seblak with authentic taste' }}</span>
+                                <span class="text-gray-700">{{ currentLang === 'id' ? 'Seblak dengan cita rasa autentik' :
+                                    'Seblak with authentic taste' }}</span>
                             </div>
                             <div class="flex items-center space-x-3">
                                 <div class="w-6 h-6 bg-orange-500 rounded-full flex items-center justify-center">
@@ -72,7 +75,8 @@
                                             d="M5 13l4 4L19 7"></path>
                                     </svg>
                                 </div>
-                                <span class="text-gray-700">{{ currentLang === 'id' ? 'Promo dan diskon khusus member' : 'Special member promotions and discounts' }}</span>
+                                <span class="text-gray-700">{{ currentLang === 'id' ? 'Promo dan diskon khusus member' :
+                                    'Special member promotions and discounts' }}</span>
                             </div>
                             <div class="flex items-center space-x-3">
                                 <div class="w-6 h-6 bg-orange-500 rounded-full flex items-center justify-center">
@@ -99,11 +103,10 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted } from "vue";
 const config = useRuntimeConfig()
 const apiUrl = config.public.apiUrl
 
-const { $axios } = useNuxtApp()
 const data = ref(null)
 const loading = ref(true)
 const error = ref('')
@@ -111,12 +114,16 @@ const logoUrl = ref('')
 
 onMounted(async () => {
     try {
-        const res = await $axios.get('/applications')
-        data.value = res.data.data
+        const res = await $fetch('/applications', {
+            baseURL: apiUrl,
+        })
+
+        data.value = res.data
         logoUrl.value = `${apiUrl}/image/application/${data.value.logo_filename}`
         useState('appSetting', () => data.value)
+
     } catch (err) {
-        error.value = err.message || 'Error Unknown'
+        error.value = err?.message || 'Error Unknown'
     } finally {
         setTimeout(() => {
             loading.value = false

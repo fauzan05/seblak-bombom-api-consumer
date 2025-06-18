@@ -128,12 +128,13 @@
 <script setup>
 import Pusher from "pusher-js";
 import { ref, onMounted } from "vue";
-const { $axios } = useNuxtApp()
 const router = useRouter()
 
 definePageMeta({
     layout: "auth",
 });
+const config = useRuntimeConfig()
+const apiUrl = config.public.apiUrl
 const appSetting = useState('appSetting')
 const currentLang = useState('lang')
 
@@ -166,16 +167,20 @@ const handleLogin = async () => {
     error.value = null
 
     try {
-        const res = await $axios.post('/users/login', loginForm.value)
+        const res = await $fetch('/users/login', {
+            method: 'POST',
+            body: loginForm.value,
+            baseURL: apiUrl // jika kamu menggunakan apiUrl, pastikan sudah didefinisikan
+        })
 
-        data.value = res.data.data
+        data.value = res.data
         if (data.value.role === 'admin') {
             router.push('/admin/dashboard')
         } else {
             router.push('/')
         }
     } catch (err) {
-        if (err.status !== 500) {
+        if (err?.response?.status !== 500) {
             error.value = 'The email or password you entered does not match. Please check again.'
             if (currentLang.value === 'id') {
                 error.value = 'Email atau password yang kamu masukkan tidak cocok. Silakan periksa kembali.'
@@ -183,9 +188,11 @@ const handleLogin = async () => {
             return
         }
         error.value = 'Internal server error 500'
+
     } finally {
         loading.value = false
     }
+
 }
 
 

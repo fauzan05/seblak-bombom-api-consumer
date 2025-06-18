@@ -80,7 +80,8 @@
                                 <a href="#" class="nav-link group">
                                     <span class="relative">
                                         Home
-                                        <span class="absolute -bottom-3 left-0 w-full h-0.5 bg-orange-500 transform scale-x-0 transition-transform group-hover:scale-x-100"></span>
+                                        <span
+                                            class="absolute -bottom-3 left-0 w-full h-0.5 bg-orange-500 transform scale-x-0 transition-transform group-hover:scale-x-100"></span>
                                     </span>
                                 </a>
 
@@ -114,13 +115,15 @@
                                 <a href="#" class="nav-link group">
                                     <span class="relative">
                                         My Orders
-                                        <span class="absolute -bottom-3 left-0 w-full h-0.5 bg-orange-500 transform scale-x-0 transition-transform group-hover:scale-x-100"></span>
+                                        <span
+                                            class="absolute -bottom-3 left-0 w-full h-0.5 bg-orange-500 transform scale-x-0 transition-transform group-hover:scale-x-100"></span>
                                     </span>
                                 </a>
                                 <a href="#" class="nav-link group">
                                     <span class="relative">
                                         FAQ
-                                        <span class="absolute -bottom-3 left-0 w-full h-0.5 bg-orange-500 transform scale-x-0 transition-transform group-hover:scale-x-100"></span>
+                                        <span
+                                            class="absolute -bottom-3 left-0 w-full h-0.5 bg-orange-500 transform scale-x-0 transition-transform group-hover:scale-x-100"></span>
                                     </span>
                                 </a>
                             </div>
@@ -495,17 +498,16 @@
 </template>
   
 <script setup>
-const config = useRuntimeConfig();
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import AOS from 'aos';
 import 'aos/dist/aos.css';
-const { $axios } = useNuxtApp()
 
 const isMenuOpen = ref(false)
 const toggleMenu = () => {
     isMenuOpen.value = !isMenuOpen.value
 }
 
+const config = useRuntimeConfig();
 const apiUrl = config.public.apiUrl
 const data = ref(null)
 
@@ -584,12 +586,17 @@ const yearNow = new Date().getFullYear()
 
 async function getAppSetting() {
     try {
-        const res = await $axios.get('/applications')
-        data.value = res.data.data
+        const res = await $fetch('/applications', {
+            baseURL: apiUrl
+        })
+
+        data.value = res.data
         logoUrl.value = `${apiUrl}/image/application/${data.value.logo_filename}`
         appSetting.value = data.value
+
     } catch (err) {
-        alert(err.message)
+        alert(err?.message || 'Unknown error')
+
     } finally {
         setTimeout(() => {
             loading.value = false
@@ -599,17 +606,22 @@ async function getAppSetting() {
 
 async function getCurrentUser() {
     try {
-        const res = await $axios.get('/users/current', {
-            withCredentials: true
+        const res = await $fetch('/users/current', {
+            baseURL: apiUrl,       
+            credentials: 'include'
         })
-        useState('currentUser', () => res.data.data)
-        currentUser.value = res.data.data
+
+        useState('currentUser', () => res.data)
+        currentUser.value = res.data
+
     } catch (err) {
-        if (err.status !== 401) {
-            alert(err.message)
+        if (err?.response?.status !== 401 && err?.status !== 401) {
+            alert(err?.message || 'Unknown error')
         }
     } finally {
+        // kosong = tidak masalah
     }
+
 }
 
 </script>
@@ -623,7 +635,7 @@ async function getCurrentUser() {
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
 body {
-  font-family: 'Poppins', sans-serif;
+    font-family: 'Poppins', sans-serif;
 }
 
 
