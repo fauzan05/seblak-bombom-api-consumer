@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "nuxi dev --dotenv .env.local",
     "build": "nuxt build",
-    "start": "nuxt start",
+    "start": "nuxt start --dotenv .env.prod",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
