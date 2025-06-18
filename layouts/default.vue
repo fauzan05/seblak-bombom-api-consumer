@@ -263,18 +263,25 @@
 
                                 <!-- Auth Buttons -->
                                 <div v-if="!currentUser" class="flex items-center space-x-3">
-                                    <button :class="[
+                                    <NuxtLink
+                                    to="/auth/login"
+                                    :class="[
                                         'px-4 py-2 rounded-full border transition-all duration-300 hover:scale-105',
                                         isScrolled ? 'border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white' : 'border-white text-white hover:bg-white hover:text-orange-500'
-                                    ]">
-                                        Login
-                                    </button>
-                                    <button :class="[
+                                    ]"
+                                    >
+                                    Login
+                                    </NuxtLink>
+
+                                    <NuxtLink
+                                    to="/auth/register"
+                                    :class="[
                                         'px-4 py-2 rounded-full transition-all duration-300 hover:scale-105',
                                         isScrolled ? 'bg-orange-500 text-white hover:bg-orange-600' : 'bg-white text-orange-500 hover:bg-orange-50'
-                                    ]">
-                                        Register
-                                    </button>
+                                    ]"
+                                    >
+                                    Register
+                                    </NuxtLink>
                                 </div>
 
                                 <!-- Profile (Visible when logged in) -->
