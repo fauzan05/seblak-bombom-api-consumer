@@ -114,7 +114,7 @@
                 </div>
                 <div class="text-center">
                     <p class="text-sm text-gray-600">
-                        <NuxtLink to="/home"
+                        <NuxtLink to="/"
                             class="font-medium text-orange-500 hover:text-orange-600 transition-colors duration-200">
                             {{ currentLang === 'id' ? 'Kembali ke halaman utama' : 'Back to main page' }}
                         </NuxtLink>
