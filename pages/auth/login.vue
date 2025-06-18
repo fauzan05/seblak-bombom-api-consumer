@@ -166,9 +166,7 @@ const handleLogin = async () => {
     error.value = null
 
     try {
-        const res = await $axios.post('/users/login', loginForm.value, {
-            withCredentials: true
-        })
+        const res = await $axios.post('/users/login', loginForm.value)
 
         data.value = res.data.data
         if (data.value.role === 'admin') {

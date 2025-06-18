@@ -605,7 +605,9 @@ async function getCurrentUser() {
         useState('currentUser', () => res.data.data)
         currentUser.value = res.data.data
     } catch (err) {
-        alert(err.message)
+        if (err.status !== 401) {
+            alert(err.message)
+        }
     } finally {
     }
 }
