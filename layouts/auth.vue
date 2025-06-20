@@ -43,7 +43,9 @@
                 <div class="text-center lg:text-left space-y-6">
                     <div class="flex justify-center lg:justify-start">
                         <div class="h-20 w-20 bg-orange-500 rounded-full flex items-center justify-center shadow-lg">
-                            <img v-if="logoUrl" :src="logoUrl" alt="Logo Seblak" />
+                            <NuxtLink to="/">
+                                <img v-if="logoUrl" :src="logoUrl" alt="Logo Seblak" />
+                            </NuxtLink>
                         </div>
                     </div>
 
@@ -53,7 +55,7 @@
                             <span class="text-orange-500">{{ data.app_name != null ? data.app_name : "" }}</span>
                         </h2>
                         <p class="text-xl text-gray-600 mb-6">
-                        {{ currentLang === 'id' ? 'Daftar sekarang dan nikmati seblak terbaik' : 'Register now and enjoy the best seblak' }} !
+                            {{ currentLang === 'id' ? 'Daftar sekarang dan nikmati seblak terbaik' : 'Register now and enjoy the best seblak' }} !
                         </p>
 
                         <!-- Benefits List (Desktop only) -->
@@ -111,6 +113,7 @@ const data = ref(null)
 const loading = ref(true)
 const error = ref('')
 const logoUrl = ref('')
+const timezone = ref('')
 
 onMounted(async () => {
     try {
@@ -129,6 +132,7 @@ onMounted(async () => {
             loading.value = false
         }, 300)
     }
+    timezone.value = Intl.DateTimeFormat().resolvedOptions().timeZone
 })
 
 const yearNow = new Date().getFullYear()

@@ -206,22 +206,46 @@
 </template>
   
 <script setup>
-import { ref, onMounted } from "vue";
-const config = useRuntimeConfig()
-const apiUrl = config.public.apiUrl
-
 definePageMeta({
     layout: 'auth'
 })
-const appSetting = useState('appSetting')
+
+import { ref, onMounted } from "vue";
 const currentLang = useState('lang')
+const config = useRuntimeConfig()
+const apiUrl = config.public.apiUrl
+const appSettingStore = useAppSettingStore()
+await appSettingStore.fetchSettings()
+const appSetting = ref(null)
+
+const appName = computed(() =>
+    appSettingStore.settings?.data?.app_name || 'Untitled App'
+)
+
+const faviconUrl = computed(() =>
+    appSettingStore.settings?.data?.logo_filename
+        ? `${apiUrl}/image/application/${appSettingStore.settings.data.logo_filename}`
+        : '/favicon.ico'
+)
 
 // Meta tags
 useHead({
-    title: `Register -${appSetting.value.app_name}`,
+    title: () => `Register - ${appName.value}`,
     meta: [
         { name: 'description', content: 'Daftar di Warung Seblak Mantap untuk menikmati seblak terbaik' }
-    ]
+    ],
+    link: [
+        {
+            rel: 'icon',
+            type: 'image/png',
+            href: () => faviconUrl.value
+        },
+        {
+            rel: 'apple-touch-icon',
+            sizes: '180x180',
+            href: () => faviconUrl.value
+        }
+    ],
 })
 
 // Reactive data
@@ -293,6 +317,9 @@ const handleRegister = async () => {
 }
 
 onMounted(() => {
+    if (appSettingStore.settings && appSettingStore.settings.data) {
+        appSetting.value = appSettingStore.settings.data
+    }
     // Auto focus ke input email saat component dimount
     document.getElementById('first_name')?.focus()
 })
@@ -314,4 +341,5 @@ onMounted(() => {
 
 .animate-float {
     animation: float 6s ease-in-out infinite;
-}</style>
+}
+</style>
