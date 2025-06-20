@@ -129,23 +129,48 @@
 import Pusher from "pusher-js";
 import { ref, onMounted } from "vue";
 const router = useRouter()
+const appSettingStore = useAppSettingStore()
+await appSettingStore.fetchSettings()
+const appSetting = ref(null)
 
 definePageMeta({
     layout: "auth",
 });
+
 const config = useRuntimeConfig()
 const apiUrl = config.public.apiUrl
-const appSetting = useState('appSetting')
 const currentLang = useState('lang')
+
+const appName = computed(() =>
+    appSettingStore.settings?.data?.app_name || 'Untitled App'
+)
+
+const faviconUrl = computed(() =>
+    appSettingStore.settings?.data?.logo_filename
+        ? `${apiUrl}/image/application/${appSettingStore.settings.data.logo_filename}`
+        : '/favicon.ico'
+)
 
 // Meta tags
 useHead({
-    title: `Login - ${appSetting.value.app_name}`,
+    title: `Login - ${appName.value}`,
     meta: [
         {
             name: "description",
             content: "Login ke Warung Seblak Mantap untuk menikmati seblak terbaik",
         },
+    ],
+    link: [
+        {
+            rel: 'icon',
+            type: 'image/png',
+            href: () => faviconUrl.value
+        },
+        {
+            rel: 'apple-touch-icon',
+            sizes: '180x180',
+            href: () => faviconUrl.value
+        }
     ],
 });
 
@@ -159,7 +184,7 @@ const error = ref('')
 
 const showPassword = ref(false);
 const loading = ref(false);
-const data = ref(null)
+const data = ref(null);
 
 // Methods
 const handleLogin = async () => {
@@ -241,6 +266,9 @@ onUnmounted(() => {
     //     pusher.disconnect();
     // }
     document.body.style.overflow = "";
+    if (appSettingStore.settings && appSettingStore.settings.data) {
+        appSetting.value = appSettingStore.settings.data
+    }
 });
 </script>
 <style scoped>

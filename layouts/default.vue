@@ -64,13 +64,15 @@
                 <div class="container mx-auto px-4">
                     <div class="flex justify-between items-center h-20">
                         <!-- Logo Section -->
+                        <NuxtLink to="/">
                         <div class="flex items-center space-x-2">
-                            <img :src="logoUrl" alt="Logo" class="h-10 transition-transform hover:scale-105" />
-                            <h1
+                                <img :src="logoUrl" alt="Logo" class="h-10 transition-transform hover:scale-105" />
+                                <h1
                                 class="text-lg md:text-xl font-bold truncate max-w-[300px] hover:text-orange-500 transition-colors">
                                 {{ appSetting.app_name }}
                             </h1>
                         </div>
+                        </NuxtLink>
 
                         <!-- Desktop Menu -->
                         <div class="hidden md:flex items-center space-x-6">
