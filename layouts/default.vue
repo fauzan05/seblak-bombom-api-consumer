@@ -65,13 +65,13 @@
                     <div class="flex justify-between items-center h-20">
                         <!-- Logo Section -->
                         <NuxtLink to="/">
-                        <div class="flex items-center space-x-2">
+                            <div class="flex items-center space-x-2">
                                 <img :src="logoUrl" alt="Logo" class="h-10 transition-transform hover:scale-105" />
                                 <h1
-                                class="text-lg md:text-xl font-bold truncate max-w-[300px] hover:text-orange-500 transition-colors">
-                                {{ appSetting.app_name }}
-                            </h1>
-                        </div>
+                                    class="text-lg md:text-xl font-bold truncate max-w-[300px] hover:text-orange-500 transition-colors">
+                                    {{ appSetting.app_name }}
+                                </h1>
+                            </div>
                         </NuxtLink>
 
                         <!-- Desktop Menu -->
@@ -265,24 +265,18 @@
 
                                 <!-- Auth Buttons -->
                                 <div v-if="!currentUser" class="flex items-center space-x-3">
-                                    <NuxtLink
-                                    to="/auth/login"
-                                    :class="[
+                                    <NuxtLink to="/auth/login" :class="[
                                         'px-4 py-2 rounded-full border transition-all duration-300 hover:scale-105',
                                         isScrolled ? 'border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white' : 'border-white text-white hover:bg-white hover:text-orange-500'
-                                    ]"
-                                    >
-                                    Login
+                                    ]">
+                                        Login
                                     </NuxtLink>
 
-                                    <NuxtLink
-                                    to="/auth/register"
-                                    :class="[
+                                    <NuxtLink to="/auth/register" :class="[
                                         'px-4 py-2 rounded-full transition-all duration-300 hover:scale-105',
                                         isScrolled ? 'bg-orange-500 text-white hover:bg-orange-600' : 'bg-white text-orange-500 hover:bg-orange-50'
-                                    ]"
-                                    >
-                                    Register
+                                    ]">
+                                        Register
                                     </NuxtLink>
                                 </div>
 
@@ -300,7 +294,7 @@
                                                 fill="#D1D5DB" />
                                         </svg>
 
-                                        <span class="text-sm font-medium">John Doe</span>
+                                        <span class="text-sm font-medium">{{ currentUser.first_name }}</span>
                                     </button>
                                     <!-- Profile Dropdown -->
                                     <div
@@ -317,8 +311,11 @@
                                                         fill="#D1D5DB" />
                                                 </svg>
                                                 <div class="ml-3">
-                                                    <p class="text-sm font-medium text-gray-800">John Doe</p>
-                                                    <p class="text-xs text-gray-500">john@example.com</p>
+                                                    <p class="text-sm font-medium text-gray-800">
+                                                        {{ `${currentUser?.first_name ?? ''} ${currentUser?.last_name ??
+                                                            ''}`.trim() }}
+                                                    </p>
+                                                    <p class="text-xs text-gray-500">{{ currentUser.email }}</p>
                                                 </div>
                                             </div>
                                             <div class="mt-3 space-y-1">
@@ -616,13 +613,13 @@ async function getAppSetting() {
 async function getCurrentUser() {
     try {
         const res = await $fetch('/users/current', {
-            baseURL: apiUrl,       
+            baseURL: apiUrl,
             credentials: 'include'
         })
 
         useState('currentUser', () => res.data)
         currentUser.value = res.data
-
+        console.log("user sekarang : ", currentUser.value)
     } catch (err) {
         if (err?.response?.status !== 401 && err?.status !== 401) {
             alert(err?.message || 'Unknown error')

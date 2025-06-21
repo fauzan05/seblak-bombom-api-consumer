@@ -195,7 +195,8 @@ const handleLogin = async () => {
         const res = await $fetch('/users/login', {
             method: 'POST',
             body: loginForm.value,
-            baseURL: apiUrl // jika kamu menggunakan apiUrl, pastikan sudah didefinisikan
+            baseURL: apiUrl,
+            credentials: 'include',
         })
 
         data.value = res.data

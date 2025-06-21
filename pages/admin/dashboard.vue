@@ -13,7 +13,10 @@ const counter = useCounterStore()
 
 definePageMeta({
     layout: "admin",
+    middleware: ['auth']
 });
+
+const currentUserStore = useUserStore()
 
 </script>
 <style lang="">
