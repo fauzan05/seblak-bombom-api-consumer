@@ -310,12 +310,12 @@
                                                         d="M24 78C24 65.2975 35.2975 56 48 56H52C64.7025 56 76 65.2975 76 78V80H24V78Z"
                                                         fill="#D1D5DB" />
                                                 </svg>
-                                                <div class="ml-3">
-                                                    <p class="text-sm font-medium text-gray-800">
+                                                <div class="ml-3 max-w-40">
+                                                    <p class="text-sm font-medium text-gray-800 truncate">
                                                         {{ `${currentUser?.first_name ?? ''} ${currentUser?.last_name ??
                                                             ''}`.trim() }}
                                                     </p>
-                                                    <p class="text-xs text-gray-500">{{ currentUser.email }}</p>
+                                                    <p class="text-xs text-gray-500 truncate">{{ currentUser.email }}</p>
                                                 </div>
                                             </div>
                                             <div class="mt-3 space-y-1">
@@ -352,7 +352,7 @@
                                                     Settings
                                                 </a>
                                                 <hr class="my-2" />
-                                                <button
+                                                <button @click="logout"
                                                     class="flex items-center px-3 py-2 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 rounded-lg w-full">
                                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none"
                                                         viewBox="0 0 24 24" stroke="currentColor">
@@ -381,28 +381,122 @@
             </nav>
         </div>
 
-        <!-- Mobile Sidebar -->
-        <div class="fixed top-0 right-0 h-full w-64 bg-white text-black shadow-lg z-50 transform transition-transform duration-300 ease-in-out"
-            :class="{ 'translate-x-0': isMenuOpen, 'translate-x-full': !isMenuOpen }">
-            <!-- Close Button -->
-            <div class="flex justify-end p-4">
-                <button @click="toggleMenu">
-                    <svg class="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
+        <Transition name="slide-fade">
+            <div v-if="isMenuOpen" class="fixed inset-0 z-50 md:hidden">
+                <div class="absolute inset-0 bg-black/30 backdrop-blur-sm" @click="toggleMenu"></div>
+                <div class="absolute top-0 right-0 h-full w-[280px] bg-white shadow-xl overflow-y-auto">
+                    <div class="sticky top-0 z-10 bg-white border-b border-gray-100">
+                        <div class="flex items-center justify-between p-4">
+                            <div class="flex-1 min-w-0 pr-2">
+                                <template v-if="currentUser">
+                                    <p class="text-sm font-medium text-gray-800 truncate">
+                                        {{ `${currentUser?.first_name ?? ''} ${currentUser?.last_name ?? ''}`.trim() }}
+                                    </p>
+                                    <p class="text-xs text-gray-500 truncate">{{ currentUser.email }}</p>
+                                </template>
+                                <template v-else>
+                                    <div class="flex space-x-2">
+                                        <NuxtLink to="/auth/login" @click="toggleMenu"
+                                            class="px-3 py-1.5 text-sm font-medium text-white bg-orange-500 rounded-lg hover:bg-orange-600 transition-colors">
+                                            Login
+                                        </NuxtLink>
+                                        <NuxtLink to="/auth/register" @click="toggleMenu"
+                                            class="px-3 py-1.5 text-sm font-medium text-orange-500 border border-orange-500 rounded-lg hover:bg-orange-50 transition-colors">
+                                            Register
+                                        </NuxtLink>
+                                    </div>
+                                </template>
+                            </div>
 
-            <!-- Sidebar Links -->
-            <div class="px-6 space-y-4">
-                <a href="#" class="block hover:text-orange-600">Home</a>
-                <a href="#" class="block hover:text-orange-600">Pages</a>
-                <a href="#" class="block hover:text-orange-600">Shop</a>
-                <a href="#" class="block hover:text-orange-600">Blogs</a>
-                <a href="#" class="block hover:text-orange-600">Contact</a>
+                            <div class="flex items-center space-x-3">
+                                <div v-if="currentUser">
+                                    <svg width="100" height="100"
+                                        class="h-10 w-10 rounded-full bg-white border border-gray-200" viewBox="0 0 100 100"
+                                        fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <circle cx="50" cy="50" r="48" fill="#F3F4F6" stroke="#E5E7EB" stroke-width="4" />
+                                        <circle cx="50" cy="38" r="14" fill="#FB923C" />
+                                        <path
+                                            d="M24 78C24 65.2975 35.2975 56 48 56H52C64.7025 56 76 65.2975 76 78V80H24V78Z"
+                                            fill="#FB923C" />
+                                    </svg>
+                                </div>
+                                <button @click="toggleMenu" class="p-2 rounded-full hover:bg-gray-100 transition-colors">
+                                    <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4 space-y-6">
+                        <div class="space-y-2">
+                            <a href="#" @click="toggleMenu"
+                                class="flex items-center space-x-3 p-2.5 rounded-xl text-gray-700 hover:bg-orange-50 hover:text-orange-500 transition-colors"><svg
+                                    class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                                </svg><span>Home</span>
+                            </a>
+                            <div>
+                                <button @click="isMobileSubmenuOpen = !isMobileSubmenuOpen"
+                                    class="w-full flex items-center justify-between p-2.5 rounded-xl text-gray-700 hover:bg-orange-50 hover:text-orange-500 transition-colors cursor-pointer">
+                                    <div class="flex items-center space-x-3"><svg class="w-5 h-5" fill="none"
+                                            stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M4 6h16M4 12h16M4 18h16" />
+                                        </svg><span>Menu</span></div><svg class="w-4 h-4 transition-transform duration-200"
+                                        :class="{ 'rotate-180': isMobileSubmenuOpen }" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </button>
+                                <Transition name="expand">
+                                    <div v-if="isMobileSubmenuOpen" class="mt-1 ml-8 space-y-1.5">
+                                        <a href="#" @click="toggleMenu"
+                                            class="block py-2 rounded-lg px-3 text-sm text-gray-600 hover:text-orange-500 hover:bg-orange-50 transition-colors">Seblak
+                                            Kuah
+                                        </a>
+                                        <a href="#" @click="toggleMenu"
+                                            class="block py-2 rounded-lg px-3 text-sm text-gray-600 hover:text-orange-500 hover:bg-orange-50 transition-colors">Seblak
+                                            Kering
+                                        </a>
+                                        <a href="#" @click="toggleMenu"
+                                            class="block py-2 rounded-lg px-3 text-sm text-gray-600 hover:text-orange-500 hover:bg-orange-50 transition-colors">Topping
+                                        </a>
+                                        <a href="#" @click="toggleMenu"
+                                            class="block py-2 rounded-lg px-3 text-sm text-gray-600 hover:text-orange-500 hover:bg-orange-50 transition-colors">Minuman
+                                        </a>
+                                    </div>
+                                </Transition>
+                            </div>
+                            <a href="#" @click="toggleMenu"
+                                class="flex items-center space-x-3 p-2.5 rounded-xl text-gray-700 hover:bg-orange-50 hover:text-orange-500 transition-colors"><svg
+                                    class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                                </svg><span>My Orders</span></a><a href="#" @click="toggleMenu"
+                                class="flex items-center space-x-3 p-2.5 rounded-xl text-gray-700 hover:bg-orange-50 hover:text-orange-500 transition-colors"><svg
+                                    class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg><span>FAQ</span>
+                            </a>
+                            <button @click="logout"
+                                class="flex w-full cursor-pointer items-center space-x-3 p-2.5 rounded-xl text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 12H3m12 0l-4-4m4 4l-4 4m6-10h2a2 2 0 012 2v10a2 2 0 01-2 2h-2" />
+                                </svg>
+                                <span>Logout</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
+        </Transition>
 
         <!-- Overlay / backdrop -->
         <div v-if="isMenuOpen" class="fixed inset-0 backdrop-blur-3xl z-40" @click="toggleMenu"></div>
@@ -527,6 +621,7 @@ const logoUrl = ref('')
 const loading = ref(true)
 const appSetting = useState('appSetting', () => null)
 const currentUser = useState('currentUser', () => null)
+const isMobileSubmenuOpen = ref(false);
 
 onMounted(async () => {
     await getAppSetting()
@@ -627,7 +722,22 @@ async function getCurrentUser() {
     } finally {
         // kosong = tidak masalah
     }
+}
 
+async function logout() {
+    try {
+        await $fetch('/users/logout', {
+            baseURL: apiUrl,
+            method: 'delete',
+            credentials: 'include'
+        })
+
+        useState('currentUser', () => null)
+        currentUser.value = null
+        showNotification.value = true
+    } catch (err) {
+        alert(err?.message || 'Unknown error')
+    }
 }
 
 </script>
@@ -658,5 +768,4 @@ circle {
 .fade-slide-leave-to {
     opacity: 0;
     transform: translateY(20px);
-}
-</style>
+}</style>
