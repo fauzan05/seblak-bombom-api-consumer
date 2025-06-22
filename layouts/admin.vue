@@ -190,7 +190,8 @@
                 <div class="p-6">
                     <slot />
                 </div>
-                <footer class="bg-white border-t border-2">
+            </main>
+            <footer class="bg-white border-t border-gray-200">
                     <div class="mx-auto py-4 px-4 sm:px-6 lg:px-8">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center space-x-2 text-gray-500 text-sm">
@@ -217,7 +218,6 @@
                         </div>
                     </div>
                 </footer>
-            </main>
         </div>
     </div>
 </template>
