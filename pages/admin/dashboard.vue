@@ -1,4 +1,8 @@
 <template>
+    <head>
+        <Title>Admin Dashboard - {{ appSettingStore.settings.data.app_name }}</Title>
+        <Link rel="icon" type="image/x-icon" href="favicon.ico" />
+    </head>
     <div class="p-6 bg-gray-50">
         <!-- Header Welcome -->
         <div class="mb-8">
@@ -184,10 +188,37 @@ definePageMeta({
     middleware: ['auth']
 });
 
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { Bar } from 'vue-chartjs'
-const counter = useCounterStore()
+const config = useRuntimeConfig()
+const apiUrl = config.public.apiUrl
 const currentUserStore = useUserStore()
+const appSettingStore = useAppSettingStore()
+const appName = computed(() =>
+    appSettingStore.settings?.data?.app_name || 'Untitled App'
+)
+
+const faviconUrl = computed(() =>
+    appSettingStore.settings?.data?.logo_filename
+        ? `${apiUrl}/image/application/${appSettingStore.settings.data.logo_filename}`
+        : '/favicon.ico'
+)
+
+useHead({
+    title: `${appSettingStore.settings?.data?.app_name} - Admin Dashboard`,
+    link: [
+        {
+            rel: 'icon',
+            type: 'image/png',
+            href: () => faviconUrl.value
+        },
+        {
+            rel: 'apple-touch-icon',
+            sizes: '180x180',
+            href: () => faviconUrl.value
+        }
+    ],
+});
 
 // Chart Data
 const chartData = ref({
@@ -238,4 +269,8 @@ const getStatusColor = (status) => {
     }
     return colors[status] || 'bg-gray-100 text-gray-800'
 }
+
+onMounted(() => {
+
+});
 </script>

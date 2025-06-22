@@ -1,4 +1,8 @@
 <template>
+    <head>
+        <Title>Home - {{ appSettingStore.settings.data.app_name }}</Title>
+        <Link rel="icon" type="image/x-icon" href="favicon.ico" />
+    </head>
     <div class="relative w-full h-[700px] overflow-hidden">
         <div class="swiper-1 w-full h-full">
             <div class="swiper-wrapper">
@@ -1072,6 +1076,7 @@ import { onMounted, ref } from "vue";
 import { useHead } from "nuxt/app";
 import Swiper from "swiper/bundle";
 import "swiper/css/bundle";
+const appSettingStore = useAppSettingStore()
 
 const copiedIndex = ref(null);
 function copyCode(code, index) {
@@ -1103,11 +1108,6 @@ const slides = [
         desc: "Semua topping dalam satu mangkuk spesial. Porsi kenyang!",
     },
 ];
-
-useHead({
-    title: "Seblak BomBom - Home",
-    meta: [{ name: "default page", content: "seblak bombom ya" }],
-});
 
 const activeIndex = ref(0);
 const swiper = ref(null);

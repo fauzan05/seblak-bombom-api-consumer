@@ -154,8 +154,14 @@
                         @mouseenter="openProfileDropdown" @mouseleave="isProfileDropdownOpen = false">
                         <button @click.stop="toggleProfileDropdown" class="relative">
                             <div class="relative">
-                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=John" alt="User Avatar"
-                                    class="w-10 h-10 rounded-full ring-2 ring-gray-200 group-hover:ring-orange-300 transition-all duration-200" />
+                                <svg width="100" height="100"
+                                    class="w-8 h-8 rounded-full ring-2 ring-gray-200 group-hover:ring-orange-300 transition-all duration-200"
+                                    viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="50" cy="50" r="48" fill="#F3F4F6" stroke="#E5E7EB" stroke-width="4" />
+                                    <circle cx="50" cy="38" r="14" fill="#D1D5DB" />
+                                    <path d="M24 78C24 65.2975 35.2975 56 48 56H52C64.7025 56 76 65.2975 76 78V80H24V78Z"
+                                        fill="#D1D5DB" />
+                                </svg>
                                 <div
                                     class="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-green-500 rounded-full border-2 border-white">
                                 </div>
@@ -164,9 +170,15 @@
                         <div v-show="isProfileDropdownOpen"
                             class="absolute right-0 top-full w-70 bg-white rounded-2xl shadow-xl border border-gray-100 z-50 transition-all duration-200">
                             <div class="px-4 py-4 border-b border-gray-100">
-                                <div class="flex items-center space-x-3"><img
-                                        src="https://api.dicebear.com/7.x/avataaars/svg?seed=John" alt="User Avatar"
-                                        class="w-12 h-12 rounded-full">
+                                <div class="flex items-center space-x-3">
+                                    <svg width="100" height="100" class="h-8 w-8 rounded-full object-cover"
+                                        viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <circle cx="50" cy="50" r="48" fill="#F3F4F6" stroke="#E5E7EB" stroke-width="4" />
+                                        <circle cx="50" cy="38" r="14" fill="#D1D5DB" />
+                                        <path
+                                            d="M24 78C24 65.2975 35.2975 56 48 56H52C64.7025 56 76 65.2975 76 78V80H24V78Z"
+                                            fill="#D1D5DB" />
+                                    </svg>
                                     <div class="max-w-40">
                                         <p class="text-sm font-semibold text-gray-800 truncate">{{
                                             `${currentUserStore.user.first_name} ${currentUserStore.user.last_name} ` }}</p>

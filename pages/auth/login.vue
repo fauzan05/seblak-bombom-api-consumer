@@ -1,4 +1,9 @@
 <template>
+    <head>
+        <Title>Login - {{ appName }}</Title>
+        <Link rel="icon" type="image/x-icon"
+            href="favicon.ico" />
+    </head>
     <div class="w-full max-w-md mx-auto lg:mx-0">
         <div class="bg-white rounded-2xl shadow-2xl p-8 backdrop-blur-sm bg-opacity-95">
             <form class="space-y-6" @submit.prevent="handleLogin">
@@ -151,29 +156,6 @@ const faviconUrl = computed(() =>
         : '/favicon.ico'
 )
 
-// Meta tags
-useHead({
-    title: `Login - ${appName.value}`,
-    meta: [
-        {
-            name: "description",
-            content: "Login ke Warung Seblak Mantap untuk menikmati seblak terbaik",
-        },
-    ],
-    link: [
-        {
-            rel: 'icon',
-            type: 'image/png',
-            href: () => faviconUrl.value
-        },
-        {
-            rel: 'apple-touch-icon',
-            sizes: '180x180',
-            href: () => faviconUrl.value
-        }
-    ],
-});
-
 // Reactive data
 const loginForm = ref({
     email: "",
@@ -270,6 +252,7 @@ onUnmounted(() => {
     if (appSettingStore.settings && appSettingStore.settings.data) {
         appSetting.value = appSettingStore.settings.data
     }
+
 });
 </script>
 <style scoped>

@@ -1,4 +1,8 @@
 <template>
+    <head>
+        <Title>Register - {{ appName }}</Title>
+        <Link rel="icon" type="image/x-icon" href="favicon.ico" />
+    </head>
     <div class="w-full max-w-[100%] mx-auto lg:mx-0">
         <div class="bg-white rounded-2xl shadow-2xl p-8 backdrop-blur-sm bg-opacity-95">
             <form class="space-y-6" @submit.prevent="handleRegister">

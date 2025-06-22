@@ -12,7 +12,7 @@ export default defineNuxtConfig({
       charset: 'utf-16',
       viewport: 'width=device-width, initial-scale=1, maximum-scale=1',
       // link: [
-      //   { rel: 'icon', type: 'image/png', href: '/favicon-32x32.png' },
+      //   { rel: 'icon', type: 'image/x-icon', href: 'http://localhost/api/image/application/cb870cea868eaa13.png' },
       // ]
     }
   }
