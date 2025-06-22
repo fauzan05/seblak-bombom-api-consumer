@@ -11,14 +11,17 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@heroicons/vue": "^2.2.0",
     "@nuxtjs/tailwindcss": "^7.0.0-beta.0",
     "@pinia/nuxt": "^0.11.1",
     "aos": "^2.3.4",
+    "chart.js": "^4.5.0",
     "nuxt": "^3.17.4",
     "pinia": "^3.0.3",
     "pusher-js": "^8.4.0",
     "swiper": "^11.2.8",
     "vue": "^3.5.14",
+    "vue-chartjs": "^5.3.2",
     "vue-router": "^4.5.1"
   }
 }

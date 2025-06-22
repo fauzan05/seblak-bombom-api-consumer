@@ -301,16 +301,18 @@
                                         class="absolute top-full right-0 mt-2 w-56 bg-white rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 translate-y-2">
                                         <div class="p-3">
                                             <div class="flex items-center px-3 py-2">
-                                                <svg width="100" height="100" class="h-10 w-10 rounded-full object-cover"
-                                                    viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <circle cx="50" cy="50" r="48" fill="#F3F4F6" stroke="#E5E7EB"
-                                                        stroke-width="4" />
-                                                    <circle cx="50" cy="38" r="14" fill="#D1D5DB" />
-                                                    <path
-                                                        d="M24 78C24 65.2975 35.2975 56 48 56H52C64.7025 56 76 65.2975 76 78V80H24V78Z"
-                                                        fill="#D1D5DB" />
-                                                </svg>
-                                                <div class="ml-3 max-w-40">
+                                                <div>
+                                                    <svg width="100" height="100" class="h-8 w-8 rounded-full object-cover"
+                                                        viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <circle cx="50" cy="50" r="48" fill="#F3F4F6" stroke="#E5E7EB"
+                                                            stroke-width="4" />
+                                                        <circle cx="50" cy="38" r="14" fill="#D1D5DB" />
+                                                        <path
+                                                            d="M24 78C24 65.2975 35.2975 56 48 56H52C64.7025 56 76 65.2975 76 78V80H24V78Z"
+                                                            fill="#D1D5DB" />
+                                                    </svg>
+                                                </div>
+                                                <div class="ml-3 max-w-30">
                                                     <p class="text-sm font-medium text-gray-800 truncate">
                                                         {{ `${currentUser?.first_name ?? ''} ${currentUser?.last_name ??
                                                             ''}`.trim() }}
@@ -768,4 +770,5 @@ circle {
 .fade-slide-leave-to {
     opacity: 0;
     transform: translateY(20px);
-}</style>
+}
+</style>
