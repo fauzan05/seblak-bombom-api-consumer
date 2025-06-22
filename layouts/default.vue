@@ -716,7 +716,6 @@ async function getCurrentUser() {
 
         useState('currentUser', () => res.data)
         currentUser.value = res.data
-        console.log("user sekarang : ", currentUser.value)
     } catch (err) {
         if (err?.response?.status !== 401 && err?.status !== 401) {
             alert(err?.message || 'Unknown error')
