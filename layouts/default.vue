@@ -184,7 +184,7 @@
                             </div>
 
                             <!-- Cart -->
-                            <div class="relative cart-wrapper flex align-center h-20" @mouseenter="isCartOpen = true"
+                            <div class="relative cart-wrapper flex items-center h-20" @mouseenter="isCartOpen = true"
                                 @mouseleave="isCartOpen = false">
                                 <button @click.stop="toggleCart"
                                     class="relative p-2 hover:bg-white/10 rounded-full transition-colors">
@@ -238,7 +238,7 @@
                             </div>
 
                             <!-- Language -->
-                            <div class="relative language-wrapper flex align-center h-20"
+                            <div class="relative language-wrapper flex items-center h-20"
                                 @mouseenter="isLanguageOpen = true" @mouseleave="isLanguageOpen = false">
                                 <button @click.stop="toggleLanguage"
                                     class="flex items-center space-x-1 p-2 hover:bg-white/10 rounded-full transition-colors">
@@ -285,7 +285,7 @@
                             </div>
 
                             <!-- Profile (Visible when logged in) -->
-                            <div v-if="currentUser" class="relative profile-wrapper flex align-center h-20"
+                            <div v-if="currentUser" class="relative profile-wrapper flex items-center h-20"
                                 @mouseenter="isProfileOpen = true" @mouseleave="isProfileOpen = false">
                                 <button @click.stop="toggleProfile"
                                     class="flex items-center space-x-2 p-2 hover:bg-white/10 rounded-full transition-colors">
