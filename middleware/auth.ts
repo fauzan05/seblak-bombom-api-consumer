@@ -6,12 +6,12 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     const user = await userStore.fetchUser() as { data?: { role?: string } };
     // Jika fetch gagal (null), redirect ke login
 
-    // if (!user) {
-    //   return navigateTo('/auth/login')
-    // }
-    console.log("User fetched:", user?.data);
-    // if (to.path.startsWith('/admin') && user?.data?.role !== 'admin') {
-    //   return navigateTo('/auth/login')
-    // }
+    if (!user) {
+      return navigateTo('/auth/login')
+    }
+
+    if (to.path.startsWith('/admin') && user?.data?.role !== 'admin') {
+      return navigateTo('/auth/login')
+    }
   }
 })
