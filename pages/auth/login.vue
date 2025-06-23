@@ -188,6 +188,7 @@ const handleLogin = async () => {
             router.push('/')
         }
     } catch (err) {
+        console.log("ERROR : ", err)
         if (err?.response?.status !== 500) {
             error.value = 'The email or password you entered does not match. Please check again.'
             if (currentLang.value === 'id') {
