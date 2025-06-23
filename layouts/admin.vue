@@ -274,6 +274,8 @@ import SearchButton from '~/components/modals/searchButtonAdmin.vue'
 
 const route = useRoute()
 const loading = ref(true)
+const config = useRuntimeConfig();
+const apiUrl = config.public.apiUrl
 
 const isActive = (path) => {
     return route.path.startsWith(path)
@@ -339,6 +341,8 @@ const sidebarItems = [
 const lastUpdated = "22 Jun 2025"
 
 onMounted(async () => {
+    await getCurrentUser()
+
     loading.value = false
     window.addEventListener('click', closeNotificationDropdown)
     window.addEventListener('click', closeProfileDropdown)
@@ -348,6 +352,24 @@ onUnmounted(() => {
     window.removeEventListener('click', closeNotificationDropdown)
     window.removeEventListener('click', closeProfileDropdown)
 })
+
+async function getCurrentUser() {
+    try {
+        const res = await $fetch('/users/current', {
+            baseURL: apiUrl,
+            credentials: 'include'
+        })
+
+        useState('currentUser', () => res.data)
+        currentUser.value = res.data
+    } catch (err) {
+        if (err?.response?.status !== 401 && err?.status !== 401) {
+            alert(err?.message || 'Unknown error')
+        }
+    } finally {
+        // kosong = tidak masalah
+    }
+}
 
 </script>
 <style>
