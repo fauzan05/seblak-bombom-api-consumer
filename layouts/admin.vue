@@ -341,8 +341,6 @@ const sidebarItems = [
 const lastUpdated = "22 Jun 2025"
 
 onMounted(async () => {
-    await getCurrentUser()
-
     loading.value = false
     window.addEventListener('click', closeNotificationDropdown)
     window.addEventListener('click', closeProfileDropdown)
@@ -353,23 +351,6 @@ onUnmounted(() => {
     window.removeEventListener('click', closeProfileDropdown)
 })
 
-async function getCurrentUser() {
-    try {
-        const res = await $fetch('/users/current', {
-            baseURL: apiUrl,
-            credentials: 'include'
-        })
-
-        useState('currentUser', () => res.data)
-        currentUser.value = res.data
-    } catch (err) {
-        if (err?.response?.status !== 401 && err?.status !== 401) {
-            alert(err?.message || 'Unknown error')
-        }
-    } finally {
-        // kosong = tidak masalah
-    }
-}
 
 </script>
 <style>
