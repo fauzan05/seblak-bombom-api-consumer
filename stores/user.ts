@@ -19,7 +19,6 @@ export const useUserStore = defineStore('user', {
                         cookie: cookie.cookie || '',
                     },
                 })
-                console.log('Current user fetched:', data.value)
 
                 if (error.value || Number(status.value) === 401 || !data.value) {
                     this.user = null
