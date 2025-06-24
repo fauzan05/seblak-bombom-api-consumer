@@ -172,7 +172,7 @@ const data = ref(null);
 const handleLogin = async () => {
     loading.value = true
     error.value = null
-
+    console.log("API URL : ", apiUrl)
     try {
         const res = await $fetch('/users/login', {
             method: 'POST',
