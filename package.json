@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "nuxi dev --dotenv .env.local",
     "build": "nuxt build",
-    "start": "node .output/server/index.mjs",
+    "start": "node .output/server/index.mjs || npm run preview",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
