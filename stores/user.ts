@@ -27,6 +27,7 @@ export const useUserStore = defineStore('user', {
                 }
 
                 const userData = (data.value as any)?.data
+                console.log("CURRENTNYA : ",userData)
                 this.user = userData
                 return data.value
             } catch (err) {

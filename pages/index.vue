@@ -1072,6 +1072,11 @@
 </template>
 
 <script setup>
+definePageMeta({
+    layout: "default",
+    middleware: ['auth']
+});
+
 import { onMounted, ref } from "vue";
 import { useHead } from "nuxt/app";
 import Swiper from "swiper/bundle";

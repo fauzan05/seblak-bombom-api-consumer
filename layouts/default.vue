@@ -69,7 +69,7 @@
                                 <img :src="logoUrl" alt="Logo" class="h-10 transition-transform hover:scale-105" />
                                 <h1
                                     class="text-lg md:text-xl font-bold truncate max-w-[300px] hover:text-orange-500 transition-colors">
-                                    {{ appSetting.app_name }}
+                                    {{ appSettingStore.settings.data.app_name }}
                                 </h1>
                             </div>
                         </NuxtLink>
@@ -270,7 +270,7 @@
                                 </div>
 
                                 <!-- Auth Buttons -->
-                                <div v-if="!currentUser" class="flex items-center space-x-3">
+                                <div v-if="!currentUserStore.user" class="flex items-center space-x-3">
                                     <NuxtLink to="/auth/login" :class="[
                                         'px-4 py-2 rounded-full border transition-all duration-300 hover:scale-105',
                                         isScrolled ? 'border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white' : 'border-white text-white hover:bg-white hover:text-orange-500'
@@ -287,7 +287,7 @@
                                 </div>
 
                                 <!-- Profile (Visible when logged in) -->
-                                <div v-if="currentUser" class="relative profile-wrapper flex items-center h-20"
+                                <div v-if="currentUserStore.user" class="relative profile-wrapper flex items-center h-20"
                                     @mouseenter="isProfileOpen = true" @mouseleave="isProfileOpen = false">
                                     <button @click.stop="toggleProfile"
                                         class="flex items-center space-x-2 p-2 hover:bg-white/10 rounded-full transition-colors">
@@ -301,7 +301,7 @@
                                                 fill="#D1D5DB" />
                                         </svg>
 
-                                        <span class="text-sm font-medium">{{ currentUser.first_name }}</span>
+                                        <span class="text-sm font-medium">{{ currentUserStore.user.first_name }}</span>
                                     </button>
                                     <!-- Profile Dropdown -->
                                     <div v-show="isProfileOpen"
@@ -322,10 +322,10 @@
                                                 </div>
                                                 <div class="ml-3 max-w-30">
                                                     <p class="text-sm font-medium text-gray-800 truncate">
-                                                        {{ `${currentUser?.first_name ?? ''} ${currentUser?.last_name ??
+                                                        {{ `${currentUserStore.user?.first_name ?? ''} ${currentUserStore.user?.last_name ??
                                                             ''}`.trim() }}
                                                     </p>
-                                                    <p class="text-xs text-gray-500 truncate">{{ currentUser.email }}</p>
+                                                    <p class="text-xs text-gray-500 truncate">{{ currentUserStore.user.email }}</p>
                                                 </div>
                                             </div>
                                             <div class="mt-3 space-y-1">
@@ -399,11 +399,11 @@
                     <div class="sticky top-0 z-10 bg-white border-b border-gray-100">
                         <div class="flex items-center justify-between p-4">
                             <div class="flex-1 min-w-0 pr-2">
-                                <template v-if="currentUser">
+                                <template v-if="currentUserStore.user">
                                     <p class="text-sm font-medium text-gray-800 truncate">
-                                        {{ `${currentUser?.first_name ?? ''} ${currentUser?.last_name ?? ''}`.trim() }}
+                                        {{ `${currentUserStore.user?.first_name ?? ''} ${currentUserStore.user?.last_name ?? ''}`.trim() }}
                                     </p>
-                                    <p class="text-xs text-gray-500 truncate">{{ currentUser.email }}</p>
+                                    <p class="text-xs text-gray-500 truncate">{{ currentUserStore.user.email }}</p>
                                 </template>
                                 <template v-else>
                                     <div class="flex space-x-2">
@@ -420,7 +420,7 @@
                             </div>
 
                             <div class="flex items-center space-x-3">
-                                <div v-if="currentUser">
+                                <div v-if="currentUserStore.user">
                                     <svg width="100" height="100"
                                         class="h-10 w-10 rounded-full bg-white border border-gray-200" viewBox="0 0 100 100"
                                         fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -602,7 +602,7 @@
 
                 <!-- Footer Bottom -->
                 <div class="border-t border-orange-300 pt-8 text-sm text-center text-gray-500">
-                    &copy; {{ yearNow }} {{ appSetting.app_name }}. All rights reserved.
+                    &copy; {{ yearNow }} {{ appSettingStore.settings.data.app_name }}. All rights reserved.
                 </div>
             </div>
         </footer>
@@ -631,14 +631,14 @@ const handleScroll = () => {
 const error = ref('')
 const logoUrl = ref('')
 const loading = ref(true)
-const appSetting = useState('appSetting', () => null)
-const currentUser = useState('currentUser', () => null)
+const currentUserStore = useUserStore()
+const appSettingStore = useAppSettingStore()
 const isMobileSubmenuOpen = ref(false);
 
 onMounted(async () => {
-    await getAppSetting()
-    await getCurrentUser()
-
+    // await getAppSetting()
+    // await getCurrentUser()
+    logoUrl.value = `${apiUrl}/image/application/${appSettingStore.settings.data.logo_filename}`
     window.addEventListener('scroll', handleScroll)
     window.addEventListener('scroll', updateProgress)
     updateProgress()
@@ -669,6 +669,7 @@ onMounted(async () => {
     window.addEventListener('click', closeCart)
     window.addEventListener('click', closeNotif)
     window.addEventListener('click', closeMenu)
+    loading.value = false
 })
 
 onBeforeUnmount(() => {
@@ -708,43 +709,43 @@ watch(showNotification, (val) => {
 
 const yearNow = new Date().getFullYear()
 
-async function getAppSetting() {
-    try {
-        const res = await $fetch('/applications', {
-            baseURL: apiUrl
-        })
+// async function getAppSetting() {
+//     try {
+//         const res = await $fetch('/applications', {
+//             baseURL: apiUrl
+//         })
 
-        data.value = res.data
-        logoUrl.value = `${apiUrl}/image/application/${data.value.logo_filename}`
-        appSetting.value = data.value
+//         data.value = res.data
+//         logoUrl.value = `${apiUrl}/image/application/${data.value.logo_filename}`
+//         appSetting.value = data.value
 
-    } catch (err) {
-        alert(err?.message || 'Unknown error')
+//     } catch (err) {
+//         alert(err?.message || 'Unknown error')
 
-    } finally {
-        setTimeout(() => {
-            loading.value = false
-        }, 300)
-    }
-}
+//     } finally {
+//         setTimeout(() => {
+//             loading.value = false
+//         }, 300)
+//     }
+// }
 
-async function getCurrentUser() {
-    try {
-        const res = await $fetch('/users/current', {
-            baseURL: apiUrl,
-            credentials: 'include'
-        })
+// async function getCurrentUser() {
+//     try {
+//         const res = await $fetch('/users/current', {
+//             baseURL: apiUrl,
+//             credentials: 'include'
+//         })
 
-        useState('currentUser', () => res.data)
-        currentUser.value = res.data
-    } catch (err) {
-        if (err?.response?.status !== 401 && err?.status !== 401) {
-            alert(err?.message || 'Unknown error')
-        }
-    } finally {
-        // kosong = tidak masalah
-    }
-}
+//         useState('currentUserStore.user', () => res.data)
+//         currentUserStore.user.value = res.data
+//     } catch (err) {
+//         if (err?.response?.status !== 401 && err?.status !== 401) {
+//             alert(err?.message || 'Unknown error')
+//         }
+//     } finally {
+//         // kosong = tidak masalah
+//     }
+// }
 
 async function logout() {
     try {
@@ -754,9 +755,8 @@ async function logout() {
             credentials: 'include'
         })
 
-        useState('currentUser', () => null)
-        currentUser.value = null
         showNotification.value = true
+        location.reload()
     } catch (err) {
         alert(err?.message || 'Unknown error')
     }
