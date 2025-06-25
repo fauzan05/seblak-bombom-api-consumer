@@ -1,7 +1,7 @@
 export default defineNuxtRouteMiddleware(async (to, from) => {
   const userStore = useUserStore()
   const headers = useRequestHeaders(['cookie'])
-
+  console.log("COOKIE: ",headers.cookie)
   if (!userStore.user) {
     const user = await userStore.fetchUser(headers.cookie || '')
 
