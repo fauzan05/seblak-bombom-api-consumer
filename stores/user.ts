@@ -6,19 +6,18 @@ export const useUserStore = defineStore('user', {
     }),
 
     actions: {
-        async fetchUser() {
+        async fetchUser(cookieHeader?: string) {
             try {
                 const config = useRuntimeConfig()
                 const apiUrl = config.public.apiUrl
-
-                // Deteksi apakah sedang SSR
                 const isServer = typeof window === 'undefined'
-                const cookieHeader = isServer ? useRequestHeaders(['cookie']).cookie || '' : ''
 
                 const { data, error, status } = await useFetch('/users/current', {
                     baseURL: apiUrl,
                     credentials: 'include',
-                    headers: isServer ? { cookie: cookieHeader } : {}, // Kirim header hanya saat SSR
+                    headers: isServer && cookieHeader
+                        ? { cookie: cookieHeader, 'Content-Type': 'application/json'}
+                        : {'Content-Type': 'application/json'}
                 })
 
                 if (error.value || Number(status.value) === 401 || !data.value) {
@@ -26,8 +25,7 @@ export const useUserStore = defineStore('user', {
                     return null
                 }
 
-                const userData = (data.value as any)?.data
-                this.user = userData
+                this.user = (data.value as any)?.data
                 return data.value
             } catch (err) {
                 console.error('Error when get current user:', err)
@@ -36,4 +34,5 @@ export const useUserStore = defineStore('user', {
             }
         }
     }
+
 })
