@@ -88,8 +88,8 @@
                                 </a>
 
                                 <!-- Menu Dropdown -->
-                                <div class="relative group menu-wrapper h-20 flex items-center" @mouseenter="isMenuOpen = true"
-                                    @mouseleave="isMenuOpen = false">
+                                <div class="relative group menu-wrapper h-20 flex items-center"
+                                    @mouseenter="isMenuOpen = true" @mouseleave="isMenuOpen = false">
                                     <button class="nav-link flex items-center space-x-1" @click.stop="toggleMenu">
                                         <span>Menu</span>
                                         <svg class="w-4 h-4 transition-transform group-hover:rotate-180" fill="none"
@@ -322,10 +322,12 @@
                                                 </div>
                                                 <div class="ml-3 max-w-30">
                                                     <p class="text-sm font-medium text-gray-800 truncate">
-                                                        {{ `${currentUserStore.user?.first_name ?? ''} ${currentUserStore.user?.last_name ??
+                                                        {{ `${currentUserStore.user?.first_name ?? ''}
+                                                                                                                ${currentUserStore.user?.last_name ??
                                                             ''}`.trim() }}
                                                     </p>
-                                                    <p class="text-xs text-gray-500 truncate">{{ currentUserStore.user.email }}</p>
+                                                    <p class="text-xs text-gray-500 truncate">{{ currentUserStore.user.email
+                                                    }}</p>
                                                 </div>
                                             </div>
                                             <div class="mt-3 space-y-1">
@@ -362,15 +364,17 @@
                                                     Settings
                                                 </a>
                                                 <hr class="my-2" />
-                                                <button @click="logout"
-                                                    class="flex items-center px-3 py-2 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 rounded-lg w-full">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none"
-                                                        viewBox="0 0 24 24" stroke="currentColor">
+                                                <button @click="logout" :disabled="isLoggingOut"
+                                                    class="flex items-center px-3 py-2 text-sm rounded-lg w-full hover:bg-red-50 hover:text-red-700 text-red-600 disabled:opacity-50 disabled:cursor-not-allowed">
+                                                    <svg v-if="!isLoggingOut" xmlns="http://www.w3.org/2000/svg"
+                                                        class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24"
+                                                        stroke="currentColor">
                                                         <path stroke-linecap="round" stroke-linejoin="round"
                                                             stroke-width="2"
                                                             d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                                                     </svg>
-                                                    Logout
+                                                    <span v-if="!isLoggingOut">Logout</span>
+                                                    <span v-else>Logging out...</span>
                                                 </button>
                                             </div>
                                         </div>
@@ -401,7 +405,8 @@
                             <div class="flex-1 min-w-0 pr-2">
                                 <template v-if="currentUserStore.user">
                                     <p class="text-sm font-medium text-gray-800 truncate">
-                                        {{ `${currentUserStore.user?.first_name ?? ''} ${currentUserStore.user?.last_name ?? ''}`.trim() }}
+                                        {{ `${currentUserStore.user?.first_name ?? ''} ${currentUserStore.user?.last_name ??
+                                            ''}`.trim() }}
                                     </p>
                                     <p class="text-xs text-gray-500 truncate">{{ currentUserStore.user.email }}</p>
                                 </template>
@@ -746,9 +751,12 @@ const yearNow = new Date().getFullYear()
 //         // kosong = tidak masalah
 //     }
 // }
-
+const isLoggingOut = ref(false)
 async function logout() {
     try {
+        if (isLoggingOut.value) return // Hindari klik ganda
+        isLoggingOut.value = true
+
         await $fetch('/users/logout', {
             baseURL: apiUrl,
             method: 'delete',
@@ -760,6 +768,8 @@ async function logout() {
         location.reload()
     } catch (err) {
         alert(err?.message || 'Unknown error')
+    } finally {
+        isLoggingOut.value = false
     }
 }
 
@@ -850,4 +860,5 @@ circle {
 .fade-slide-leave-to {
     opacity: 0;
     transform: translateY(20px);
-}</style>
+}
+</style>
