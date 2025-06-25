@@ -729,7 +729,10 @@ async function logout() {
         await $fetch('/users/logout', {
             baseURL: apiUrl,
             method: 'delete',
-            credentials: 'include'
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
         })
 
         showNotification.value = true
