@@ -140,7 +140,6 @@ const router = useRouter()
 const appSettingStore = useAppSettingStore()
 await appSettingStore.fetchSettings()
 const appSetting = ref(null)
-
 const config = useRuntimeConfig()
 const apiUrl = config.public.apiUrl
 const currentLang = useState('lang')
@@ -149,20 +148,14 @@ const appName = computed(() =>
     appSettingStore.settings?.data?.app_name || 'Untitled App'
 )
 
-const faviconUrl = computed(() =>
-    appSettingStore.settings?.data?.logo_filename
-        ? `${apiUrl}/image/application/${appSettingStore.settings.data.logo_filename}`
-        : '/favicon.ico'
-)
-
 // Reactive data
 const loginForm = ref({
     email: "",
     password: "",
     remember: false,
 });
-const error = ref('')
 
+const error = ref('')
 const showPassword = ref(false);
 const loading = ref(false);
 const data = ref(null);
@@ -194,7 +187,7 @@ const handleLogin = async () => {
             router.push('/')
         }
     } catch (err) {
-        console.log("ERROR : ", err)
+        console.error("ERROR : ", err)
         if (err?.response?.status !== 500) {
             error.value = 'The email or password you entered does not match. Please check again.'
             if (currentLang.value === 'id') {

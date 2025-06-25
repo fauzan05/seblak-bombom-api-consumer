@@ -641,9 +641,9 @@ const appSettingStore = useAppSettingStore()
 const isMobileSubmenuOpen = ref(false);
 
 onMounted(async () => {
-    console.log("current user: ", currentUserStore.user)
     if (!currentUserStore.user) {
-        await currentUserStore.fetchUser()
+        const user = await currentUserStore.fetchUser()
+        console.log("current user: ", user)
     }
 
     logoUrl.value = `${apiUrl}/image/application/${appSettingStore.settings.data.logo_filename}`

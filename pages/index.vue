@@ -1073,13 +1073,16 @@
 
 <script setup>
 definePageMeta({
-    layout: "default"
+    layout: "default",
+    middleware: ['auth']
 });
 
 import { onMounted, ref } from "vue";
 import { useHead } from "nuxt/app";
 import Swiper from "swiper/bundle";
 import "swiper/css/bundle";
+import { useUserStore } from '~/stores/user'
+
 const appSettingStore = useAppSettingStore()
 
 const copiedIndex = ref(null);
@@ -1115,8 +1118,13 @@ const slides = [
 
 const activeIndex = ref(0);
 const swiper = ref(null);
+const currentUserStore = useUserStore()
 
-onMounted(() => {
+onMounted(async () => {
+    if (!currentUserStore.user) {
+        await currentUserStore.fetchUser()
+    }
+
     swiper.value = new Swiper(".swiper-1", {
         loop: true,
         autoplay: {
