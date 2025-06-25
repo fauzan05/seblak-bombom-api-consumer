@@ -727,11 +727,14 @@ async function logout() {
         isLoggingOut.value = true
 
         await $fetch('/users/logout', {
+            method: 'DELETE',
             baseURL: apiUrl,
-            method: 'delete',
             credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
+            },
+            onRequest({ options }) {
+                options.credentials = 'include'
             },
         })
 
