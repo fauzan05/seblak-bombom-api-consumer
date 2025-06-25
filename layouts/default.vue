@@ -650,7 +650,6 @@ onMounted(async () => {
     }
 
     logoUrl.value = `${apiUrl}/image/application/${appSettingStore.settings.data.logo_filename}`
-    console.log('logoUrl', logoUrl.value)
     window.addEventListener('scroll', handleScroll)
     window.addEventListener('scroll', updateProgress)
     updateProgress()
