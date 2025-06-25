@@ -271,7 +271,7 @@ const getStatusColor = (status) => {
 const currentUserStore = useUserStore()
 onMounted(async () => {
     if (!currentUserStore.user) {
-        const user = await currentUserStore.fetchUser()
+        await currentUserStore.fetchUser()
     }
 });
 </script>
