@@ -19,7 +19,7 @@
                         d="M13 16h-1v-4h-1m1-4h.01M12 12h.01M12 12h.01m0-4h.01M21 12A9 9 0 113 12a9 9 0 0118 0z" />
                 </svg>
                 <div class="flex-1">
-                    <!-- <p class="text-sm font-semibold text-gray-800">Notifikasi Berhasil!</p> -->
+                    <p class="text-sm font-semibold text-gray-800">New Notification!</p>
                     <p class="text-sm text-gray-600">{{ notificationValue }}</p>
                 </div>
                 <button @click="showNotification = false" class="text-gray-400 hover:text-gray-700 ml-2">

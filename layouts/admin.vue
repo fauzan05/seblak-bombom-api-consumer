@@ -19,7 +19,7 @@
                         d="M13 16h-1v-4h-1m1-4h.01M12 12h.01M12 12h.01m0-4h.01M21 12A9 9 0 113 12a9 9 0 0118 0z" />
                 </svg>
                 <div class="flex-1">
-                    <!-- <p class="text-sm font-semibold text-gray-800">Notifikasi Berhasil!</p> -->
+                    <p class="text-sm font-semibold text-gray-800">New Notification!</p>
                     <p class="text-sm text-gray-600">{{ notificationValue }}</p>
                 </div>
                 <button @click="showNotification = false" class="text-gray-400 hover:text-gray-700 ml-2">
@@ -201,11 +201,11 @@
                                             d="M24 78C24 65.2975 35.2975 56 48 56H52C64.7025 56 76 65.2975 76 78V80H24V78Z"
                                             fill="#D1D5DB" />
                                     </svg>
-                                    <!-- <div class="max-w-40">
+                                    <div class="max-w-40">
                                         <p class="text-sm font-semibold text-gray-800 truncate">{{
                                             `${currentUserStore.user.first_name} ${currentUserStore.user.last_name} ` }}</p>
                                         <p class="text-xs text-gray-500 truncate">{{ currentUserStore.user.email }}</p>
-                                    </div> -->
+                                    </div>
                                 </div>
                             </div>
                             <div class="py-2">
@@ -293,7 +293,6 @@ import {
 } from '@heroicons/vue/24/outline'
 import SearchButton from '~/components/modals/searchButtonAdmin.vue'
 import { useUserStore } from '~/stores/user'
-const currentUserStore = useUserStore()
 
 const showNotification = ref(false)
 const notificationValue = ref("")
@@ -373,12 +372,11 @@ const sidebarItems = [
 
 const lastUpdated = "22 Jun 2025"
 
+const currentUserStore = useUserStore()
 onMounted(async () => {
     if (!currentUserStore.user) {
         const user = await currentUserStore.fetchUser()
-        console.log("FETCH USER :", user)
     }
-    console.log("CURRENT :",currentUserStore.user)
     loading.value = false
     window.addEventListener('click', closeNotificationDropdown)
     window.addEventListener('click', closeProfileDropdown)
@@ -410,23 +408,6 @@ async function logout() {
         isLoggingOut.value = false
     }
 }
-
-// const currentUserStore.user = ref(null)
-// async function getCurrentUser() {
-//     try {
-//         const res = await $fetch('/users/current', {
-//             baseURL: apiUrl,
-//             credentials: 'include'
-//         })
-//         currentUserStore.user.value = res.data
-//     } catch (err) {
-//         if (err?.response?.status !== 401 && err?.status !== 401) {
-//             alert(err?.message || 'Unknown error')
-//         }
-//     } finally {
-//         // kosong = tidak masalah
-//     }
-// }
 
 </script>
 <style>

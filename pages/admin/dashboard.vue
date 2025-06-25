@@ -6,7 +6,7 @@
     <div class="p-6 bg-gray-50">
         <!-- Header Welcome -->
         <div class="mb-8">
-            <!-- <h1 class="text-2xl font-bold text-gray-800">Welcome back, {{ currentUser.name }}!</h1> -->
+            <h1 class="text-2xl font-bold text-gray-800">Welcome back, {{ currentUserStore.user.first_name }}!</h1>
             <p class="text-gray-600">Here's what's happening with Seblak Bombom today.</p>
         </div>
 
@@ -190,12 +190,11 @@ definePageMeta({
 
 import { ref, onMounted } from 'vue'
 import { Bar } from 'vue-chartjs'
+import { useUserStore } from '~/stores/user'
+
 const config = useRuntimeConfig()
 const apiUrl = config.public.apiUrl
 const appSettingStore = useAppSettingStore()
-const appName = computed(() =>
-    appSettingStore.settings?.data?.app_name || 'Untitled App'
-)
 
 const faviconUrl = computed(() =>
     appSettingStore.settings?.data?.logo_filename
@@ -269,7 +268,10 @@ const getStatusColor = (status) => {
     return colors[status] || 'bg-gray-100 text-gray-800'
 }
 
-onMounted(() => {
-
+const currentUserStore = useUserStore()
+onMounted(async () => {
+    if (!currentUserStore.user) {
+        const user = await currentUserStore.fetchUser()
+    }
 });
 </script>
