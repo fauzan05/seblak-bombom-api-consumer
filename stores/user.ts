@@ -1,4 +1,36 @@
 import { defineStore } from 'pinia'
+interface Wallet {
+    id: number
+    balance: number
+    status: string
+    created_at: string
+    updated_at: string
+}
+
+interface Cart {
+    cart_items: any[] | null
+    created_at: string
+    updated_at: string
+}
+
+interface UserData {
+    id: number
+    first_name: string
+    last_name: string
+    email: string
+    phone: string
+    role: string
+    wallet: Wallet
+    cart: Cart
+    created_at: string
+    updated_at: string
+}
+
+interface CurrentUserResponse {
+    code: number
+    status: string
+    data: UserData
+}
 
 export const useUserStore = defineStore('user', {
     state: () => ({
@@ -6,18 +38,19 @@ export const useUserStore = defineStore('user', {
     }),
 
     actions: {
-        async fetchUser(cookieHeader?: string) {
+        async fetchUser(): Promise<CurrentUserResponse | null> {
             try {
                 const config = useRuntimeConfig()
                 const apiUrl = config.public.apiUrl
-                const isServer = typeof window === 'undefined'
+                // const isServer = typeof window === 'undefined'
+                // const cookieHeader = isServer ? useRequestHeaders(['cookie']).cookie || '' : ''
 
-                const { data, error, status } = await useFetch('/users/current', {
+                const { data, error, status } = await useFetch<CurrentUserResponse>('/users/current', {
                     baseURL: apiUrl,
                     credentials: 'include',
-                    headers: isServer && cookieHeader
-                        ? { cookie: cookieHeader, 'Content-Type': 'application/json'}
-                        : {'Content-Type': 'application/json'}
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
                 })
 
                 if (error.value || Number(status.value) === 401 || !data.value) {
@@ -25,10 +58,10 @@ export const useUserStore = defineStore('user', {
                     return null
                 }
 
-                this.user = (data.value as any)?.data
+                this.user = data.value.data
                 return data.value
             } catch (err) {
-                console.error('Error when get current user:', err)
+                console.error('Error fetching current user:', err)
                 this.user = null
                 return null
             }

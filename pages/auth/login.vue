@@ -188,8 +188,6 @@ const handleLogin = async () => {
         })
 
         data.value = res.data
-        console.log("DATA ROLE : ", data.value.role)
-        console.log("IS ADMIN : ", data.value.role === 'admin')
         if (data.value.role === 'admin') {
             router.push('/admin/dashboard')
         } else {
