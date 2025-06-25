@@ -63,6 +63,8 @@ export const useUserStore = defineStore('user', {
                     return null
                 }
 
+                console.log('Current user data:', data.value)
+
                 this.user = data.value.data
                 return data.value
             } catch (err) {
