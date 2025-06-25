@@ -201,11 +201,11 @@
                                             d="M24 78C24 65.2975 35.2975 56 48 56H52C64.7025 56 76 65.2975 76 78V80H24V78Z"
                                             fill="#D1D5DB" />
                                     </svg>
-                                    <div class="max-w-40">
+                                    <!-- <div class="max-w-40">
                                         <p class="text-sm font-semibold text-gray-800 truncate">{{
                                             `${currentUserStore.user.first_name} ${currentUserStore.user.last_name} ` }}</p>
                                         <p class="text-xs text-gray-500 truncate">{{ currentUserStore.user.email }}</p>
-                                    </div>
+                                    </div> -->
                                 </div>
                             </div>
                             <div class="py-2">
@@ -379,7 +379,8 @@ const lastUpdated = "22 Jun 2025"
 
 onMounted(async () => {
     if (!currentUserStore.user) {
-        await currentUserStore.fetchUser()
+        const user = await currentUserStore.fetchUser()
+        console.log("FETCH USER :", user)
     }
     console.log("CURRENT :",currentUserStore.user)
     loading.value = false
