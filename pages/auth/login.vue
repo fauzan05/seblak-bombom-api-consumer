@@ -130,16 +130,16 @@
 </template>
 
 <script setup>
+definePageMeta({
+    layout: "auth",
+});
+
 import Pusher from "pusher-js";
 import { ref, onMounted } from "vue";
 const router = useRouter()
 const appSettingStore = useAppSettingStore()
 await appSettingStore.fetchSettings()
 const appSetting = ref(null)
-
-definePageMeta({
-    layout: "auth",
-});
 
 const config = useRuntimeConfig()
 const apiUrl = config.public.apiUrl

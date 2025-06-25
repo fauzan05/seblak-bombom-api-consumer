@@ -1,13 +1,12 @@
 export default defineNuxtRouteMiddleware(async (to, from) => {
   const userStore = useUserStore()
-  const headers = useRequestHeaders(['cookie'])
-  console.log("COOKIE: ",headers.cookie)
-  if (!userStore.user) {
-    const user = await userStore.fetchUser(headers.cookie || '')
+  const isServer = typeof window === 'undefined'
 
-    // Jika user buka halaman /admin tapi bukan admin
-    if (to.path.startsWith('/admin') && user?.data?.role !== 'admin') {
-      return navigateTo('/auth/login')
-    }
+  const cookieHeader = isServer ? useRequestHeaders(['cookie']).cookie || '' : undefined
+  console.log("Cookie Header:", cookieHeader)
+  const user = await userStore.fetchUser(cookieHeader)
+
+  if (to.path.startsWith('/admin') && user?.data?.role !== 'admin') {
+    return navigateTo('/auth/login')
   }
 })
