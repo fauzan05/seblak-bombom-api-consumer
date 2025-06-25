@@ -374,12 +374,13 @@ const lastUpdated = "22 Jun 2025"
 
 const currentUserStore = useUserStore()
 onMounted(async () => {
+    loading.value = true
     if (!currentUserStore.user) {
         await currentUserStore.fetchUser()
     }
-    loading.value = false
     window.addEventListener('click', closeNotificationDropdown)
     window.addEventListener('click', closeProfileDropdown)
+    loading.value = false
 })
 
 onUnmounted(() => {
