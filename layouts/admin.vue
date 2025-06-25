@@ -8,6 +8,28 @@
             </path>
         </svg>
     </div>
+    <!-- Notifikasi -->
+    <Transition name="fade-slide">
+        <div v-if="showNotification"
+            class="fixed bottom-6 right-6 bg-white border-l-4 border-orange-500 shadow-lg rounded-md p-4 w-80 z-50">
+            <div class="flex items-start">
+                <svg class="h-6 w-6 text-orange-500 mr-2 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                    stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M13 16h-1v-4h-1m1-4h.01M12 12h.01M12 12h.01m0-4h.01M21 12A9 9 0 113 12a9 9 0 0118 0z" />
+                </svg>
+                <div class="flex-1">
+                    <!-- <p class="text-sm font-semibold text-gray-800">Notifikasi Berhasil!</p> -->
+                    <p class="text-sm text-gray-600">{{ notificationValue }}</p>
+                </div>
+                <button @click="showNotification = false" class="text-gray-400 hover:text-gray-700 ml-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </Transition>
     <div v-if="!loading" class="h-screen flex overflow-hidden">
         <!-- Sidebar backdrop -->
         <Transition enter-active-class="transition-opacity ease-out duration-300" enter-from-class="opacity-0"
@@ -258,7 +280,6 @@
 </template>
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
-import { useRoute } from 'vue-router'
 import {
     HomeIcon,
     UserIcon,
@@ -272,10 +293,21 @@ import {
 } from '@heroicons/vue/24/outline'
 import SearchButton from '~/components/modals/searchButtonAdmin.vue'
 
-const route = useRoute()
+const showNotification = ref(false)
+const notificationValue = ref("")
+watch(showNotification, (val) => {
+    if (val) {
+        setTimeout(() => {
+            showNotification.value = false
+        }, 3000)
+    }
+})
+
 const loading = ref(true)
 const config = useRuntimeConfig();
 const apiUrl = config.public.apiUrl
+const router = useRouter()
+const route = useRoute()
 
 const isActive = (path) => {
     return route.path.startsWith(path)
@@ -351,6 +383,27 @@ onUnmounted(() => {
     window.removeEventListener('click', closeProfileDropdown)
 })
 
+const isLoggingOut = ref(false)
+async function logout() {
+    try {
+        if (isLoggingOut.value) return // Hindari klik ganda
+        isLoggingOut.value = true
+
+        await $fetch('/users/logout', {
+            baseURL: apiUrl,
+            method: 'delete',
+            credentials: 'include'
+        })
+
+        showNotification.value = true
+        notificationValue.value = 'Logout successful!'
+        router.push('/auth/login')
+    } catch (err) {
+        alert(err?.message || 'Unknown error')
+    } finally {
+        isLoggingOut.value = false
+    }
+}
 
 </script>
 <style>
