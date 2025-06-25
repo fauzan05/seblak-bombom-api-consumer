@@ -38,20 +38,24 @@ export const useUserStore = defineStore('user', {
     }),
 
     actions: {
-        async fetchUser(cookieHeader?: string): Promise<CurrentUserResponse | null> {
+        async fetchUser(): Promise<CurrentUserResponse | null> {
             try {
                 const config = useRuntimeConfig()
                 const apiUrl = config.public.apiUrl
                 const isServer = typeof window === 'undefined'
 
+                const cookieHeader = isServer ? useRequestHeaders(['cookie']).cookie || '' : ''
+
                 const { data, error, status } = await useFetch<CurrentUserResponse>('/users/current', {
                     baseURL: apiUrl,
                     credentials: 'include',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    }
-                    // headers: isServer && cookieHeader ? { cookie: cookieHeader } : {}
+                    headers: isServer
+                        ? {
+                            cookie: cookieHeader,
+                            'Content-Type': 'application/json',
+                            Accept: 'application/json',
+                        }
+                        : {}
                 })
 
                 if (error.value || Number(status.value) === 401 || !data.value) {
@@ -67,5 +71,6 @@ export const useUserStore = defineStore('user', {
                 return null
             }
         }
-    }
+    },
+    persist: true
 })

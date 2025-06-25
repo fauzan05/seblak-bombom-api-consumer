@@ -6,7 +6,7 @@
     <div class="p-6 bg-gray-50">
         <!-- Header Welcome -->
         <div class="mb-8">
-            <h1 class="text-2xl font-bold text-gray-800">Welcome back, {{ currentUserStore.user.name }}!</h1>
+            <!-- <h1 class="text-2xl font-bold text-gray-800">Welcome back, {{ currentUser.name }}!</h1> -->
             <p class="text-gray-600">Here's what's happening with Seblak Bombom today.</p>
         </div>
 
@@ -184,15 +184,13 @@
   
 <script setup>
 definePageMeta({
-    layout: "admin",
-    middleware: ['auth']
+    layout: "admin"
 });
 
 import { ref, onMounted } from 'vue'
 import { Bar } from 'vue-chartjs'
 const config = useRuntimeConfig()
 const apiUrl = config.public.apiUrl
-const currentUserStore = useUserStore()
 const appSettingStore = useAppSettingStore()
 const appName = computed(() =>
     appSettingStore.settings?.data?.app_name || 'Untitled App'

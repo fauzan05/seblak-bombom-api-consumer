@@ -279,6 +279,10 @@
     </div>
 </template>
 <script setup>
+definePageMeta({
+    middleware: ['auth']
+})
+
 import { ref, onMounted, onUnmounted } from 'vue'
 import {
     HomeIcon,
@@ -292,6 +296,8 @@ import {
     Cog6ToothIcon,
 } from '@heroicons/vue/24/outline'
 import SearchButton from '~/components/modals/searchButtonAdmin.vue'
+import { useUserStore } from '~/stores/user'
+const currentUserStore = useUserStore()
 
 const showNotification = ref(false)
 const notificationValue = ref("")
@@ -317,7 +323,6 @@ const isSidebarCollapsed = ref(false)
 const isMobileSidebarOpen = ref(false)
 const appSettingStore = useAppSettingStore()
 await appSettingStore.fetchSettings()
-const currentUserStore = useUserStore()
 const isNotificationDropdownOpen = ref(false)
 const isProfileDropdownOpen = ref(false)
 
@@ -373,6 +378,10 @@ const sidebarItems = [
 const lastUpdated = "22 Jun 2025"
 
 onMounted(async () => {
+    if (!currentUserStore.user) {
+        await currentUserStore.fetchUser()
+    }
+    console.log("CURRENT :",currentUserStore.user)
     loading.value = false
     window.addEventListener('click', closeNotificationDropdown)
     window.addEventListener('click', closeProfileDropdown)
@@ -404,6 +413,23 @@ async function logout() {
         isLoggingOut.value = false
     }
 }
+
+// const currentUserStore.user = ref(null)
+// async function getCurrentUser() {
+//     try {
+//         const res = await $fetch('/users/current', {
+//             baseURL: apiUrl,
+//             credentials: 'include'
+//         })
+//         currentUserStore.user.value = res.data
+//     } catch (err) {
+//         if (err?.response?.status !== 401 && err?.status !== 401) {
+//             alert(err?.message || 'Unknown error')
+//         }
+//     } finally {
+//         // kosong = tidak masalah
+//     }
+// }
 
 </script>
 <style>

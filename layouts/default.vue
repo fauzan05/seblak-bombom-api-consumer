@@ -618,6 +618,7 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import { useUserStore } from '~/stores/user'
 
 const isMenuMobileOpen = ref(false)
 const toggleMobileMenu = () => {
@@ -626,7 +627,6 @@ const toggleMobileMenu = () => {
 
 const config = useRuntimeConfig();
 const apiUrl = config.public.apiUrl
-const data = ref(null)
 
 const isScrolled = ref(false)
 
@@ -641,8 +641,11 @@ const appSettingStore = useAppSettingStore()
 const isMobileSubmenuOpen = ref(false);
 
 onMounted(async () => {
-    // await getAppSetting()
-    // await getCurrentUser()
+    console.log("current user: ", currentUserStore.user)
+    if (!currentUserStore.user) {
+        await currentUserStore.fetchUser()
+    }
+
     logoUrl.value = `${apiUrl}/image/application/${appSettingStore.settings.data.logo_filename}`
     window.addEventListener('scroll', handleScroll)
     window.addEventListener('scroll', updateProgress)
@@ -714,43 +717,6 @@ watch(showNotification, (val) => {
 
 const yearNow = new Date().getFullYear()
 
-// async function getAppSetting() {
-//     try {
-//         const res = await $fetch('/applications', {
-//             baseURL: apiUrl
-//         })
-
-//         data.value = res.data
-//         logoUrl.value = `${apiUrl}/image/application/${data.value.logo_filename}`
-//         appSetting.value = data.value
-
-//     } catch (err) {
-//         alert(err?.message || 'Unknown error')
-
-//     } finally {
-//         setTimeout(() => {
-//             loading.value = false
-//         }, 300)
-//     }
-// }
-
-// async function getCurrentUser() {
-//     try {
-//         const res = await $fetch('/users/current', {
-//             baseURL: apiUrl,
-//             credentials: 'include'
-//         })
-
-//         useState('currentUserStore.user', () => res.data)
-//         currentUserStore.user.value = res.data
-//     } catch (err) {
-//         if (err?.response?.status !== 401 && err?.status !== 401) {
-//             alert(err?.message || 'Unknown error')
-//         }
-//     } finally {
-//         // kosong = tidak masalah
-//     }
-// }
 const isLoggingOut = ref(false)
 async function logout() {
     try {
