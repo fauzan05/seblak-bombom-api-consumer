@@ -19,8 +19,8 @@
                         d="M13 16h-1v-4h-1m1-4h.01M12 12h.01M12 12h.01m0-4h.01M21 12A9 9 0 113 12a9 9 0 0118 0z" />
                 </svg>
                 <div class="flex-1">
-                    <p class="text-sm font-semibold text-gray-800">Notifikasi Berhasil!</p>
-                    <p class="text-sm text-gray-600">Data berhasil disimpan ke sistem.</p>
+                    <!-- <p class="text-sm font-semibold text-gray-800">Notifikasi Berhasil!</p> -->
+                    <p class="text-sm text-gray-600">{{ notificationValue }}</p>
                 </div>
                 <button @click="showNotification = false" class="text-gray-400 hover:text-gray-700 ml-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
@@ -698,7 +698,7 @@ function scrollToTop() {
 }
 
 const showNotification = ref(false)
-
+const notificationValue = ref("")
 watch(showNotification, (val) => {
     if (val) {
         setTimeout(() => {
@@ -756,6 +756,7 @@ async function logout() {
         })
 
         showNotification.value = true
+        notificationValue.value = 'Logout successful!'
         location.reload()
     } catch (err) {
         alert(err?.message || 'Unknown error')
