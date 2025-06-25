@@ -44,7 +44,7 @@ export const useUserStore = defineStore('user', {
                 const apiUrl = config.public.apiUrl
                 const isServer = typeof window === 'undefined'
                 const cookieHeader = isServer ? useRequestHeaders(['cookie']).cookie || '' : ''
-
+                console.log("Cookie Header: ",cookieHeader)
                 const { data, error, status } = await useFetch<CurrentUserResponse>('/users/current', {
                     baseURL: apiUrl,
                     credentials: 'include',
