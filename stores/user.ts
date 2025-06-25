@@ -47,7 +47,11 @@ export const useUserStore = defineStore('user', {
                 const { data, error, status } = await useFetch<CurrentUserResponse>('/users/current', {
                     baseURL: apiUrl,
                     credentials: 'include',
-                    headers: isServer && cookieHeader ? { cookie: cookieHeader } : {}
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    }
+                    // headers: isServer && cookieHeader ? { cookie: cookieHeader } : {}
                 })
 
                 if (error.value || Number(status.value) === 401 || !data.value) {
