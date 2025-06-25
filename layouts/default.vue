@@ -615,9 +615,9 @@
 </template>
   
 <script setup>
-definePageMeta({
-    middleware: ['auth']
-})
+// definePageMeta({
+//     middleware: ['auth']
+// })
 
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import AOS from 'aos';
