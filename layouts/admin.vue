@@ -279,10 +279,6 @@
     </div>
 </template>
 <script setup>
-definePageMeta({
-    middleware: ['auth']
-})
-
 import { ref, onMounted, onUnmounted } from 'vue'
 import {
     HomeIcon,
