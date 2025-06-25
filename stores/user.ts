@@ -42,15 +42,13 @@ export const useUserStore = defineStore('user', {
             try {
                 const config = useRuntimeConfig()
                 const apiUrl = config.public.apiUrl
-                // const isServer = typeof window === 'undefined'
-                // const cookieHeader = isServer ? useRequestHeaders(['cookie']).cookie || '' : ''
+                const isServer = typeof window === 'undefined'
+                const cookieHeader = isServer ? useRequestHeaders(['cookie']).cookie || '' : ''
 
                 const { data, error, status } = await useFetch<CurrentUserResponse>('/users/current', {
                     baseURL: apiUrl,
                     credentials: 'include',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
+                    headers: isServer ? { cookie: cookieHeader } : {}
                 })
 
                 if (error.value || Number(status.value) === 401 || !data.value) {
