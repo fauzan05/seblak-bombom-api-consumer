@@ -42,28 +42,24 @@ export const useUserStore = defineStore('user', {
             try {
                 const config = useRuntimeConfig()
                 const apiUrl = config.public.apiUrl
-                const isServer = typeof window === 'undefined'
 
-                const cookieHeader = isServer ? useRequestHeaders(['cookie']).cookie || '' : ''
+                const nuxtApp = useNuxtApp()
+                const isServer = nuxtApp.ssrContext !== undefined
+
+                const cookieHeader = isServer
+                    ? nuxtApp.ssrContext?.event?.req?.headers?.cookie || ''
+                    : ''
 
                 const { data, error, status } = await useFetch<CurrentUserResponse>('/users/current', {
                     baseURL: apiUrl,
                     credentials: 'include',
-                    headers: isServer
-                        ? {
-                            cookie: cookieHeader,
-                            'Content-Type': 'application/json',
-                            Accept: 'application/json',
-                        }
-                        : {}
+                    headers: isServer ? { cookie: cookieHeader } : {}
                 })
 
                 if (error.value || Number(status.value) === 401 || !data.value) {
                     this.user = null
                     return null
                 }
-
-                console.log('Current user data:', data.value)
 
                 this.user = data.value.data
                 return data.value
