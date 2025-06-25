@@ -615,6 +615,10 @@
 </template>
   
 <script setup>
+definePageMeta({
+    middleware: ['auth']
+})
+
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import AOS from 'aos';
 import 'aos/dist/aos.css';
@@ -642,11 +646,11 @@ const isMobileSubmenuOpen = ref(false);
 
 onMounted(async () => {
     if (!currentUserStore.user) {
-        const user = await currentUserStore.fetchUser()
-        console.log("current user: ", user)
+        await currentUserStore.fetchUser()
     }
 
     logoUrl.value = `${apiUrl}/image/application/${appSettingStore.settings.data.logo_filename}`
+    console.log('logoUrl', logoUrl.value)
     window.addEventListener('scroll', handleScroll)
     window.addEventListener('scroll', updateProgress)
     updateProgress()
