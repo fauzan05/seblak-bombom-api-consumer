@@ -1,8 +1,7 @@
 <template>
     <head>
         <Title>Login - {{ appName }}</Title>
-        <Link rel="icon" type="image/x-icon"
-            href="favicon.ico" />
+        <Link rel="icon" type="image/x-icon" href="favicon.ico" />
     </head>
     <div class="w-full max-w-md mx-auto lg:mx-0">
         <div class="bg-white rounded-2xl shadow-2xl p-8 backdrop-blur-sm bg-opacity-95">
@@ -179,6 +178,13 @@ const handleLogin = async () => {
             body: loginForm.value,
             baseURL: apiUrl,
             credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept-Language': currentLang.value === 'id' ? 'id' : 'en',
+            },
+            onRequest({ options }) {
+                options.credentials = 'include'
+            },
         })
 
         data.value = res.data
