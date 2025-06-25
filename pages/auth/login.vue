@@ -172,7 +172,7 @@ const data = ref(null);
 const handleLogin = async () => {
     loading.value = true
     error.value = null
-    console.log("API URL : ", apiUrl)
+
     try {
         const res = await $fetch('/users/login', {
             method: 'POST',
@@ -182,11 +182,11 @@ const handleLogin = async () => {
         })
 
         data.value = res.data
-        // if (data.value.role === 'admin') {
-        //     router.push('/admin/dashboard')
-        // } else {
-        //     router.push('/')
-        // }
+        if (data.value.role === 'admin') {
+            router.push('/admin/dashboard')
+        } else {
+            router.push('/')
+        }
     } catch (err) {
         console.log("ERROR : ", err)
         if (err?.response?.status !== 500) {
