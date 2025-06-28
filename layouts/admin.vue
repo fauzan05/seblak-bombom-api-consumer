@@ -314,7 +314,7 @@ const isActive = (path) => {
     return route.path.startsWith(path)
 }
 
-const isSidebarCollapsed = ref(false)
+const isSidebarCollapsed = ref(true)
 const isMobileSidebarOpen = ref(false)
 const appSettingStore = useAppSettingStore()
 await appSettingStore.fetchSettings()

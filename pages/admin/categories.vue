@@ -8,7 +8,7 @@
         <Dialog as="div" @close="closeModal" class="relative z-10">
             <TransitionChild as="template" enter="duration-300 ease-out" enter-from="opacity-0" enter-to="opacity-100"
                 leave="duration-200 ease-in" leave-from="opacity-100" leave-to="opacity-0">
-                <div class="fixed inset-0 bg-black/75" />
+                <div class="fixed inset-0 bg-black/60 backdrop-blur-sm" />
             </TransitionChild>
 
             <div class="fixed inset-0 overflow-y-auto">
@@ -19,7 +19,7 @@
                         <DialogPanel
                             class="w-full max-w-4xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
                             <DialogTitle as="h3" class="text-lg font-medium leading-6 text-gray-900 mb-4">
-                                Create New Category
+                                {{ createTitleModal }}
                             </DialogTitle>
 
                             <form @submit.prevent="createNewCategory" class="flex flex-col md:flex-row gap-6">
@@ -59,50 +59,54 @@
                                 </div>
 
                                 <!-- Form Details - Full width on mobile, right column on desktop -->
-                                <div class="w-full md:w-1/2">
-                                    <!-- Name -->
-                                    <div class="mb-4">
-                                        <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
-                                            Name
-                                        </label>
-                                        <input type="text" id="name" v-model="categoryForm.name"
-                                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-orange-500 focus:border-orange-500"
-                                            required>
+                                <div class="w-full md:w-1/2 flex flex-col justify-between">
+                                    <div>
+                                        <!-- Name -->
+                                        <div class="mb-4">
+                                            <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
+                                                Name
+                                            </label>
+                                            <input type="text" id="name" v-model="categoryForm.name"
+                                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-orange-500 focus:border-orange-500"
+                                                required>
+                                        </div>
+
+                                        <!-- Description -->
+                                        <div class="mb-4">
+                                            <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
+                                                Description
+                                            </label>
+                                            <textarea id="description" v-model="categoryForm.description" rows="4"
+                                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-orange-500 focus:border-orange-500"
+                                                required></textarea>
+                                        </div>
                                     </div>
 
-                                    <!-- Description -->
-                                    <div class="mb-4">
-                                        <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
-                                            Description
-                                        </label>
-                                        <textarea id="description" v-model="categoryForm.description" rows="4"
-                                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-orange-500 focus:border-orange-500"
-                                            required></textarea>
-                                    </div>
-
-                                    <!-- Action Buttons -->
-                                    <div class="mt-6 flex justify-end space-x-3">
-                                        <button type="button"
-                                            class="inline-flex justify-center rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2"
-                                            @click="closeModal">
-                                            Cancel
-                                        </button>
-                                        <button type="submit" :disabled="loading"
-                                            class="inline-flex justify-center rounded-md border border-transparent bg-orange-600 px-4 py-2 text-sm font-medium text-white hover:bg-orange-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2">
-                                            <span v-if="!loading">Create Category</span>
-                                            <span v-else class="flex items-center">
-                                                <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                                                        stroke-width="4">
-                                                    </circle>
-                                                    <path class="opacity-75" fill="currentColor"
-                                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                                                    </path>
-                                                </svg>
-                                                Processing...
-                                            </span>
-                                        </button>
+                                    <div>
+                                        <!-- Action Buttons -->
+                                        <div class="mt-6 flex justify-center space-x-3">
+                                            <button type="button"
+                                                class="inline-flex justify-center rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2"
+                                                @click="closeModal">
+                                                Cancel
+                                            </button>
+                                            <button type="submit" :disabled="loading"
+                                                class="inline-flex justify-center rounded-md border border-transparent bg-orange-600 px-4 py-2 text-sm font-medium text-white hover:bg-orange-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2">
+                                                <span v-if="!loading">{{ createTitleModalButton }}</span>
+                                                <span v-else class="flex items-center">
+                                                    <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                                                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                        <circle class="opacity-25" cx="12" cy="12" r="10"
+                                                            stroke="currentColor" stroke-width="4">
+                                                        </circle>
+                                                        <path class="opacity-75" fill="currentColor"
+                                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                                        </path>
+                                                    </svg>
+                                                    Processing...
+                                                </span>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </form>
@@ -112,6 +116,113 @@
             </div>
         </Dialog>
     </TransitionRoot>
+    <!-- modal delete category confirmation -->
+    <TransitionRoot appear :show="isDeleteModalOpen" as="template">
+        <Dialog as="div" @close="closeDeleteModal" class="relative z-10">
+            <TransitionChild as="template" enter="duration-300 ease-out" enter-from="opacity-0" enter-to="opacity-100"
+                leave="duration-200 ease-in" leave-from="opacity-100" leave-to="opacity-0">
+                <div class="fixed inset-0 bg-black/60 backdrop-blur-sm" />
+            </TransitionChild>
+
+            <div class="fixed inset-0 overflow-y-auto">
+                <div class="flex min-h-full items-center justify-center p-4 text-center">
+                    <TransitionChild as="template" enter="duration-300 ease-out" enter-from="opacity-0 scale-95"
+                        enter-to="opacity-100 scale-100" leave="duration-200 ease-in" leave-from="opacity-100 scale-100"
+                        leave-to="opacity-0 scale-95">
+                        <DialogPanel
+                            class="w-full max-w-lg transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                            <!-- Header -->
+                            <div class="flex items-center justify-between mb-6">
+                                <DialogTitle as="h3" class="text-xl font-semibold text-gray-900">
+                                    Confirm Deletion
+                                </DialogTitle>
+                                <button @click="closeDeleteModal"
+                                    class="text-gray-400 hover:text-gray-500 transition-colors">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <!-- Warning Message -->
+                            <div class="bg-red-50 rounded-lg p-4 mb-6">
+                                <div class="flex">
+                                    <div class="flex-shrink-0">
+                                        <svg class="h-5 w-5 text-red-400" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                        </svg>
+                                    </div>
+                                    <div class="ml-3">
+                                        <p class="text-sm text-red-800">
+                                            The following categories will be permanently deleted. This action cannot be
+                                            undone.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- List of categories -->
+                            <div class="bg-gray-50 rounded-xl overflow-hidden">
+                                <div class="max-h-64 overflow-y-auto">
+                                    <ul class="divide-y divide-gray-200">
+                                        <li v-for="item in selectedCategories" :key="item.id"
+                                            class="flex items-center gap-3 p-4 hover:bg-gray-100 transition-colors">
+                                            <div class="flex-shrink-0">
+                                                <div
+                                                    class="w-10 h-10 rounded-lg bg-red-100 flex items-center justify-center">
+                                                    <img v-if="item.image" :src="item.image"
+                                                        alt="Category Image" class="w-10 h-10 object-cover rounded-lg">
+                                                </div>
+                                            </div>
+                                            <div class="flex-1 min-w-0">
+                                                <p class="text-sm font-medium text-gray-900 truncate">
+                                                    {{ item.name }}
+                                                </p>
+                                                <p class="text-sm text-gray-500 truncate" v-if="item.description">
+                                                    {{ item.description }}
+                                                </p>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- Action buttons -->
+                            <div class="mt-6 flex justify-end gap-3">
+                                <button type="button"
+                                    class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors"
+                                    @click="closeDeleteModal">
+                                    Cancel
+                                </button>
+                                <button type="button" :disabled="loading"
+                                    class="inline-flex cursor-pointer items-center justify-center px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                    @click="deleteSelectedCategories">
+                                    <template v-if="!loading">
+                                        Delete Selected
+                                    </template>
+                                    <template v-else>
+                                        <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                                stroke-width="4"></circle>
+                                            <path class="opacity-75" fill="currentColor"
+                                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                            </path>
+                                        </svg>
+                                        Deleting...
+                                    </template>
+                                </button>
+                            </div>
+                        </DialogPanel>
+                    </TransitionChild>
+                </div>
+            </div>
+        </Dialog>
+    </TransitionRoot>
+
     <div class="p-6 bg-gray-50 min-h-screen">
         <!-- Header Section -->
         <div class="flex justify-between items-center mb-8">
@@ -119,7 +230,7 @@
                 <h1 class="text-2xl font-bold text-gray-800">Categories Management</h1>
                 <p class="text-gray-600">Manage your product categories and organize your inventory</p>
             </div>
-            <button @click="openModal"
+            <button @click="openModal(null)"
                 class="bg-orange-600 cursor-pointer hover:bg-orange-700 text-white px-6 py-2 rounded-lg flex items-center space-x-2 transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor">
@@ -183,7 +294,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm text-gray-500">Products in Categories</p>
-                        <h3 class="text-2xl font-bold text-gray-700">{{ totalProducts }}</h3>
+                        <h3 class="text-2xl font-bold text-gray-700">{{ totalProductsInCategories }}</h3>
                     </div>
                     <div class="p-3 bg-purple-100 rounded-full">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-purple-600" fill="none"
@@ -211,26 +322,182 @@
                             class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent">
                     </div>
                 </div>
-                <div class="flex items-center space-x-4">
-                    <select v-model="statusFilter"
-                        class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
-                        <option value="">All Status</option>
-                        <option value="active">Active</option>
-                        <option value="inactive">Inactive</option>
-                    </select>
-                    <select v-model="sortBy"
-                        class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
-                        <option value="name">Sort by Name</option>
-                        <option value="created_at">Sort by Date</option>
-                    </select>
-                    <select v-model="pageSize"
-                        class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
-                        <option value="10">10</option>
-                        <option value="25">25</option>
-                        <option value="50">50</option>
-                    </select>
+                <div class="flex items-center space-x-4 ms-3">
+                    <!-- refresh data -->
+                    <button @click="fetchCategories" :disabled="loading"
+                        class="inline-flex items-center cursor-pointer gap-1 px-3 py-1.5 text-sm bg-orange-600 text-white rounded-md shadow hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-offset-2 transition disabled:opacity-50 disabled:cursor-not-allowed">
+                        <span v-if="!loading" class="flex items-center gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor" class="h-4 w-4">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+                            </svg>
+                            Refresh
+                        </span>
+                        <span v-else class="flex items-center gap-1">
+                            <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+                                <path class="opacity-75" fill="currentColor"
+                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                            </svg>
+                            Loading...
+                        </span>
+                    </button>
+                    <!-- status filter -->
+                    <div class="w-30">
+                        <Listbox v-model="selectedStatusFilter">
+                            <div class="relative z-10">
+                                <ListboxButton
+                                    class="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+                                    <span class="block truncate">{{ selectedStatusFilter.name }}</span>
+                                    <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                                        <ChevronUpDownIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
+                                    </span>
+                                </ListboxButton>
+
+                                <transition leave-active-class="transition duration-100 ease-in"
+                                    leave-from-class="opacity-100" leave-to-class="opacity-0">
+                                    <ListboxOptions
+                                        class="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
+                                        <ListboxOption v-slot="{ active, selected }" v-for="statusItem in statusItems"
+                                            :key="statusItem.name" :value="statusItem" as="template">
+                                            <li :class="[
+                                                active ? 'bg-amber-100 text-amber-900' : 'text-gray-900',
+                                                'relative cursor-default select-none py-2 pl-10 pr-4',
+                                            ]">
+                                                <span :class="[
+                                                    selected ? 'font-medium' : 'font-normal',
+                                                    'block truncate',
+                                                ]">{{ statusItem.name }}</span>
+                                                <span v-if="selected"
+                                                    class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600">
+                                                    <CheckIcon class="h-5 w-5" aria-hidden="true" />
+                                                </span>
+                                            </li>
+                                        </ListboxOption>
+                                    </ListboxOptions>
+                                </transition>
+                            </div>
+                        </Listbox>
+                    </div>
+                    <!-- sort by filter -->
+                    <div class="w-40">
+                        <Listbox v-model="selectedSortByFilter">
+                            <div class="relative z-10">
+                                <ListboxButton
+                                    class="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+                                    <span class="block truncate">{{ selectedSortByFilter.name }}</span>
+                                    <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                                        <ChevronUpDownIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
+                                    </span>
+                                </ListboxButton>
+
+                                <transition leave-active-class="transition duration-100 ease-in"
+                                    leave-from-class="opacity-100" leave-to-class="opacity-0">
+                                    <ListboxOptions
+                                        class="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
+                                        <ListboxOption v-slot="{ active, selected }" v-for="sortByItem in sortByItems"
+                                            :key="sortByItem.name" :value="sortByItem" as="template">
+                                            <li :class="[
+                                                active ? 'bg-amber-100 text-amber-900' : 'text-gray-900',
+                                                'relative cursor-default select-none py-2 pl-10 pr-4',
+                                            ]">
+                                                <span :class="[
+                                                    selected ? 'font-medium' : 'font-normal',
+                                                    'block truncate',
+                                                ]">{{ sortByItem.name }}</span>
+                                                <span v-if="selected"
+                                                    class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600">
+                                                    <CheckIcon class="h-5 w-5" aria-hidden="true" />
+                                                </span>
+                                            </li>
+                                        </ListboxOption>
+                                    </ListboxOptions>
+                                </transition>
+                            </div>
+                        </Listbox>
+                    </div>
+                    <!-- page size filter -->
+                    <div class="w-30">
+                        <Listbox v-model="selectedPageSizeFilter">
+                            <div class="relative z-10">
+                                <ListboxButton
+                                    class="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+                                    <span class="block truncate">{{ selectedPageSizeFilter.name }}</span>
+                                    <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                                        <ChevronUpDownIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
+                                    </span>
+                                </ListboxButton>
+
+                                <transition leave-active-class="transition duration-100 ease-in"
+                                    leave-from-class="opacity-100" leave-to-class="opacity-0">
+                                    <ListboxOptions
+                                        class="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
+                                        <ListboxOption v-slot="{ active, selected }" v-for="pageSizeItem in pageSizeItems"
+                                            :key="pageSizeItem.name" :value="pageSizeItem" as="template">
+                                            <li :class="[
+                                                active ? 'bg-amber-100 text-amber-900' : 'text-gray-900',
+                                                'relative cursor-default select-none py-2 pl-10 pr-4',
+                                            ]">
+                                                <span :class="[
+                                                    selected ? 'font-medium' : 'font-normal',
+                                                    'block truncate',
+                                                ]">{{ pageSizeItem.name }}</span>
+                                                <span v-if="selected"
+                                                    class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600">
+                                                    <CheckIcon class="h-5 w-5" aria-hidden="true" />
+                                                </span>
+                                            </li>
+                                        </ListboxOption>
+                                    </ListboxOptions>
+                                </transition>
+                            </div>
+                        </Listbox>
+                    </div>
+                    <!-- direction filter -->
+                    <SwitchGroup as="div" class="flex items-center space-x-2">
+                        <SwitchLabel as="span" class="text-sm text-gray-700">Asc</SwitchLabel>
+                        <Switch v-model="isDesc" :class="isDesc ? 'bg-orange-600' : 'bg-gray-400'"
+                            class="relative inline-flex items-center h-[33px] w-[68px] shrink-0 cursor-pointer rounded-full border-2 border-gray-200 transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75">
+                            <span class="sr-only">Toggle sort direction</span>
+                            <span aria-hidden="true" :class="isDesc ? 'translate-x-9' : 'translate-x-0'"
+                                class="pointer-events-none inline-block h-[29px] w-[29px] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out" />
+                        </Switch>
+                        <SwitchLabel as="span" class="text-sm text-gray-700">Desc</SwitchLabel>
+                    </SwitchGroup>
                 </div>
             </div>
+        </div>
+
+        <div class="w-full flex items-center">
+            <button @click="selectAllCategories"
+                class="inline-flex mb-4 items-center cursor-pointer gap-1 px-3 py-1.5 text-sm bg-orange-600 text-white rounded-md shadow hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-offset-2 transition disabled:opacity-50 disabled:cursor-not-allowed">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                </svg>
+                Select All
+            </button>
+            <button @click="clearSelectAllCategories"
+                class="inline-flex ms-4 mb-4 items-center cursor-pointer gap-1 px-3 py-1.5 text-sm bg-gray-600 text-white rounded-md shadow hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 transition disabled:opacity-50 disabled:cursor-not-allowed">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                </svg>
+                Clear All
+            </button>
+            <button v-show="showButtonDeleteSelectedItems" @click="showModalDeleteSelectedItems"
+                class="inline-flex ms-4 mb-4 items-center cursor-pointer gap-1 px-3 py-1.5 text-sm bg-red-600 text-white rounded-md shadow hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2 transition disabled:opacity-50 disabled:cursor-not-allowed">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+                Delete Selected Items
+            </button>
         </div>
 
         <!-- Categories Grid -->
@@ -246,6 +513,30 @@
                             {{ category.status }}
                         </span>
                     </div>
+                    <div class="absolute top-12 right-3">
+                        <button
+                            class="bg-white/80 cursor-pointer hover:bg-white/25 backdrop-blur px-2 py-1 rounded-full text-xs font-medium text-gray-800 shadow">
+                            {{ category.products.length }} products
+                        </button>
+                    </div>
+                    <div class="absolute top-3 left-3">
+                        <label class="inline-flex items-center cursor-pointer">
+                            <input type="checkbox" v-model="selectedCategories" :value="category" class="sr-only">
+                            <div class="h-5 w-5 rounded transition-all duration-200 ease-in-out relative" :class="[
+                                selectedCategories.includes(category)
+                                    ? 'bg-gradient-to-br from-orange-400 to-orange-600'
+                                    : 'bg-white/50'
+                            ]">
+                                <!-- Checkmark -->
+                                <svg class="w-4 h-4 text-white absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2
+                       transition-all duration-200 ease-in-out"
+                                    :class="selectedCategories.includes(category) ? 'opacity-100' : 'opacity-0'"
+                                    viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
+                                </svg>
+                            </div>
+                        </label>
+                    </div>
                 </div>
                 <div class="p-4">
                     <h3 class="text-lg font-semibold text-gray-800 mb-2">{{ category.name }}</h3>
@@ -254,11 +545,11 @@
                         <span class="text-sm text-gray-500">{{ formatDate(category.created_at) }}</span>
                     </div>
                     <div class="flex items-center space-x-2">
-                        <button @click="editCategory(category)"
+                        <button @click="openModal(category)"
                             class="flex-1 bg-orange-600 cursor-pointer hover:bg-orange-700 text-white px-3 py-2 rounded-lg text-sm transition-colors">
                             Edit
                         </button>
-                        <button @click="deleteCategory(category.id)"
+                        <button @click="deleteCategory(category)"
                             class="px-3 py-2 bg-red-100 cursor-pointer hover:bg-red-200 text-red-600 rounded-lg transition-colors">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor">
@@ -303,10 +594,9 @@ const config = useRuntimeConfig()
 const apiUrl = config.public.apiUrl
 
 const appSettingStore = useAppSettingStore()
-
+import { CheckIcon, ChevronUpDownIcon } from '@heroicons/vue/20/solid'
 import { ref, computed, onMounted, watch } from 'vue'
 import { useToast } from "vue-toastification";
-// Toast notification
 const toast = useToast()
 
 import {
@@ -315,6 +605,13 @@ import {
     Dialog,
     DialogPanel,
     DialogTitle,
+    Switch,
+    SwitchGroup,
+    SwitchLabel,
+    Listbox,
+    ListboxButton,
+    ListboxOptions,
+    ListboxOption
 } from '@headlessui/vue'
 
 const isCreateNewCategoryOpen = ref(false)
@@ -323,21 +620,59 @@ function closeModal() {
     isCreateNewCategoryOpen.value = false
 }
 
-function openModal() {
-    resetForm()
+function openModal(selectedCategory = null) {
+    if (selectedCategory) {
+        categoryForm.value.id = selectedCategory.id
+        categoryForm.value.name = selectedCategory.name
+        categoryForm.value.description = selectedCategory.description
+        categoryImage.value = selectedCategory.image || null
+        createTitleModal.value = 'Edit Category'
+        createTitleModalButton.value = 'Update Category'
+        isCreateNewCategory.value = false
+    } else {
+        createTitleModal.value = 'Create New Category'
+        createTitleModalButton.value = 'Create Category'
+        resetForm()
+    }
     isCreateNewCategoryOpen.value = true
 }
 
+// List reactive data items
+const sortByItems = [
+    { name: 'Name', value: 'categories.name' },
+    { name: 'Created Date', value: 'categories.created_at' },
+    { name: 'Updated Date', value: 'categories.updated_at' }
+]
+
+const statusItems = [
+    { name: 'Active', value: 'active' },
+    { name: 'Inactive', value: 'inactive' }
+]
+
+const pageSizeItems = [
+    { name: '10', value: 10 },
+    { name: '25', value: 25 },
+    { name: '50', value: 50 },
+    { name: '100', value: 100 }
+]
+
 // Reactive data
+const createTitleModal = ref('')
+const createTitleModalButton = ref('')
+const isCreateNewCategory = ref(true)
 const categories = ref([])
 const search = ref('')
-const statusFilter = ref('active')
-const sortBy = ref('name')
-const pageSize = ref(10)
+const selectedStatusFilter = ref(statusItems[0])
+const selectedSortByFilter = ref(sortByItems[0])
+const selectedPageSizeFilter = ref(pageSizeItems[0])
+const selectedCategories = ref([])
+const isDesc = ref(true)
 const dataPerPages = ref(0)
 const currentPage = ref(1)
 const loading = ref(false)
 const totalPages = ref(1)
+const showButtonDeleteSelectedItems = ref(false)
+const isDeleteModalOpen = ref(false)
 
 // Modal states  
 const showModal = ref(false)
@@ -347,13 +682,29 @@ const totalCurrentCategories = computed(() => categories.value.total_current_dat
 const totalRealCategories = computed(() => categories.value.total_real_datas)
 const totalActiveCategories = computed(() => categories.value.total_active_datas)
 const totalInactiveCategories = computed(() => categories.value.total_inactive_datas)
-const totalProducts = computed(() => 0)
+const direction = computed(() => isDesc.value ? 'desc' : 'asc')
+const totalProductsInCategories = ref(0)
 const categoryImage = ref(null)
 const uploadedCategoryImageFile = ref(null)
+const selectAllCategories = () => {
+    selectedCategories.value = categories.value.data.map(cat => cat)
+}
+const clearSelectAllCategories = () => {
+    selectedCategories.value = []
+    showButtonDeleteSelectedItems.value = false
+}
 
 // watch for search and filter changes
-watch([statusFilter, sortBy, pageSize, search], () => {
+watch([selectedStatusFilter, selectedSortByFilter, selectedPageSizeFilter, search, isDesc], () => {
     fetchCategories()
+})
+
+watch(selectedCategories, (newSelectedCategories) => {
+    if (newSelectedCategories.length > 0) {
+        showButtonDeleteSelectedItems.value = true
+    } else {
+        showButtonDeleteSelectedItems.value = false
+    }
 })
 
 const categoryForm = ref({
@@ -364,6 +715,7 @@ const categoryForm = ref({
 });
 
 const resetForm = () => {
+    isCreateNewCategory.value = true
     categoryForm.value = {
         id: null,
         name: '',
@@ -423,12 +775,13 @@ const validateFile = (file) => {
 
 const createNewCategory = async () => {
     try {
+        let message = '';
         loading.value = true
         const formData = new FormData()
         formData.append('name', categoryForm.value.name)
         formData.append('description', categoryForm.value.description)
         // If categoryImage is a base64 string, convert it to a file first
-        if (categoryImage.value) {
+        if (uploadedCategoryImageFile.value) {
             // Convert base64 to blob
             const response = await fetch(categoryImage.value)
             const blob = await response.blob()
@@ -444,15 +797,26 @@ const createNewCategory = async () => {
             formData.append('image', file)
         }
 
-        await $fetch('/categories', {
-            method: 'POST',
-            body: formData,
-            baseURL: apiUrl,
-            credentials: 'include'
-        })
+        if (isCreateNewCategory.value) {
+            await $fetch('/categories', {
+                method: 'POST',
+                body: formData,
+                baseURL: apiUrl,
+                credentials: 'include'
+            })
+            message = 'Category created successfully!'
+        } else {
+            await $fetch(`/categories/${categoryForm.value.id}`, {
+                method: 'PUT',
+                body: formData,
+                baseURL: apiUrl,
+                credentials: 'include'
+            })
+            message = 'Category updated successfully!'
+        }
 
         fetchCategories()
-        toast.success(`Category ${categoryForm.value.name} was created successfully!`)
+        toast.success(message)
         closeModal()
     } catch (error) {
         console.error('Error creating category:', error)
@@ -462,60 +826,13 @@ const createNewCategory = async () => {
     }
 }
 
-const updateCategory = async () => {
-    // const formData = new FormData()
-    // formData.append('_method', 'PUT')
-    // formData.append('name', categoryForm.value.name)
-    // formData.append('description', categoryForm.value.description)
-    // formData.append('status', categoryForm.value.status)
-    // if (categoryForm.value.image && typeof categoryForm.value.image === 'object') {
-    //     formData.append('image', categoryForm.value.image)
-    // }
-
-    // const response = await fetch(`/categories/${categoryForm.value.id}`, {
-    //     method: 'POST',
-    //     body: formData,
-    //     baseURL: apiUrl,
-    //     headers: {
-    //         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-    //     }
-    // })
-
-    // if (!response.ok) {
-    //     throw new Error('Failed to update category')
-    // }
-
-    // return await response.json()
+const showModalDeleteSelectedItems = () => {
+    isDeleteModalOpen.value = true
 }
 
-const deleteCategory = (categoryId) => {
-    // categoryToDelete.value = categoryId
-    // showDeleteModal.value = true
+const closeDeleteModal = () => {
+    isDeleteModalOpen.value = false
 }
-
-const confirmDelete = async () => {
-    try {
-        // const response = await fetch(`/api/categories/${categoryToDelete.value}`, {
-        //     method: 'DELETE',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        //     }
-        // })
-
-        // if (!response.ok) {
-        //     throw new Error('Failed to delete category')
-        // }
-
-        // await fetchCategories()
-        // toast.success('Category deleted successfully!')
-        // closeDeleteModal()
-    } catch (error) {
-        console.error('Error deleting category:', error)
-        toast.error('Failed to delete category. Please try again.')
-    }
-}
-
 
 // Pagination functions
 const previousPage = () => {
@@ -555,7 +872,8 @@ const formatDate = (utcDateString) => {
 // Fetch categories from API
 const fetchCategories = async () => {
     try {
-        const response = await $fetch(`/categories?is_active=${statusFilter.value || ''}&per_page=${pageSize.value}&page=${currentPage.value}&search=${search.value}`, {
+        loading.value = true
+        const response = await $fetch(`/categories?is_active=${selectedStatusFilter.value.value || ''}&per_page=${selectedPageSizeFilter.value.value}&page=${currentPage.value}&search=${search.value}&sort_by=${direction.value}&column=${selectedSortByFilter.value.value}`, {
             baseURL: apiUrl,
             credentials: 'include'
         })
@@ -570,6 +888,7 @@ const fetchCategories = async () => {
                 } else {
                     category.status = 'inactive'
                 }
+                totalProductsInCategories.value += category.products.length || 0
             })
         dataPerPages.value = response.data_per_pages
         currentPage.value = response.current_pages
@@ -579,7 +898,39 @@ const fetchCategories = async () => {
         toast.error('Failed to load categories')
         // Fallback to sample data for development
         loadSampleData()
+    } finally {
+        loading.value = false
     }
+}
+
+const deleteSelectedCategories = async () => {
+    try {
+        loading.value = true
+        let ids = selectedCategories.value.map(category => category.id)
+        ids = ids.join(',')
+
+        await $fetch(`/categories?ids=${ids}`, {
+            method: 'DELETE',
+            body: { ids },
+            baseURL: apiUrl,
+            credentials: 'include'
+        })
+        toast.success('Selected categories deleted successfully!')
+        closeDeleteModal()
+        fetchCategories()
+        selectedCategories.value = []
+    } catch (error) {
+        console.error('Error deleting categories:', error)
+        toast.error('Failed to delete selected categories')
+    } finally {
+        loading.value = false
+    }
+}
+
+const deleteCategory = (category) => {
+    selectedCategories.value = []
+    isDeleteModalOpen.value = true
+    selectedCategories.value = [category]
 }
 
 // Keyboard shortcuts
