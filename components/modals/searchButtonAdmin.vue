@@ -9,7 +9,7 @@
         </button>
 
         <button @click="openSearchModal"
-            class="md:flex hidden items-center text-left space-x-3 px-4 h-10 bg-white ring-1 ring-slate-900/10 hover:ring-slate-300 focus:outline-none focus:ring-2 focus:ring-orange-500 shadow-sm rounded-lg text-slate-400">
+            class="md:flex hidden items-center text-left space-x-3 px-4 h-10 bg-white ring-1 ring-slate-900/10 hover:ring-slate-300 focus:outline-none focus:ring-2 focus:ring-orange-500 shadow-sm rounded-lg text-slate-400 focus:border-transparent">
             <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                 stroke-linejoin="round" class="flex-none text-slate-300 dark:text-slate-400" aria-hidden="true">
                 <path d="m19 19-3.5-3.5" />

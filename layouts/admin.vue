@@ -124,7 +124,7 @@
 
                         <!-- Dropdown -->
                         <div v-show="isNotificationDropdownOpen"
-                            class="absolute right-0 top-full w-80 bg-white rounded-2xl shadow-xl border border-gray-100 z-50 transition-all duration-200">
+                            class="absolute -right-4 top-full w-80 bg-white rounded-2xl shadow-xl border border-gray-100 z-50 transition-all duration-200">
                             <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
                                 <h3 class="text-sm font-semibold text-gray-800">Notifications</h3><button
                                     class="text-xs text-orange-600 hover:text-orange-700 font-medium">Mark all as
@@ -190,7 +190,7 @@
                             </div>
                         </button>
                         <div v-show="isProfileDropdownOpen"
-                            class="absolute right-0 top-full w-70 bg-white rounded-2xl shadow-xl border border-gray-100 z-50 transition-all duration-200">
+                            class="absolute -right-4 top-full w-70 bg-white rounded-2xl shadow-xl border border-gray-100 z-50 transition-all duration-200">
                             <div class="px-4 py-4 border-b border-gray-100">
                                 <div class="flex items-center space-x-3">
                                     <svg width="100" height="100" class="h-8 w-8 rounded-full object-cover"
