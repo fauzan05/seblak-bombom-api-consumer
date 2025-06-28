@@ -20,4 +20,7 @@ export default defineNuxtConfig({
     '~/assets/css/main.css',
     'vue-toastification/dist/index.css'
   ],
+  build: {
+    transpile: ['vue-toastification']
+  }
 })

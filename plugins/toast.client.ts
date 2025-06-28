@@ -1,5 +1,4 @@
-// plugins/toast.client.ts
-import Toast, { POSITION, type PluginOptions } from "vue-toastification";
+import Toast, { useToast, POSITION, type PluginOptions } from "vue-toastification";
 import "vue-toastification/dist/index.css";
 
 export default defineNuxtPlugin((nuxtApp) => {
@@ -12,4 +11,17 @@ export default defineNuxtPlugin((nuxtApp) => {
   };
 
   nuxtApp.vueApp.use(Toast, options);
+
+  const toast = useToast()
+
+  return {
+    provide: {
+      toast: {
+        success: (message: string) => toast.success(message),
+        error: (message: string) => toast.error(message),
+        warning: (message: string) => toast.warning(message),
+        info: (message: string) => toast.info(message),
+      }
+    }
+  }
 });

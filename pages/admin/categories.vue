@@ -596,8 +596,7 @@ const apiUrl = config.public.apiUrl
 const appSettingStore = useAppSettingStore()
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/vue/20/solid'
 import { ref, computed, onMounted, watch } from 'vue'
-import { useToast } from "vue-toastification";
-const toast = useToast()
+const { $toast } = useNuxtApp()
 
 import {
     TransitionRoot,
@@ -816,11 +815,11 @@ const createNewCategory = async () => {
         }
 
         fetchCategories()
-        toast.success(message)
+        $toast.success(message)
         closeModal()
     } catch (error) {
         console.error('Error creating category:', error)
-        toast.error('Failed to create category. Please try again.')
+        $toast.error('Failed to create category. Please try again.')
     } finally {
         loading.value = false
     }
@@ -895,7 +894,7 @@ const fetchCategories = async () => {
         totalPages.value = response.total_pages
     } catch (error) {
         console.error('Error fetching categories:', error)
-        toast.error('Failed to load categories')
+        $toast.error('Failed to load categories')
         // Fallback to sample data for development
         loadSampleData()
     } finally {
@@ -915,13 +914,13 @@ const deleteSelectedCategories = async () => {
             baseURL: apiUrl,
             credentials: 'include'
         })
-        toast.success('Selected categories deleted successfully!')
+        $toast.success('Selected categories deleted successfully!')
         closeDeleteModal()
         fetchCategories()
         selectedCategories.value = []
     } catch (error) {
         console.error('Error deleting categories:', error)
-        toast.error('Failed to delete selected categories')
+        $toast.error('Failed to delete selected categories')
     } finally {
         loading.value = false
     }

@@ -5,9 +5,9 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   // const isClient = typeof window !== 'undefined'
 
   // if (isClient) {
-  //   console.log('✅ CLIENT: Current user:', user)
+  //   console.log('CLIENT: Current user:', user)
   // } else {
-  //   console.log('✅ SERVER: Current user:', user)
+  //   console.log('SERVER: Current user:', user)
   // }
 
   if (to.path.startsWith('/admin') && user?.data?.role !== 'admin') {
