@@ -24,14 +24,31 @@
 </template>  
   
 <script setup>
-// Menggunakan composable bawaan dari Nuxt
-const colorMode = useColorMode()
+import { ref, onMounted } from 'vue'
 
-// Computed property untuk menentukan mode gelap
-const isDark = computed(() => colorMode.value === 'dark')
+const isDark = ref(false)
 
-// Fungsi toggle dark mode
 const toggleDarkMode = () => {
-    colorMode.preference = isDark.value ? 'light' : 'dark'
+  isDark.value = !isDark.value
+  applyTheme()
+  localStorage.setItem('theme', isDark.value ? 'dark' : 'light')
 }
+
+const applyTheme = () => {
+  const html = document.documentElement
+  if (isDark.value) {
+    html.classList.add('dark')
+    html.setAttribute('data-theme', 'dark')
+  } else {
+    html.classList.remove('dark')
+    html.setAttribute('data-theme', 'light')
+  }
+}
+
+onMounted(() => {
+  const saved = localStorage.getItem('theme')
+  isDark.value = saved === 'dark'
+  applyTheme()
+})
 </script>
+
