@@ -3,7 +3,7 @@
         <Link rel="icon" type="image/x-icon" href="favicon.ico" />
     </head>
     <!-- Fullscreen Loading Overlay -->
-    <div v-if="loading" class="fixed inset-0 z-50 flex items-center justify-center bg-white/80 backdrop-blur-sm">
+    <div v-if="loading" class="fixed inset-0 z-50 flex items-center justify-center bg-white/80 dark:bg-slate-800/50 backdrop-blur-sm">
         <svg class="animate-spin h-12 w-12 text-orange-500" xmlns="http://www.w3.org/2000/svg" fill="none"
             viewBox="0 0 24 24">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -84,7 +84,7 @@
                     </button>
                     <h1 class="text-xl font-semibold text-gray-800 dark:text-white">Dashboard</h1>
                 </div>
-                <div class="flex items-center space-x-6">
+                <div class="flex items-center space-x-4">
                     <div class="relative group">
                         <SearchButton />
                     </div>
@@ -107,7 +107,7 @@
 
                         <!-- Dropdown -->
                         <div v-show="isNotificationDropdownOpen"
-                            class="absolute -right-4 top-full w-80 bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 z-50 transition-all duration-200">
+                            class="absolute -right-4 top-full w-80 bg-white z-50 dark:bg-slate-800 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 transition-all duration-200">
                             <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
                                 <h3 class="text-sm font-semibold text-gray-800 dark:text-white">Notifications</h3><button
                                     class="text-xs text-orange-600 hover:text-orange-700 font-medium">Mark all as
@@ -155,8 +155,10 @@
                             </div>
                         </div>
                     </div>
-                    <ToggleDarkMode />
-                    <div class="relative h-[80px] flex items-center dropdown-notification-wrapper"
+                    <div class="relative h-[80px] flex items-center">
+                        <ToggleDarkMode />
+                    </div>
+                    <div class="relative h-[80px] ms-3 flex items-center dropdown-notification-wrapper"
                         @mouseenter="openProfileDropdown" @mouseleave="isProfileDropdownOpen = false">
                         <button @click.stop="toggleProfileDropdown" class="relative">
                             <div class="relative">

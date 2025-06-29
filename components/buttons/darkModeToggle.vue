@@ -1,6 +1,6 @@
 <template>
     <button @click="toggleDarkMode" :title="isDark ? 'Switch to light mode' : 'Switch to dark mode'"
-        class="relative overflow-hidden p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 w-9 h-9 ease-in-out">
+        class="relative overflow-hidden -p-2.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 w-9 h-9 ease-in-out">
         <div class="relative w-full h-full">
             <!-- Sun icon -->
             <svg class="absolute -inset-1 w-6 h-6 m-auto text-yellow-500 transition-all duration-300"

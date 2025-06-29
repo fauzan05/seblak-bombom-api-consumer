@@ -244,7 +244,7 @@
         <!-- Statistics Cards -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <div
-                class="bg-white rounded-xl shadow-md p-6 border border-gray-50 dark:bg-slate-800/50 dark:border-slate-700/50 backdrop-blur-xl">
+                class="bg-white rounded-xl shadow-md p-6 border border-gray-50 dark:bg-slate-800/50 dark:border-slate-700/50">
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm text-gray-500 dark:text-white">Total Categories</p>
@@ -261,7 +261,7 @@
             </div>
 
             <div
-                class="bg-white rounded-xl shadow-md p-6 border border-gray-50 dark:bg-slate-800/50 dark:border-slate-700/50 backdrop-blur-xl">
+                class="bg-white rounded-xl shadow-md p-6 border border-gray-50 dark:bg-slate-800/50 dark:border-slate-700/50">
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm text-gray-500 dark:text-white">Active Categories</p>
@@ -278,7 +278,7 @@
             </div>
 
             <div
-                class="bg-white rounded-xl shadow-md p-6 border border-gray-50 dark:bg-slate-800/50 dark:border-slate-700/50 backdrop-blur-xl">
+                class="bg-white rounded-xl shadow-md p-6 border border-gray-50 dark:bg-slate-800/50 dark:border-slate-700/50">
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm text-gray-500 dark:text-white">Inactive Categories</p>
@@ -295,7 +295,7 @@
             </div>
 
             <div
-                class="bg-white rounded-xl shadow-md p-6 borde border-gray-50 dark:bg-slate-800/50 dark:border-slate-700/50 backdrop-blur-xl">
+                class="bg-white rounded-xl shadow-md p-6 borde border-gray-50 dark:bg-slate-800/50 dark:border-slate-700/50">
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm text-gray-500 dark:text-white">Products in Categories</p>
@@ -353,7 +353,7 @@
                     <!-- status filter -->
                     <div class="w-30">
                         <Listbox v-model="selectedStatusFilter">
-                            <div class="relative z-10">
+                            <div class="relative z-5">
                                 <ListboxButton
                                     class="relative w-full cursor-default rounded-lg bg-white dark:bg-slate-800/50 py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
                                     <span class="block truncate">{{ selectedStatusFilter.name }}</span>
@@ -390,7 +390,7 @@
                     <!-- sort by filter -->
                     <div class="w-40">
                         <Listbox v-model="selectedSortByFilter">
-                            <div class="relative z-10">
+                            <div class="relative z-5">
                                 <ListboxButton
                                     class="relative w-full cursor-default rounded-lg bg-white dark:bg-slate-800/50 py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
                                     <span class="block truncate">{{ selectedSortByFilter.name }}</span>
@@ -427,7 +427,7 @@
                     <!-- page size filter -->
                     <div class="w-30">
                         <Listbox v-model="selectedPageSizeFilter">
-                            <div class="relative z-10">
+                            <div class="relative z-5">
                                 <ListboxButton
                                     class="relative w-full cursor-default rounded-lg bg-white dark:bg-slate-800/50 py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
                                     <span class="block truncate">{{ selectedPageSizeFilter.name }}</span>
@@ -521,7 +521,7 @@
                     </div>
                     <div class="absolute top-12 right-3">
                         <button
-                            class="bg-white/80 cursor-pointer hover:bg-white/25 backdrop-blur px-2 py-1 rounded-full text-xs font-medium text-gray-800 shadow">
+                            class="bg-white/80 cursor-pointer hover:bg-white/25 px-2 py-1 rounded-full text-xs font-medium text-gray-800 shadow">
                             {{ category.products.length }} products
                         </button>
                     </div>
