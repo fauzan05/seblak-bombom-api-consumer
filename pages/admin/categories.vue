@@ -29,9 +29,20 @@
                                         @drop.prevent="handleDrop" @dragover.prevent="dragover = true"
                                         @dragleave.prevent="dragover = false"
                                         :class="{ 'border-orange-500 bg-orange-50': dragover }">
-                                        <div v-if="categoryImage" class="w-full h-full">
+                                        <div v-if="categoryImage" class="w-full h-full relative">
+                                            <!-- Gambar -->
                                             <img :src="categoryImage" alt="Category"
                                                 class="w-full h-full object-cover rounded-lg" />
+
+                                            <!-- Overlay tombol "Change Image" -->
+                                            <div class="absolute bottom-4 left-1/2 -translate-x-1/2">
+                                                <label
+                                                    class="cursor-pointer inline-block px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-500 text-sm shadow">
+                                                    Change Image
+                                                    <input type="file" class="sr-only" @change="handleFileSelect"
+                                                        accept="image/*">
+                                                </label>
+                                            </div>
                                         </div>
                                         <div v-else class="text-center">
                                             <div class="mb-4">
@@ -167,7 +178,8 @@
                             </div>
 
                             <!-- List of categories -->
-                            <div class="bg-gray-50 dark:bg-slate-800/80 border dark:border-gray-100 rounded-xl overflow-hidden">
+                            <div
+                                class="bg-gray-50 dark:bg-slate-800/80 border dark:border-gray-100 rounded-xl overflow-hidden">
                                 <div class="max-h-64 overflow-y-auto">
                                     <ul class="divide-y divide-gray-200">
                                         <li v-for="item in selectedCategories" :key="item.id"
@@ -452,7 +464,7 @@
                                                     'block truncate',
                                                 ]">{{ pageSizeItem.name }}</span>
                                                 <span v-if="selected"
-                                                    class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600">
+                                                    class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600 dark:text-white">
                                                     <CheckIcon class="h-5 w-5" aria-hidden="true" />
                                                 </span>
                                             </li>
