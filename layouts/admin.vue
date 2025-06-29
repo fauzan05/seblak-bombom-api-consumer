@@ -1,4 +1,7 @@
 <template>
+    <head>
+        <Link rel="icon" type="image/x-icon" href="favicon.ico" />
+    </head>
     <!-- Fullscreen Loading Overlay -->
     <div v-if="loading" class="fixed inset-0 z-50 flex items-center justify-center bg-white/80 backdrop-blur-sm">
         <svg class="animate-spin h-12 w-12 text-orange-500" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -8,28 +11,6 @@
             </path>
         </svg>
     </div>
-    <!-- Notifikasi -->
-    <Transition name="fade-slide">
-        <div v-if="showNotification"
-            class="fixed bottom-6 right-6 bg-white border-l-4 border-orange-500 shadow-lg rounded-md p-4 w-80 z-50">
-            <div class="flex items-start">
-                <svg class="h-6 w-6 text-orange-500 mr-2 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                    stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                        d="M13 16h-1v-4h-1m1-4h.01M12 12h.01M12 12h.01m0-4h.01M21 12A9 9 0 113 12a9 9 0 0118 0z" />
-                </svg>
-                <div class="flex-1">
-                    <p class="text-sm font-semibold text-gray-800">New Notification!</p>
-                    <p class="text-sm text-gray-600">{{ notificationValue }}</p>
-                </div>
-                <button @click="showNotification = false" class="text-gray-400 hover:text-gray-700 ml-2">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
-        </div>
-    </Transition>
     <div v-if="!loading" class="h-screen flex overflow-hidden bg-white dark:bg-slate-800 dark:text-white">
         <!-- Sidebar backdrop -->
         <Transition enter-active-class="transition-opacity ease-out duration-300" enter-from-class="opacity-0"

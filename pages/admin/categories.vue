@@ -1,7 +1,6 @@
 <template>
     <head>
         <Title>Admin Categories - {{ appSettingStore.settings.data.app_name }}</Title>
-        <Link rel="icon" type="image/x-icon" href="favicon.ico" />
     </head>
     <!-- modal create new category -->
     <TransitionRoot appear :show="isCreateNewCategoryOpen" as="template">
@@ -17,7 +16,7 @@
                         enter-to="opacity-100 scale-100" leave="duration-200 ease-in" leave-from="opacity-100 scale-100"
                         leave-to="opacity-0 scale-95">
                         <DialogPanel
-                            class="w-full max-w-4xl transform overflow-hidden rounded-2xl bg-white dark:bg-slate-800 p-6 text-left align-middle shadow-xl transition-all">
+                            class="w-full max-w-4xl transform overflow-hidden rounded-2xl bg-white dark:bg-slate-800/80 p-6 text-left align-middle shadow-xl transition-all">
                             <DialogTitle as="h3" class="text-lg font-medium leading-6 text-gray-900 mb-4 dark:text-white">
                                 {{ createTitleModal }}
                             </DialogTitle>
@@ -63,7 +62,8 @@
                                     <div>
                                         <!-- Name -->
                                         <div class="mb-4">
-                                            <label for="name" class="block text-sm font-medium text-gray-700 mb-2 dark:text-white">
+                                            <label for="name"
+                                                class="block text-sm font-medium text-gray-700 mb-2 dark:text-white">
                                                 Name
                                             </label>
                                             <input type="text" id="name" v-model="categoryForm.name"
@@ -73,7 +73,8 @@
 
                                         <!-- Description -->
                                         <div class="mb-4">
-                                            <label for="description" class="block text-sm font-medium text-gray-700 mb-2 dark:text-white">
+                                            <label for="description"
+                                                class="block text-sm font-medium text-gray-700 mb-2 dark:text-white">
                                                 Description
                                             </label>
                                             <textarea id="description" v-model="categoryForm.description" rows="4"
@@ -130,10 +131,10 @@
                         enter-to="opacity-100 scale-100" leave="duration-200 ease-in" leave-from="opacity-100 scale-100"
                         leave-to="opacity-0 scale-95">
                         <DialogPanel
-                            class="w-full max-w-lg transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                            class="w-full max-w-lg transform overflow-hidden rounded-2xl bg-white dark:bg-slate-800/80 dark:border-gray-600 p-6 text-left align-middle shadow-xl transition-all">
                             <!-- Header -->
                             <div class="flex items-center justify-between mb-6">
-                                <DialogTitle as="h3" class="text-xl font-semibold text-gray-900">
+                                <DialogTitle as="h3" class="text-xl font-semibold text-gray-900 dark:text-white">
                                     Confirm Deletion
                                 </DialogTitle>
                                 <button @click="closeDeleteModal"
@@ -146,7 +147,7 @@
                             </div>
 
                             <!-- Warning Message -->
-                            <div class="bg-red-50 rounded-lg p-4 mb-6">
+                            <div class="bg-red-50 dark:bg-red-200 rounded-lg p-4 mb-6">
                                 <div class="flex">
                                     <div class="flex-shrink-0">
                                         <svg class="h-5 w-5 text-red-400" fill="none" stroke="currentColor"
@@ -165,20 +166,20 @@
                             </div>
 
                             <!-- List of categories -->
-                            <div class="bg-gray-50 rounded-xl overflow-hidden">
+                            <div class="bg-gray-50 dark:bg-slate-800/80 border dark:border-gray-100 rounded-xl overflow-hidden">
                                 <div class="max-h-64 overflow-y-auto">
                                     <ul class="divide-y divide-gray-200">
                                         <li v-for="item in selectedCategories" :key="item.id"
-                                            class="flex items-center gap-3 p-4 hover:bg-gray-100 transition-colors">
+                                            class="flex items-center gap-3 p-4 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
                                             <div class="flex-shrink-0">
                                                 <div
                                                     class="w-10 h-10 rounded-lg bg-red-100 flex items-center justify-center">
-                                                    <img v-if="item.image" :src="item.image"
-                                                        alt="Category Image" class="w-10 h-10 object-cover rounded-lg">
+                                                    <img v-if="item.image" :src="item.image" alt="Category Image"
+                                                        class="w-10 h-10 object-cover rounded-lg">
                                                 </div>
                                             </div>
                                             <div class="flex-1 min-w-0">
-                                                <p class="text-sm font-medium text-gray-900 truncate">
+                                                <p class="text-sm font-medium text-gray-900 dark:text-white truncate">
                                                     {{ item.name }}
                                                 </p>
                                                 <p class="text-sm text-gray-500 truncate" v-if="item.description">
@@ -193,7 +194,7 @@
                             <!-- Action buttons -->
                             <div class="mt-6 flex justify-end gap-3">
                                 <button type="button"
-                                    class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors"
+                                    class="inline-flex justify-center cursor-pointer rounded-md border dark:text-white/75 border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:hover:bg-gray-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2"
                                     @click="closeDeleteModal">
                                     Cancel
                                 </button>
@@ -242,7 +243,8 @@
 
         <!-- Statistics Cards -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div class="bg-white rounded-xl shadow-md p-6 border border-gray-50 dark:bg-slate-800/50 dark:border-slate-700/50 backdrop-blur-xl">
+            <div
+                class="bg-white rounded-xl shadow-md p-6 border border-gray-50 dark:bg-slate-800/50 dark:border-slate-700/50 backdrop-blur-xl">
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm text-gray-500 dark:text-white">Total Categories</p>
@@ -258,7 +260,8 @@
                 </div>
             </div>
 
-            <div class="bg-white rounded-xl shadow-md p-6 border border-gray-50 dark:bg-slate-800/50 dark:border-slate-700/50 backdrop-blur-xl">
+            <div
+                class="bg-white rounded-xl shadow-md p-6 border border-gray-50 dark:bg-slate-800/50 dark:border-slate-700/50 backdrop-blur-xl">
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm text-gray-500 dark:text-white">Active Categories</p>
@@ -274,7 +277,8 @@
                 </div>
             </div>
 
-            <div class="bg-white rounded-xl shadow-md p-6 border border-gray-50 dark:bg-slate-800/50 dark:border-slate-700/50 backdrop-blur-xl">
+            <div
+                class="bg-white rounded-xl shadow-md p-6 border border-gray-50 dark:bg-slate-800/50 dark:border-slate-700/50 backdrop-blur-xl">
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm text-gray-500 dark:text-white">Inactive Categories</p>
@@ -290,7 +294,8 @@
                 </div>
             </div>
 
-            <div class="bg-white rounded-xl shadow-md p-6 borde border-gray-50 dark:bg-slate-800/50 dark:border-slate-700/50 backdrop-blur-xl">
+            <div
+                class="bg-white rounded-xl shadow-md p-6 borde border-gray-50 dark:bg-slate-800/50 dark:border-slate-700/50 backdrop-blur-xl">
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm text-gray-500 dark:text-white">Products in Categories</p>
@@ -308,7 +313,8 @@
         </div>
 
         <!-- Search and Filter Section -->
-        <div class="bg-white rounded-xl shadow-md p-6 border border-gray-100 mb-6 dark:bg-slate-800/50 dark:border-slate-700/50 backdrop-blur-xl">
+        <div
+            class="bg-white rounded-xl shadow-md p-6 border border-gray-100 mb-6 dark:bg-slate-800/50 dark:border-slate-700/50">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
                 <div class="flex-1 max-w-md">
                     <div class="relative">
@@ -423,7 +429,7 @@
                         <Listbox v-model="selectedPageSizeFilter">
                             <div class="relative z-10">
                                 <ListboxButton
-                                    class="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+                                    class="relative w-full cursor-default rounded-lg bg-white dark:bg-slate-800/50 py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
                                     <span class="block truncate">{{ selectedPageSizeFilter.name }}</span>
                                     <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                                         <ChevronUpDownIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
@@ -433,11 +439,11 @@
                                 <transition leave-active-class="transition duration-100 ease-in"
                                     leave-from-class="opacity-100" leave-to-class="opacity-0">
                                     <ListboxOptions
-                                        class="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
+                                        class="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white dark:bg-slate-800 py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
                                         <ListboxOption v-slot="{ active, selected }" v-for="pageSizeItem in pageSizeItems"
                                             :key="pageSizeItem.name" :value="pageSizeItem" as="template">
                                             <li :class="[
-                                                active ? 'bg-amber-100 text-amber-900' : 'text-gray-900',
+                                                active ? 'bg-amber-100 text-amber-900 dark:bg-gray-500 dark:text-white' : 'text-gray-900 dark:text-white',
                                                 'relative cursor-default select-none py-2 pl-10 pr-4',
                                             ]">
                                                 <span :class="[
@@ -457,14 +463,14 @@
                     </div>
                     <!-- direction filter -->
                     <SwitchGroup as="div" class="flex items-center space-x-2">
-                        <SwitchLabel as="span" class="text-sm text-gray-700">Asc</SwitchLabel>
+                        <SwitchLabel as="span" class="text-sm text-gray-700 dark:text-white">Asc</SwitchLabel>
                         <Switch v-model="isDesc" :class="isDesc ? 'bg-orange-600' : 'bg-gray-400'"
-                            class="relative inline-flex items-center h-[33px] w-[68px] shrink-0 cursor-pointer rounded-full border-2 border-gray-200 transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75">
+                            class="relative inline-flex items-center h-6 w-11 shrink-0 cursor-pointer rounded-full border border-gray-200 transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75">
                             <span class="sr-only">Toggle sort direction</span>
-                            <span aria-hidden="true" :class="isDesc ? 'translate-x-9' : 'translate-x-0'"
-                                class="pointer-events-none inline-block h-[29px] w-[29px] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out" />
+                            <span aria-hidden="true" :class="isDesc ? 'translate-x-5' : 'translate-x-0'"
+                                class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out" />
                         </Switch>
-                        <SwitchLabel as="span" class="text-sm text-gray-700">Desc</SwitchLabel>
+                        <SwitchLabel as="span" class="text-sm text-gray-700 dark:text-white">Desc</SwitchLabel>
                     </SwitchGroup>
                 </div>
             </div>
@@ -503,7 +509,7 @@
         <!-- Categories Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
             <div v-for="category in categories.data" :key="category.id"
-                class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
+                class="bg-white dark:bg-slate-800/50 dark:border-gray-600 rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
                 <div class="relative">
                     <img :src="category.image || '/placeholder-category.jpg'" :alt="category.name"
                         class="w-full h-48 object-cover">
@@ -539,7 +545,7 @@
                     </div>
                 </div>
                 <div class="p-4">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-2">{{ category.name }}</h3>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2 dark:text-white">{{ category.name }}</h3>
                     <p class="text-gray-600 text-sm mb-3 line-clamp-2">{{ category.description }}</p>
                     <div class="flex items-center justify-between mb-4">
                         <span class="text-sm text-gray-500">{{ formatDate(category.created_at) }}</span>
@@ -563,7 +569,8 @@
         </div>
 
         <!-- Pagination -->
-        <div class="flex items-center justify-between bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+        <div
+            class="flex items-center justify-between bg-white rounded-xl shadow-sm p-4 border border-gray-100 dark:bg-slate-800/50 dark:border-gray-600">
             <div class="text-sm text-gray-500">
                 Showing {{ (currentPage - 1) * dataPerPages + 1 }} to {{ Math.min(currentPage * dataPerPages,
                     totalCurrentCategories) }} of
