@@ -1,6 +1,7 @@
 <template>
     <head>
         <Title>Admin Dashboard - {{ appSettingStore.settings.data.app_name }}</Title>
+        <Link rel="icon" type="image/x-icon" href="favicon.ico" />
     </head>
     <div class="p-6 bg-gray-50 dark:bg-slate-900/50 dark:text-gray-100 rounded-xl transition-colors duration-200">
         <div class="mb-8">

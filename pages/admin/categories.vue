@@ -1,6 +1,7 @@
 <template>
     <head>
         <Title>Admin Categories - {{ appSettingStore.settings.data.app_name }}</Title>
+        <Link rel="icon" type="image/x-icon" href="favicon.ico" />
     </head>
     <!-- modal create new category -->
     <TransitionRoot appear :show="isCreateNewCategoryOpen" as="template">

@@ -1,7 +1,4 @@
 <template>
-    <head>
-        <Link rel="icon" type="image/x-icon" href="favicon.ico" />
-    </head>
     <!-- Fullscreen Loading Overlay -->
     <div v-if="loading" class="fixed inset-0 z-50 flex items-center justify-center bg-white/80 dark:bg-slate-800/50 backdrop-blur-sm">
         <svg class="animate-spin h-12 w-12 text-orange-500" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -30,7 +27,7 @@
             <!-- Sidebar Header -->
             <div class="relative h-20 flex items-center justify-between px-5 border-b border-white/10">
                 <button @click="toggleSidebar"
-                    class="absolute top-1/2 right-[-20px] hidden md:flex z-50 transform -translate-y-1/2 w-10 h-10 items-center justify-center rounded-full bg-white dark:bg-slate-600 text-orange-600 dark:text-white dark:text- shadow-md hover:bg-orange-100 dark:hover:bg-slate-800 transition-all duration-200">
+                    class="absolute top-1/2 right-[-20px] hidden md:flex z-50 transform -translate-y-1/2 w-10 h-10 items-center justify-center rounded-full bg-white dark:bg-slate-600 text-orange-600 dark:text-orange-500 dark:text- shadow-md hover:bg-orange-100 dark:hover:bg-slate-800 transition-all duration-200">
                     <svg :class="[isSidebarCollapsed ? 'rotate-180' : '']" class="w-4 h-4 transition-transform" fill="none"
                         stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -60,9 +57,9 @@
                         class="flex group items-center px-4 py-2.5 hover:bg-orange-600 rounded-xl font-medium dark:hover:bg-white/10" :class="{
                             'bg-orange-600 dark:bg-white/10 text-white': isActive(item.path)
                         }">
-                        <component :is="item.icon" class="w-5 h-5 mx-3 text-gray-700 dark:text-white group-hover:text-white" :class="{
+                        <component :is="item.icon" class="w-5 h-5 mx-3 text-gray-700 dark:text-orange-500 group-hover:text-white" :class="{
                             'text-white': isActive(item.path)}"/>
-                        <span v-show="!isSidebarCollapsed" class="text-gray-700 dark:text-white group-hover:text-white" :class="{
+                        <span v-show="!isSidebarCollapsed" class="text-gray-700 dark:text-orange-500 group-hover:text-white" :class="{
                             'text-white': isActive(item.path)}">{{ item.name }}</span>
                     </NuxtLink>
                 </nav>
