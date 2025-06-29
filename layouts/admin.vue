@@ -30,7 +30,7 @@
             </div>
         </div>
     </Transition>
-    <div v-if="!loading" class="h-screen flex overflow-hidden">
+    <div v-if="!loading" class="h-screen flex overflow-hidden bg-white dark:bg-slate-800 dark:text-white">
         <!-- Sidebar backdrop -->
         <Transition enter-active-class="transition-opacity ease-out duration-300" enter-from-class="opacity-0"
             enter-to-class="opacity-100" leave-active-class="transition-opacity ease-in duration-200"
@@ -42,14 +42,14 @@
         <!-- Sidebar -->
         <aside :class="[
             'fixed inset-y-0 left-0 z-40 transition-all duration-300 ease-in-out transform',
-            'bg-gradient-to-b from-orange-600 to-amber-700 shadow-2xl',
+            'dark:bg-slate-800 dark:text-white shadow-2xl bg-white',
             isMobileSidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0',
             isSidebarCollapsed ? 'w-20' : 'w-60'
         ]">
             <!-- Sidebar Header -->
             <div class="relative h-20 flex items-center justify-between px-5 border-b border-white/10">
                 <button @click="toggleSidebar"
-                    class="absolute top-1/2 right-[-20px] hidden md:flex z-50 transform -translate-y-1/2 w-10 h-10 items-center justify-center rounded-full bg-white text-orange-600 shadow-md hover:bg-orange-100 transition-all duration-200">
+                    class="absolute top-1/2 right-[-20px] hidden md:flex z-50 transform -translate-y-1/2 w-10 h-10 items-center justify-center rounded-full bg-white dark:bg-slate-600 text-orange-600 dark:text-white dark:text- shadow-md hover:bg-orange-100 dark:hover:bg-slate-800 transition-all duration-200">
                     <svg :class="[isSidebarCollapsed ? 'rotate-180' : '']" class="w-4 h-4 transition-transform" fill="none"
                         stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -59,7 +59,7 @@
                     <div class="relative">
                         <div class="absolute inset-0 bg-white/20 blur-xl rounded-full"></div>
                         <div class="relative w-10 h-10 bg-white/90 rounded-xl flex items-center justify-center shadow-lg">
-                            <span class="text-orange-600 font-bold text-xl">A</span>
+                            <span class="text-orange-600 dark:text-gray-400 font-bold text-xl">A</span>
                         </div>
                     </div>
                     <Transition enter-active-class="transition-all duration-300 ease-out"
@@ -67,7 +67,7 @@
                         leave-active-class="transition-all duration-200 ease-in"
                         leave-from-class="opacity-100 translate-x-0" leave-to-class="opacity-0 -translate-x-4">
                         <span v-show="!isSidebarCollapsed"
-                            class="ml-4 text-white font-bold text-xl tracking-wide">AdminPanel</span>
+                            class="ml-4 dark:text-white text-gray-700 font-bold text-xl tracking-wide">AdminPanel</span>
                     </Transition>
                 </div>
             </div>
@@ -76,11 +76,13 @@
                 <!-- Navigation -->
                 <nav class="space-y-2">
                     <NuxtLink v-for="(item, index) in sidebarItems" :key="index" :to="item.path"
-                        class="flex items-center px-4 py-2.5 rounded-xl text-white font-medium hover:bg-white/10" :class="{
-                            'bg-white/10': isActive(item.path),
+                        class="flex group items-center px-4 py-2.5 hover:bg-orange-600 rounded-xl font-medium dark:hover:bg-white/10" :class="{
+                            'bg-orange-600 dark:bg-white/10 text-white': isActive(item.path)
                         }">
-                        <component :is="item.icon" class="w-5 h-5 mx-3" />
-                        <span v-show="!isSidebarCollapsed">{{ item.name }}</span>
+                        <component :is="item.icon" class="w-5 h-5 mx-3 text-gray-700 dark:text-white group-hover:text-white" :class="{
+                            'text-white': isActive(item.path)}"/>
+                        <span v-show="!isSidebarCollapsed" class="text-gray-700 dark:text-white group-hover:text-white" :class="{
+                            'text-white': isActive(item.path)}">{{ item.name }}</span>
                     </NuxtLink>
                 </nav>
             </div>
@@ -91,7 +93,7 @@
             :class="['flex-1 flex flex-col overflow-hidden transition-all duration-300', isSidebarCollapsed ? 'md:ml-20' : 'md:ml-60']">
             <!-- Header & Page Content (unchanged) -->
             <header
-                class="relative h-[80px] bg-white/80 backdrop-blur-xl shadow-sm flex items-center justify-between px-6 z-10">
+                class="relative h-[80px] bg-white/80 dark:bg-slate-800/50 dark:text-white shadow-sm flex items-center justify-between px-6 z-10">
                 <div class="flex items-center space-x-4">
                     <button @click="toggleMobileSidebar" class="md:hidden p-2 rounded-md hover:bg-gray-100 transition">
                         <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -99,7 +101,7 @@
                                 d="M4 6h16M4 12h16M4 18h16" />
                         </svg>
                     </button>
-                    <h1 class="text-xl font-semibold text-gray-800">Dashboard</h1>
+                    <h1 class="text-xl font-semibold text-gray-800 dark:text-white">Dashboard</h1>
                 </div>
                 <div class="flex items-center space-x-6">
                     <div class="relative group">
@@ -109,8 +111,8 @@
                         @mouseenter="openNotificationDropdown" @mouseleave="isNotificationDropdownOpen = false">
                         <!-- Tombol -->
                         <button @click.stop="toggleNotificationDropdown"
-                            class="relative p-2.5 rounded-full hover:bg-gray-100 transition-all duration-200">
-                            <svg class="w-6 h-6 text-gray-600 hover:text-gray-800 transition-colors" fill="none"
+                            class="relative group p-2.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-500 transition-all duration-200">
+                            <svg class="w-6 h-6 text-gray-600 dark:text-white hover:text-gray-800 transition-colors" fill="none"
                                 stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M15 17h5l-1.4-1.4a2 2 0 01-.6-1.42V11a6 6 0 00-4-5.66V5a2 2 0 10-4 0v.34A6 6 0 006 11v3.18c0 .53-.2 1.05-.6 1.42L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
@@ -124,15 +126,15 @@
 
                         <!-- Dropdown -->
                         <div v-show="isNotificationDropdownOpen"
-                            class="absolute -right-4 top-full w-80 bg-white rounded-2xl shadow-xl border border-gray-100 z-50 transition-all duration-200">
+                            class="absolute -right-4 top-full w-80 bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 z-50 transition-all duration-200">
                             <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
-                                <h3 class="text-sm font-semibold text-gray-800">Notifications</h3><button
+                                <h3 class="text-sm font-semibold text-gray-800 dark:text-white">Notifications</h3><button
                                     class="text-xs text-orange-600 hover:text-orange-700 font-medium">Mark all as
                                     read</button>
                             </div>
                             <div class="max-h-96 overflow-y-auto">
                                 <div
-                                    class="px-4 py-3 hover:bg-gray-50 transition-colors cursor-pointer border-b border-gray-50">
+                                    class="px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors cursor-pointer border-b border-gray-50 dark:border-gray-700">
                                     <div class="flex items-start space-x-3">
                                         <div class="flex-shrink-0">
                                             <div
@@ -145,33 +147,34 @@
                                             </div>
                                         </div>
                                         <div class="flex-1">
-                                            <p class="text-sm text-gray-800">Your order has been confirmed</p>
-                                            <p class="text-xs text-gray-500 mt-1">2 minutes ago</p>
+                                            <p class="text-sm text-gray-800 dark:text-white">Your order has been confirmed</p>
+                                            <p class="text-xs text-gray-500 mt-1 dark:text-gray-500">2 minutes ago</p>
                                         </div>
                                         <div class="flex-shrink-0">
                                             <div class="w-2 h-2 bg-orange-500 rounded-full"></div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="px-4 py-3 hover:bg-gray-50 transition-colors cursor-pointer">
+                                <div class="px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors cursor-pointer">
                                     <div class="flex items-start space-x-3">
                                         <div class="flex-shrink-0"><img
                                                 src="https://api.dicebear.com/7.x/avataaars/svg?seed=Jane"
                                                 class="w-10 h-10 rounded-full" alt="User"></div>
                                         <div class="flex-1">
-                                            <p class="text-sm text-gray-800"><span class="font-medium">Jane Cooper</span>
+                                            <p class="text-sm text-gray-800 dark:text-white"><span class="font-medium">Jane Cooper</span>
                                                 mentioned you in a comment</p>
-                                            <p class="text-xs text-gray-500 mt-1">1 hour ago</p>
+                                            <p class="text-xs text-gray-500 mt-1 dark:text-gray-500">1 hour ago</p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="px-4 py-3 bg-gray-50 text-center">
+                            <div class="px-4 py-3 bg-gray-50 dark:bg-slate-700 text-center rounded-b-xl">
                                 <a href="#" class="text-sm text-orange-600 hover:text-orange-700 font-medium">View all
                                     notifications</a>
                             </div>
                         </div>
                     </div>
+                    <ToggleDarkMode />
                     <div class="relative h-[80px] flex items-center dropdown-notification-wrapper"
                         @mouseenter="openProfileDropdown" @mouseleave="isProfileDropdownOpen = false">
                         <button @click.stop="toggleProfileDropdown" class="relative">
@@ -190,7 +193,7 @@
                             </div>
                         </button>
                         <div v-show="isProfileDropdownOpen"
-                            class="absolute -right-4 top-full w-70 bg-white rounded-2xl shadow-xl border border-gray-100 z-50 transition-all duration-200">
+                            class="absolute -right-4 top-full w-70 bg-white dark:bg-slate-800 dark:border-gray-700 rounded-2xl shadow-xl border border-gray-100 z-50 transition-all duration-200">
                             <div class="px-4 py-4 border-b border-gray-100">
                                 <div class="flex items-center space-x-3">
                                     <svg width="100" height="100" class="h-8 w-8 rounded-full object-cover"
@@ -202,7 +205,7 @@
                                             fill="#D1D5DB" />
                                     </svg>
                                     <div class="max-w-40">
-                                        <p class="text-sm font-semibold text-gray-800 truncate">{{
+                                        <p class="text-sm font-semibold text-gray-800 dark:text-white truncate">{{
                                             `${currentUserStore.user.first_name} ${currentUserStore.user.last_name} ` }}</p>
                                         <p class="text-xs text-gray-500 truncate">{{ currentUserStore.user.email }}</p>
                                     </div>
@@ -210,13 +213,13 @@
                             </div>
                             <div class="py-2">
                                 <a href="#"
-                                    class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-orange-600 transition-colors"><svg
+                                    class="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-white dark:hover:bg-gray-600 dark:hover:text-white hover:bg-gray-50 hover:text-orange-600 transition-colors"><svg
                                         class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                     </svg>My Profile</a>
                                 <a href="#"
-                                    class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-orange-600 transition-colors"><svg
+                                    class="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-white dark:hover:bg-gray-600 dark:hover:text-white hover:bg-gray-50 hover:text-orange-600 transition-colors"><svg
                                         class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
@@ -224,7 +227,7 @@
                                             d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                     </svg>Settings</a>
                                 <a href="#"
-                                    class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-orange-600 transition-colors"><svg
+                                    class="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-white dark:hover:bg-gray-600 dark:hover:text-white hover:bg-gray-50 hover:text-orange-600 transition-colors"><svg
                                         class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M8.228 11.685h.774a2 2 0 001.94-1.515L12 5.5h0l1.058 4.67a2 2 0 001.94 1.515h.774m-7.544 0H5a2 2 0 00-2 2v5a2 2 0 002 2h14a2 2 0 002-2v-5a2 2 0 00-2-2h-3.228M10 17v-6m4 6v-6" />
@@ -233,7 +236,7 @@
                             <div class="border-t border-gray-100"></div>
                             <div class="py-2">
                                 <button @click="logout"
-                                    class="flex items-center w-full px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors"><svg
+                                    class="flex items-center w-full px-4 py-2.5 text-sm text-red-600 dark:hover:bg-red-200 hover:bg-red-50 transition-colors"><svg
                                         class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -248,7 +251,7 @@
                     <slot />
                 </div>
             </main>
-            <footer class="bg-white border-t border-gray-200">
+            <footer class="bg-white dark:bg-slate-800 dark:text-white border-t dark:border-gray-500 border-gray-200">
                 <div class="mx-auto py-4 px-4 sm:px-6 lg:px-8">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center space-x-2 text-gray-500 text-sm">
@@ -293,6 +296,7 @@ import {
 } from '@heroicons/vue/24/outline'
 import SearchButton from '~/components/modals/searchButtonAdmin.vue'
 import { useUserStore } from '~/stores/user'
+import ToggleDarkMode from '~/components/buttons/darkModeToggle.vue'
 
 const showNotification = ref(false)
 const notificationValue = ref("")
@@ -412,8 +416,4 @@ async function logout() {
 
 </script>
 <style>
-html,
-body {
-    overflow-x: hidden !important;
-}
 </style>

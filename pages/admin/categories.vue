@@ -5,7 +5,7 @@
     </head>
     <!-- modal create new category -->
     <TransitionRoot appear :show="isCreateNewCategoryOpen" as="template">
-        <Dialog as="div" @close="closeModal" class="relative z-10">
+        <Dialog as="div" @close="closeModal" class="relative z-50">
             <TransitionChild as="template" enter="duration-300 ease-out" enter-from="opacity-0" enter-to="opacity-100"
                 leave="duration-200 ease-in" leave-from="opacity-100" leave-to="opacity-0">
                 <div class="fixed inset-0 bg-black/60 backdrop-blur-sm" />
@@ -17,15 +17,15 @@
                         enter-to="opacity-100 scale-100" leave="duration-200 ease-in" leave-from="opacity-100 scale-100"
                         leave-to="opacity-0 scale-95">
                         <DialogPanel
-                            class="w-full max-w-4xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                            <DialogTitle as="h3" class="text-lg font-medium leading-6 text-gray-900 mb-4">
+                            class="w-full max-w-4xl transform overflow-hidden rounded-2xl bg-white dark:bg-slate-800 p-6 text-left align-middle shadow-xl transition-all">
+                            <DialogTitle as="h3" class="text-lg font-medium leading-6 text-gray-900 mb-4 dark:text-white">
                                 {{ createTitleModal }}
                             </DialogTitle>
 
                             <form @submit.prevent="createNewCategory" class="flex flex-col md:flex-row gap-6">
                                 <!-- Upload Section - Full width on mobile, left column on desktop -->
-                                <div class="w-full md:w-1/2 md:border-r md:border-gray-300 md:pr-6">
-                                    <div class="h-[300px] md:h-[400px] border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center p-6"
+                                <div class="w-full md:w-1/2 md:border-r md:border-gray-300 dark:border-gray-100 md:pr-6">
+                                    <div class="h-[300px] md:h-[400px] border-2 border-dashed border-gray-300 dark:border-gray-100 rounded-lg flex flex-col items-center justify-center p-6"
                                         @drop.prevent="handleDrop" @dragover.prevent="dragover = true"
                                         @dragleave.prevent="dragover = false"
                                         :class="{ 'border-orange-500 bg-orange-50': dragover }">
@@ -44,7 +44,7 @@
                                             </div>
                                             <div class="flex text-sm text-gray-600 justify-center">
                                                 <label
-                                                    class="relative cursor-pointer bg-white rounded-md font-medium text-orange-600 hover:text-orange-500">
+                                                    class="relative cursor-pointer rounded-md font-medium text-orange-600 hover:text-orange-500">
                                                     <span>Upload a file</span>
                                                     <input type="file" class="sr-only" @change="handleFileSelect"
                                                         accept="image/*">
@@ -63,21 +63,21 @@
                                     <div>
                                         <!-- Name -->
                                         <div class="mb-4">
-                                            <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
+                                            <label for="name" class="block text-sm font-medium text-gray-700 mb-2 dark:text-white">
                                                 Name
                                             </label>
                                             <input type="text" id="name" v-model="categoryForm.name"
-                                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-orange-500 focus:border-orange-500"
+                                                class="w-full px-3 dark:text-white py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-orange-500 focus:border-orange-500"
                                                 required>
                                         </div>
 
                                         <!-- Description -->
                                         <div class="mb-4">
-                                            <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
+                                            <label for="description" class="block text-sm font-medium text-gray-700 mb-2 dark:text-white">
                                                 Description
                                             </label>
                                             <textarea id="description" v-model="categoryForm.description" rows="4"
-                                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-orange-500 focus:border-orange-500"
+                                                class="w-full px-3 py-2 dark:text-white border border-gray-300 rounded-md focus:outline-none focus:ring-orange-500 focus:border-orange-500"
                                                 required></textarea>
                                         </div>
                                     </div>
@@ -86,12 +86,12 @@
                                         <!-- Action Buttons -->
                                         <div class="mt-6 flex justify-center space-x-3">
                                             <button type="button"
-                                                class="inline-flex justify-center rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2"
+                                                class="inline-flex justify-center cursor-pointer rounded-md border dark:text-white/75 border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:hover:bg-gray-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2"
                                                 @click="closeModal">
                                                 Cancel
                                             </button>
                                             <button type="submit" :disabled="loading"
-                                                class="inline-flex justify-center rounded-md border border-transparent bg-orange-600 px-4 py-2 text-sm font-medium text-white hover:bg-orange-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2">
+                                                class="inline-flex justify-center cursor-pointer rounded-md border border-transparent bg-orange-600 px-4 py-2 text-sm font-medium text-white hover:bg-orange-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2">
                                                 <span v-if="!loading">{{ createTitleModalButton }}</span>
                                                 <span v-else class="flex items-center">
                                                     <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
@@ -118,7 +118,7 @@
     </TransitionRoot>
     <!-- modal delete category confirmation -->
     <TransitionRoot appear :show="isDeleteModalOpen" as="template">
-        <Dialog as="div" @close="closeDeleteModal" class="relative z-10">
+        <Dialog as="div" @close="closeDeleteModal" class="relative z-50">
             <TransitionChild as="template" enter="duration-300 ease-out" enter-from="opacity-0" enter-to="opacity-100"
                 leave="duration-200 ease-in" leave-from="opacity-100" leave-to="opacity-0">
                 <div class="fixed inset-0 bg-black/60 backdrop-blur-sm" />
@@ -223,12 +223,12 @@
         </Dialog>
     </TransitionRoot>
 
-    <div class="p-6 bg-gray-50 min-h-screen">
+    <div class="p-6 bg-gray-50 min-h-screen dark:bg-slate-900/50 dark:text-gray-100 rounded-xl">
         <!-- Header Section -->
         <div class="flex justify-between items-center mb-8">
             <div>
-                <h1 class="text-2xl font-bold text-gray-800">Categories Management</h1>
-                <p class="text-gray-600">Manage your product categories and organize your inventory</p>
+                <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Categories Management</h1>
+                <p class="text-gray-600 dark:text-gray-400">Manage your product categories and organize your inventory</p>
             </div>
             <button @click="openModal(null)"
                 class="bg-orange-600 cursor-pointer hover:bg-orange-700 text-white px-6 py-2 rounded-lg flex items-center space-x-2 transition-colors">
@@ -242,11 +242,11 @@
 
         <!-- Statistics Cards -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+            <div class="bg-white rounded-xl shadow-md p-6 border border-gray-50 dark:bg-slate-800/50 dark:border-slate-700/50 backdrop-blur-xl">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-sm text-gray-500">Total Categories</p>
-                        <h3 class="text-2xl font-bold text-gray-700">{{ totalRealCategories }}</h3>
+                        <p class="text-sm text-gray-500 dark:text-white">Total Categories</p>
+                        <h3 class="text-2xl font-bold text-gray-700 dark:text-white">{{ totalRealCategories }}</h3>
                     </div>
                     <div class="p-3 bg-blue-100 rounded-full">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none"
@@ -258,11 +258,11 @@
                 </div>
             </div>
 
-            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+            <div class="bg-white rounded-xl shadow-md p-6 border border-gray-50 dark:bg-slate-800/50 dark:border-slate-700/50 backdrop-blur-xl">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-sm text-gray-500">Active Categories</p>
-                        <h3 class="text-2xl font-bold text-gray-700">{{ totalActiveCategories }}</h3>
+                        <p class="text-sm text-gray-500 dark:text-white">Active Categories</p>
+                        <h3 class="text-2xl font-bold text-gray-700 dark:text-white">{{ totalActiveCategories }}</h3>
                     </div>
                     <div class="p-3 bg-green-100 rounded-full">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600" fill="none"
@@ -274,11 +274,11 @@
                 </div>
             </div>
 
-            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+            <div class="bg-white rounded-xl shadow-md p-6 border border-gray-50 dark:bg-slate-800/50 dark:border-slate-700/50 backdrop-blur-xl">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-sm text-gray-500">Inactive Categories</p>
-                        <h3 class="text-2xl font-bold text-gray-700">{{ totalInactiveCategories }}</h3>
+                        <p class="text-sm text-gray-500 dark:text-white">Inactive Categories</p>
+                        <h3 class="text-2xl font-bold text-gray-700 dark:text-white">{{ totalInactiveCategories }}</h3>
                     </div>
                     <div class="p-3 bg-red-100 rounded-full">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24"
@@ -290,11 +290,11 @@
                 </div>
             </div>
 
-            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+            <div class="bg-white rounded-xl shadow-md p-6 borde border-gray-50 dark:bg-slate-800/50 dark:border-slate-700/50 backdrop-blur-xl">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-sm text-gray-500">Products in Categories</p>
-                        <h3 class="text-2xl font-bold text-gray-700">{{ totalProductsInCategories }}</h3>
+                        <p class="text-sm text-gray-500 dark:text-white">Products in Categories</p>
+                        <h3 class="text-2xl font-bold text-gray-700 dark:text-white">{{ totalProductsInCategories }}</h3>
                     </div>
                     <div class="p-3 bg-purple-100 rounded-full">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-purple-600" fill="none"
@@ -308,7 +308,7 @@
         </div>
 
         <!-- Search and Filter Section -->
-        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 mb-6">
+        <div class="bg-white rounded-xl shadow-md p-6 border border-gray-100 mb-6 dark:bg-slate-800/50 dark:border-slate-700/50 backdrop-blur-xl">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
                 <div class="flex-1 max-w-md">
                     <div class="relative">
@@ -349,7 +349,7 @@
                         <Listbox v-model="selectedStatusFilter">
                             <div class="relative z-10">
                                 <ListboxButton
-                                    class="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+                                    class="relative w-full cursor-default rounded-lg bg-white dark:bg-slate-800/50 py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
                                     <span class="block truncate">{{ selectedStatusFilter.name }}</span>
                                     <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                                         <ChevronUpDownIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
@@ -359,11 +359,11 @@
                                 <transition leave-active-class="transition duration-100 ease-in"
                                     leave-from-class="opacity-100" leave-to-class="opacity-0">
                                     <ListboxOptions
-                                        class="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
+                                        class="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white dark:bg-slate-800 py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
                                         <ListboxOption v-slot="{ active, selected }" v-for="statusItem in statusItems"
-                                            :key="statusItem.name" :value="statusItem" as="template">
+                                            :key="statusItem.name" :value="statusItem" as="template" class="z-100">
                                             <li :class="[
-                                                active ? 'bg-amber-100 text-amber-900' : 'text-gray-900',
+                                                active ? 'bg-amber-100 text-amber-900 dark:bg-gray-500 dark:text-white' : 'text-gray-900 dark:text-white',
                                                 'relative cursor-default select-none py-2 pl-10 pr-4',
                                             ]">
                                                 <span :class="[
@@ -371,7 +371,7 @@
                                                     'block truncate',
                                                 ]">{{ statusItem.name }}</span>
                                                 <span v-if="selected"
-                                                    class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600">
+                                                    class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600 dark:text-white">
                                                     <CheckIcon class="h-5 w-5" aria-hidden="true" />
                                                 </span>
                                             </li>
@@ -386,7 +386,7 @@
                         <Listbox v-model="selectedSortByFilter">
                             <div class="relative z-10">
                                 <ListboxButton
-                                    class="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+                                    class="relative w-full cursor-default rounded-lg bg-white dark:bg-slate-800/50 py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
                                     <span class="block truncate">{{ selectedSortByFilter.name }}</span>
                                     <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                                         <ChevronUpDownIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
@@ -396,11 +396,11 @@
                                 <transition leave-active-class="transition duration-100 ease-in"
                                     leave-from-class="opacity-100" leave-to-class="opacity-0">
                                     <ListboxOptions
-                                        class="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
+                                        class="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white dark:bg-slate-800 py-1 z-50 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
                                         <ListboxOption v-slot="{ active, selected }" v-for="sortByItem in sortByItems"
                                             :key="sortByItem.name" :value="sortByItem" as="template">
                                             <li :class="[
-                                                active ? 'bg-amber-100 text-amber-900' : 'text-gray-900',
+                                                active ? 'bg-amber-100 text-amber-900 dark:bg-gray-500 dark:text-white' : 'text-gray-900 dark:text-white',
                                                 'relative cursor-default select-none py-2 pl-10 pr-4',
                                             ]">
                                                 <span :class="[
@@ -408,7 +408,7 @@
                                                     'block truncate',
                                                 ]">{{ sortByItem.name }}</span>
                                                 <span v-if="selected"
-                                                    class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600">
+                                                    class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600 dark:text-white">
                                                     <CheckIcon class="h-5 w-5" aria-hidden="true" />
                                                 </span>
                                             </li>

@@ -3,21 +3,20 @@
         <Title>Admin Dashboard - {{ appSettingStore.settings.data.app_name }}</Title>
         <Link rel="icon" type="image/x-icon" href="favicon.ico" />
     </head>
-    <div class="p-6 bg-gray-50">
-        <!-- Header Welcome -->
+    <div class="p-6 bg-gray-50 dark:bg-slate-900/50 dark:text-gray-100 rounded-xl transition-colors duration-200">
         <div class="mb-8">
-            <h1 class="text-2xl font-bold text-gray-800">Welcome back, {{ currentUserStore.user.first_name }}!</h1>
-            <p class="text-gray-600">Here's what's happening with Seblak Bombom today.</p>
+            <h1 class="text-2xl font-bold text-gray-800 dark:text-amber-50">Welcome back, {{ currentUserStore.user.first_name }}!</h1>
+            <p class="text-gray-600 dark:text-gray-400">Here's what's happening with Seblak Bombom today.</p>
         </div>
 
         <!-- Statistik Cards -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
             <!-- Total Orders Card -->
-            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+            <div class="bg-white rounded-xl shadow-md p-6 border border-gray-100 dark:bg-slate-800/50 dark:shadow-slate-900/50 dark:border-slate-700/50 backdrop-blur-xl transition-all duration-200"> 
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-sm text-gray-500">Total Orders</p>
-                        <h3 class="text-2xl font-bold text-gray-700">1,234</h3>
+                        <p class="text-sm text-gray-500 dark:text-amber-50">Total Orders</p>
+                        <h3 class="text-2xl font-bold text-gray-700 dark:text-white">1,234</h3>
                     </div>
                     <div class="p-3 bg-orange-100 rounded-full">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-orange-600" fill="none"
@@ -33,11 +32,11 @@
             </div>
 
             <!-- Total Revenue Card -->
-            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+            <div class="bg-white dark:bg-slate-800/50 rounded-xl shadow-md dark:shadow-slate-900/50 p-6 border border-gray-50 dark:border-slate-700/50 backdrop-blur-xl transition-all duration-200"> 
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-sm text-gray-500">Revenue</p>
-                        <h3 class="text-2xl font-bold text-gray-700">Rp 4,567K</h3>
+                        <p class="text-sm text-gray-500 dark:text-amber-50">Revenue</p>
+                        <h3 class="text-2xl font-bold text-gray-700 dark:text-white">Rp 4,567K</h3>
                     </div>
                     <div class="p-3 bg-green-100 rounded-full">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600" fill="none"
@@ -53,11 +52,11 @@
             </div>
 
             <!-- Total Products Card -->
-            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+            <div class="bg-white dark:bg-slate-800/50 rounded-xl shadow-md dark:shadow-slate-900/50 p-6 border border-gray-100 dark:border-slate-700/50 backdrop-blur-xl transition-all duration-200"> 
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-sm text-gray-500">Total Products</p>
-                        <h3 class="text-2xl font-bold text-gray-700">45</h3>
+                        <p class="text-sm text-gray-500 dark:text-amber-50">Total Products</p>
+                        <h3 class="text-2xl font-bold text-gray-700 dark:text-white">45</h3>
                     </div>
                     <div class="p-3 bg-purple-100 rounded-full">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-purple-600" fill="none"
@@ -73,11 +72,11 @@
             </div>
 
             <!-- Total Users Card -->
-            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+            <div class="bg-white dark:bg-slate-800/50 rounded-xl shadow-md dark:shadow-slate-900/50 p-6 border border-gray-100 dark:border-slate-700/50 backdrop-blur-xl transition-all duration-200"> 
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-sm text-gray-500">Total Customers</p>
-                        <h3 class="text-2xl font-bold text-gray-700">892</h3>
+                        <p class="text-sm text-gray-500 dark:text-amber-50">Total Customers</p>
+                        <h3 class="text-2xl font-bold text-gray-700 dark:text-white">892</h3>
                     </div>
                     <div class="p-3 bg-blue-100 rounded-full">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none"
@@ -96,9 +95,9 @@
         <!-- Charts Grid -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
             <!-- Sales Chart -->
-            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+            <div class="bg-white rounded-xl shadow-md p-6 border border-gray-100 dark:bg-slate-800/50 dark:shadow-slate-900/50 dark:border-slate-700/50">
                 <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-lg font-semibold text-gray-700">Sales Overview</h2>
+                    <h2 class="text-lg font-semibold text-gray-700 dark:text-white">Sales Overview</h2>
                     <div class="flex space-x-2">
                         <button
                             class="px-3 py-1 text-sm bg-gray-100 rounded-md text-gray-600 hover:bg-gray-200">Weekly</button>
@@ -114,18 +113,18 @@
             </div>
 
             <!-- Popular Products -->
-            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-                <h2 class="text-lg font-semibold text-gray-700 mb-4">Popular Products</h2>
+            <div class="bg-white rounded-xl shadow-md p-6 border border-gray-100 dark:bg-slate-800/50 dark:shadow-slate-900/50 dark:border-slate-700/50">
+                <h2 class="text-lg font-semibold text-gray-700 mb-4 dark:text-white">Popular Products</h2>
                 <div class="space-y-4">
                     <div v-for="product in popularProducts" :key="product.id"
-                        class="flex items-center space-x-4 p-2 hover:bg-gray-50 rounded-lg">
+                        class="flex items-center space-x-4 p-2 hover:bg-gray-50 dark:hover:bg-gray-600 rounded-lg">
                         <img :src="product.image" :alt="product.name" class="w-12 h-12 rounded-lg object-cover">
                         <div class="flex-1">
-                            <h3 class="text-sm font-medium text-gray-800">{{ product.name }}</h3>
+                            <h3 class="text-sm font-medium text-gray-800 dark:text-gray-500">{{ product.name }}</h3>
                             <p class="text-sm text-gray-500">{{ product.orders }} orders</p>
                         </div>
                         <div class="text-right">
-                            <p class="text-sm font-medium text-gray-800">Rp {{ product.price }}</p>
+                            <p class="text-sm font-medium text-gray-800 dark:text-amber-50">Rp {{ product.price }}</p>
                             <p class="text-xs text-gray-500">In stock: {{ product.stock }}</p>
                         </div>
                     </div>
@@ -134,13 +133,13 @@
         </div>
 
         <!-- Recent Orders Table -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden dark:bg-slate-800/50 dark:shadow-slate-900/50 dark:border-slate-700/50">
             <div class="p-6">
-                <h2 class="text-lg font-semibold text-gray-700 mb-4">Recent Orders</h2>
+                <h2 class="text-lg font-semibold text-gray-700 mb-4 dark:text-amber-50">Recent Orders</h2>
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full">
-                    <thead class="bg-gray-50">
+                    <thead class="bg-gray-50 dark:bg-slate-800/50 dark:shadow-slate-900/50 dark:border-slate-700/50">
                         <tr>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order
                                 ID</th>
@@ -154,8 +153,8 @@
                                 Status</th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        <tr v-for="order in recentOrders" :key="order.id" class="hover:bg-gray-50">
+                    <tbody class="bg-white divide-y divide-gray-200 dark:bg-slate-800/50 dark:shadow-slate-900/50 dark:border-slate-700/50">
+                        <tr v-for="order in recentOrders" :key="order.id" class="hover:bg-gray-50 dark:hover:bg-gray-600">
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">#{{ order.id }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
