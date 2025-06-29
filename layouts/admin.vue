@@ -1,6 +1,7 @@
 <template>
     <!-- Fullscreen Loading Overlay -->
-    <div v-if="loading" class="fixed inset-0 z-50 flex items-center justify-center bg-white/80 dark:bg-slate-800/50 backdrop-blur-sm">
+    <div v-if="loading"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-white/80 dark:bg-slate-800/50 backdrop-blur-sm">
         <svg class="animate-spin h-12 w-12 text-orange-500" xmlns="http://www.w3.org/2000/svg" fill="none"
             viewBox="0 0 24 24">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -54,13 +55,22 @@
                 <!-- Navigation -->
                 <nav class="space-y-2">
                     <NuxtLink v-for="(item, index) in sidebarItems" :key="index" :to="item.path"
-                        class="flex group items-center px-4 py-2.5 hover:bg-orange-600 rounded-xl font-medium dark:hover:bg-white/10" :class="{
-                            'bg-orange-600 dark:bg-white/10 text-white': isActive(item.path)
+                        class="flex group items-center px-4 py-2.5 hover:bg-orange-600 rounded-xl font-medium dark:hover:bg-white/10"
+                        :class="{
+                            'bg-orange-600 dark:bg-white/10 text-white dark:text-orange-500': isActive(item.path)
                         }">
-                        <component :is="item.icon" class="w-5 h-5 mx-3 text-gray-700 dark:text-orange-500 group-hover:text-white" :class="{
-                            'text-white': isActive(item.path)}"/>
-                        <span v-show="!isSidebarCollapsed" class="text-gray-700 dark:text-orange-500 group-hover:text-white" :class="{
-                            'text-white': isActive(item.path)}">{{ item.name }}</span>
+                        <component :is="item.icon"
+                            class="w-5 h-5 mx-3 text-gray-700 group-hover:text-white dark:text-orange-500 group-hover:dark:text-orange-500" :class="{
+                                'text-white': isActive(item.path)
+                            }" />
+                        <span v-show="!isSidebarCollapsed" :class="[
+                            isActive(item.path)
+                                ? 'dark:text-orange-500 text-white'
+                                : 'text-gray-700 dark:text-white',
+                            'group-hover:dark:text-orange-500 group-hover:text-white'
+                        ]">
+                            {{ item.name }}
+                        </span>
                     </NuxtLink>
                 </nav>
             </div>
@@ -90,8 +100,8 @@
                         <!-- Tombol -->
                         <button @click.stop="toggleNotificationDropdown"
                             class="relative group p-2.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-500 transition-all duration-200">
-                            <svg class="w-6 h-6 text-gray-600 dark:text-white hover:text-gray-800 transition-colors" fill="none"
-                                stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-6 h-6 text-gray-600 dark:text-white hover:text-gray-800 transition-colors"
+                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M15 17h5l-1.4-1.4a2 2 0 01-.6-1.42V11a6 6 0 00-4-5.66V5a2 2 0 10-4 0v.34A6 6 0 006 11v3.18c0 .53-.2 1.05-.6 1.42L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                             </svg>
@@ -125,7 +135,8 @@
                                             </div>
                                         </div>
                                         <div class="flex-1">
-                                            <p class="text-sm text-gray-800 dark:text-white">Your order has been confirmed</p>
+                                            <p class="text-sm text-gray-800 dark:text-white">Your order has been confirmed
+                                            </p>
                                             <p class="text-xs text-gray-500 mt-1 dark:text-gray-500">2 minutes ago</p>
                                         </div>
                                         <div class="flex-shrink-0">
@@ -133,13 +144,15 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors cursor-pointer">
+                                <div
+                                    class="px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors cursor-pointer">
                                     <div class="flex items-start space-x-3">
                                         <div class="flex-shrink-0"><img
                                                 src="https://api.dicebear.com/7.x/avataaars/svg?seed=Jane"
                                                 class="w-10 h-10 rounded-full" alt="User"></div>
                                         <div class="flex-1">
-                                            <p class="text-sm text-gray-800 dark:text-white"><span class="font-medium">Jane Cooper</span>
+                                            <p class="text-sm text-gray-800 dark:text-white"><span class="font-medium">Jane
+                                                    Cooper</span>
                                                 mentioned you in a comment</p>
                                             <p class="text-xs text-gray-500 mt-1 dark:text-gray-500">1 hour ago</p>
                                         </div>
@@ -358,7 +371,6 @@ const lastUpdated = "22 Jun 2025"
 
 const currentUserStore = useUserStore()
 onMounted(async () => {
-    loading.value = true
     if (!currentUserStore.user) {
         await currentUserStore.fetchUser()
     }
@@ -395,5 +407,4 @@ async function logout() {
 }
 
 </script>
-<style>
-</style>
+<style></style>
