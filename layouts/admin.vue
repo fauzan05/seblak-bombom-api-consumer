@@ -54,7 +54,7 @@
             <div class="flex flex-col h-[calc(100vh-5rem)] overflow-y-auto py-6">
                 <!-- Navigation -->
                 <nav class="space-y-2">
-                    <NuxtLink v-for="(item, index) in sidebarItems" :key="index" :to="item.path"
+                    <NuxtLink v-for="(item, index) in sidebarItems" :key="index" :to="item.path" @click="isMobileSidebarOpen = false"
                         class="flex group items-center px-4 py-2.5 hover:bg-orange-600 rounded-xl font-medium dark:hover:bg-white/10"
                         :class="{
                             'bg-orange-600 dark:bg-white/10 text-white dark:text-orange-500': isActive(item.path)
