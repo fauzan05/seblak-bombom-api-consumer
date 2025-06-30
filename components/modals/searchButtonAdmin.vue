@@ -4,7 +4,7 @@
         <button @click="openSearchModal" 
                 class="md:hidden p-2.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800/50 dark:text-gray-300">
             <svg xmlns="http://www.w3.org/2000/svg" 
-                 class="h-5 w-5 text-gray-600 dark:text-gray-400 group-hover:text-gray-800 dark:group-hover:text-gray-200 transition-colors" 
+                 class="h-5 w-5 text-gray-600 dark:text-white group-hover:text-gray-800 dark:group-hover:text-gray-200 transition-colors" 
                  fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round"
                     d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 104.5 4.5a7.5 7.5 0 0012.15 12.15z" />

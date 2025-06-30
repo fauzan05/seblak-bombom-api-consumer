@@ -1,2 +1,137 @@
 @import "tailwindcss";
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+/* toast.css */
+
+/* Base styles untuk semua toast */
+.Vue-Toastification__toast {
+    padding: 16px !important;
+    border-radius: 12px !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Light Mode Styles */
+:root[data-theme="light"] .Vue-Toastification__toast,
+:root:not([data-theme="dark"]) .Vue-Toastification__toast {
+    background: white !important;
+    color: #333 !important;
+}
+
+:root[data-theme="light"] .Vue-Toastification__toast--success,
+:root:not([data-theme="dark"]) .Vue-Toastification__toast--success {
+    border-left: 4px solid #00b09b !important;
+    background: linear-gradient(135deg, #00b09b 0%, #96c93d 100%) !important;
+    color: white !important;
+}
+
+:root[data-theme="light"] .Vue-Toastification__toast--error,
+:root:not([data-theme="dark"]) .Vue-Toastification__toast--error {
+    border-left: 4px solid #ff6b6b !important;
+    background: linear-gradient(135deg, #ff6b6b 0%, #ff4757 100%) !important;
+    color: white !important;
+}
+
+:root[data-theme="light"] .Vue-Toastification__toast--warning,
+:root:not([data-theme="dark"]) .Vue-Toastification__toast--warning {
+    border-left: 4px solid #ffa502 !important;
+    background: linear-gradient(135deg, #ffa502 0%, #ff7f50 100%) !important;
+    color: white !important;
+}
+
+:root[data-theme="light"] .Vue-Toastification__toast--info,
+:root:not([data-theme="dark"]) .Vue-Toastification__toast--info {
+    border-left: 4px solid #2980b9 !important;
+    background: linear-gradient(135deg, #2980b9 0%, #6dd5fa 100%) !important;
+    color: white !important;
+}
+
+/* Dark Mode Styles */
+:root[data-theme="dark"] .Vue-Toastification__toast {
+    background: #1a1a1a !important;
+    color: #fff !important;
+    border: 1px solid #333 !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+}
+
+:root[data-theme="dark"] .Vue-Toastification__toast--success {
+    border-left: 4px solid #00b09b !important;
+    background: #1c2827 !important;
+    /* Lebih solid */
+    color: #00e6c3 !important;
+    /* Warna text yang lebih terang */
+}
+
+:root[data-theme="dark"] .Vue-Toastification__toast--error {
+    border-left: 4px solid #ff6b6b !important;
+    background: #2a1f1f !important;
+    /* Lebih solid */
+    color: #ff8585 !important;
+    /* Warna text yang lebih terang */
+}
+
+:root[data-theme="dark"] .Vue-Toastification__toast--warning {
+    border-left: 4px solid #ffa502 !important;
+    background: #2a241f !important;
+    /* Lebih solid */
+    color: #ffb732 !important;
+    /* Warna text yang lebih terang */
+}
+
+:root[data-theme="dark"] .Vue-Toastification__toast--info {
+    border-left: 4px solid #2980b9 !important;
+    background: #1f252a !important;
+    /* Lebih solid */
+    color: #5ca8db !important;
+    /* Warna text yang lebih terang */
+}
+
+/* Optional: Tambahkan hover effect */
+:root[data-theme="dark"] .Vue-Toastification__toast:hover {
+    transform: translateY(-2px) !important;
+    transition: transform 0.2s ease !important;
+}
+
+/* Shared styles untuk close button */
+.Vue-Toastification__close-button {
+    color: inherit !important;
+    opacity: 0.7 !important;
+}
+
+.Vue-Toastification__close-button:hover {
+    opacity: 1 !important;
+}
+
+/* Animasi */
+@keyframes toast-in-right {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes toast-out-right {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+.Vue-Toastification__bounce-enter-active {
+    animation: toast-in-right 0.3s ease-out forwards;
+}
+
+.Vue-Toastification__bounce-leave-active {
+    animation: toast-out-right 0.3s ease-out forwards;
+}
