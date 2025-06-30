@@ -91,8 +91,8 @@
                     </button>
                     <h1 class="text-xl font-semibold text-gray-800 dark:text-white">Dashboard</h1>
                 </div>
-                <div class="flex items-center space-x-4">
-                    <div class="relative group">
+                <div class="flex items-center space-x-2.5">
+                    <div class="relative h-[80px] flex items-center group">
                         <SearchButton />
                     </div>
                     <div class="relative h-[80px] flex items-center dropdown-notification-wrapper"
@@ -114,7 +114,7 @@
 
                         <!-- Dropdown -->
                         <div v-show="isNotificationDropdownOpen"
-                            class="absolute -right-4 top-full w-80 bg-white z-50 dark:bg-slate-800 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 transition-all duration-200">
+                            class="absolute -right-25 md:-right-4 top-full w-80 bg-white z-50 dark:bg-slate-800 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 transition-all duration-200">
                             <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
                                 <h3 class="text-sm font-semibold text-gray-800 dark:text-white">Notifications</h3><button
                                     class="text-xs text-orange-600 hover:text-orange-700 font-medium">Mark all as
@@ -186,7 +186,7 @@
                             </div>
                         </button>
                         <div v-show="isProfileDropdownOpen"
-                            class="absolute -right-4 top-full w-70 bg-white dark:bg-slate-800 dark:border-gray-700 rounded-2xl shadow-xl border border-gray-100 z-50 transition-all duration-200">
+                            class="absolute -right-4 top-full w-50 md:w-70 bg-white dark:bg-slate-800 dark:border-gray-700 rounded-2xl shadow-xl border border-gray-100 z-50 transition-all duration-200">
                             <div class="px-4 py-4 border-b border-gray-100">
                                 <div class="flex items-center space-x-3">
                                     <svg width="100" height="100" class="h-8 w-8 rounded-full object-cover"
@@ -197,7 +197,7 @@
                                             d="M24 78C24 65.2975 35.2975 56 48 56H52C64.7025 56 76 65.2975 76 78V80H24V78Z"
                                             fill="#D1D5DB" />
                                     </svg>
-                                    <div class="max-w-40">
+                                    <div class="max-w-30 md:max-w-40">
                                         <p class="text-sm font-semibold text-gray-800 dark:text-white truncate">{{
                                             `${currentUserStore.user.first_name} ${currentUserStore.user.last_name} ` }}</p>
                                         <p class="text-xs text-gray-500 truncate">{{ currentUserStore.user.email }}</p>
@@ -338,11 +338,14 @@ function closeProfileDropdown(e) {
 
 function toggleNotificationDropdown() {
     isNotificationDropdownOpen.value = !isNotificationDropdownOpen.value
+    isProfileDropdownOpen.value = false
 }
 
 function toggleProfileDropdown() {
     isProfileDropdownOpen.value = !isProfileDropdownOpen.value
+    isNotificationDropdownOpen.value = false
 }
+
 function toggleSidebar() {
     isSidebarCollapsed.value = !isSidebarCollapsed.value
 }
@@ -350,6 +353,8 @@ function toggleSidebar() {
 function toggleMobileSidebar() {
     isMobileSidebarOpen.value = true
     isSidebarCollapsed.value = false
+    isProfileDropdownOpen.value = false
+    isNotificationDropdownOpen.value = false
 }
 function closeMobileSidebar() {
     isMobileSidebarOpen.value = false
