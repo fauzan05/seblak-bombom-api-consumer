@@ -940,7 +940,7 @@ const isCreateNewProduct = ref(true)
 const products = ref([])
 const search = ref('')
 const selectedStatusFilter = ref(statusItems[0])
-const selectedSortByFilter = ref(sortByItems[0])
+const selectedSortByFilter = ref(sortByItems[1])
 const selectedPageSizeFilter = ref(pageSizeItems[0])
 const selectedProducts = ref([])
 const isDesc = ref(true)
@@ -1191,10 +1191,6 @@ const createNewProduct = async () => {
                 })
             }
 
-            // formData.forEach((value, key) => {
-            //     console.log(`${key}: ${value}`)
-            // })
-
             await $fetch(`/products/${productForm.value.id}`, {
                 method: 'PUT',
                 body: formData,
@@ -1254,10 +1250,21 @@ const formatDate = (utcDateString) => {
 const fetchProducts = async () => {
     try {
         loading.value = true
-        const response = await $fetch(`/products?is_active=${selectedStatusFilter.value.value || ''}&per_page=${selectedPageSizeFilter.value.value}&page=${currentPage.value}&search=${search.value}&sort_by=${direction.value}&column=${selectedSortByFilter.value.value}`, {
+        const query = {
+            is_active: selectedStatusFilter.value?.value ?? '',
+            per_page: selectedPageSizeFilter.value?.value,
+            page: currentPage.value,
+            search: search.value,
+            sort_by: direction.value,
+            column: selectedSortByFilter.value?.value
+        };
+
+        const response = await $fetch('/products', {
             baseURL: apiUrl,
-            credentials: 'include'
-        })
+            credentials: 'include',
+            params: query
+        });
+
         products.value = response
         if (!products.value.data || products.value.data.length === 0) {
             $toast.info('No products found')
