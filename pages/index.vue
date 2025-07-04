@@ -17,9 +17,6 @@
                     <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent"></div>
                     <div class="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/50"></div>
 
-                    <!-- Animated Pattern Overlay -->
-                    <div class="absolute inset-0 bg-[url('/pattern.png')] opacity-20"></div>
-
                     <!-- Text Content with Animations -->
                     <div class="absolute inset-0 flex flex-col justify-center px-6 sm:px-10 md:px-20 text-white z-10">
                         <div class="max-w-4xl" :class="{ 'opacity-100': activeIndex === index }">

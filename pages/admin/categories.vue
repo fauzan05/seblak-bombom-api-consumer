@@ -886,8 +886,9 @@ const sortByItems = [
 ]
 
 const statusItems = [
-    { name: 'Active', value: 'active' },
-    { name: 'Inactive', value: 'inactive' }
+    { name: 'Active', value: 'true' },
+    { name: 'Inactive', value: 'false' },
+    { name: 'All', value: '' },
 ]
 
 const pageSizeItems = [
@@ -915,9 +916,6 @@ const totalPages = ref(1)
 const showButtonDeleteSelectedItems = ref(false)
 const isDeleteModalOpen = ref(false)
 const showMobileFilters = ref(false)
-
-// Modal states  
-const showModal = ref(false)
 
 // Statistics
 const totalCurrentCategories = computed(() => categories.value.total_current_datas)
@@ -950,7 +948,7 @@ watch(selectedCategories, (newSelectedCategories) => {
 })
 
 const categoryForm = ref({
-    id: null,
+    id: 0,
     name: "",
     description: "",
     image: null,
@@ -959,7 +957,7 @@ const categoryForm = ref({
 const resetForm = () => {
     isCreateNewCategory.value = true
     categoryForm.value = {
-        id: null,
+        id: 0,
         name: '',
         description: '',
         image: null,
@@ -969,7 +967,7 @@ const resetForm = () => {
 
 // Function to handle file processing
 const processFile = (file) => {
-    if (validateFile(file)) {
+    if (file.type.startsWith('image/') && validateFile(file)) {
         const reader = new FileReader()
         reader.onload = (e) => {
             categoryImage.value = e.target.result
@@ -1139,7 +1137,7 @@ const fetchCategories = async () => {
         console.error('Error fetching categories:', error)
         $toast.error('Failed to load categories')
         // Fallback to sample data for development
-        loadSampleData()
+        // loadSampleData()
     } finally {
         loading.value = false
     }
@@ -1175,90 +1173,70 @@ const deleteCategory = (category) => {
     selectedCategories.value = [category]
 }
 
-// Keyboard shortcuts
-const handleKeydown = (event) => {
-    // Ctrl/Cmd + N to create new category
-    if ((event.ctrlKey || event.metaKey) && event.key === 'n') {
-        event.preventDefault()
-        openCreateModal()
-    }
-    // Escape to close modals
-    if (event.key === 'Escape') {
-        if (showModal.value) {
-            closeModal()
-        }
-        if (showDeleteModal.value) {
-            closeDeleteModal()
-        }
-    }
-}
-
 onMounted(async () => {
     fetchCategories()
-    document.addEventListener('keydown', handleKeydown)
 })
 
 onUnmounted(() => {
-    document.removeEventListener('keydown', handleKeydown)
 })
 
 // Sample data for development/testing
-const loadSampleData = () => {
-    categories.value = [
-        {
-            id: 1,
-            name: 'Seblak Pedas',
-            description: 'Seblak dengan level kepedasan yang menantang untuk pecinta makanan pedas',
-            image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400',
-            status: 'active',
-            products_count: 12,
-            created_at: '2024-01-15T08:30:00Z'
-        },
-        {
-            id: 2,
-            name: 'Seblak Original',
-            description: 'Seblak dengan rasa original yang pas untuk semua kalangan',
-            image: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400',
-            status: 'active',
-            products_count: 8,
-            created_at: '2024-01-12T10:15:00Z'
-        },
-        {
-            id: 3,
-            name: 'Seblak Manis',
-            description: 'Varian seblak dengan rasa manis yang unik dan menyegarkan',
-            image: 'https://images.unsplash.com/photo-1567620832903-9fc6debc209f?w=400',
-            status: 'active',
-            products_count: 5,
-            created_at: '2024-01-10T14:45:00Z'
-        },
-        {
-            id: 4,
-            name: 'Minuman',
-            description: 'Berbagai jenis minuman segar untuk menemani seblak Anda',
-            image: 'https://images.unsplash.com/photo-1544145945-f90425340c7e?w=400',
-            status: 'active',
-            products_count: 15,
-            created_at: '2024-01-08T09:20:00Z'
-        },
-        {
-            id: 5,
-            name: 'Cemilan',
-            description: 'Aneka cemilan ringan sebagai pelengkap hidangan utama',
-            image: 'https://images.unsplash.com/photo-1599490659213-e2b9527bd087?w=400',
-            status: 'inactive',
-            products_count: 3,
-            created_at: '2024-01-05T16:30:00Z'
-        },
-        {
-            id: 6,
-            name: 'Paket Combo',
-            description: 'Paket hemat kombinasi seblak dengan minuman dan cemilan',
-            image: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=400',
-            status: 'active',
-            products_count: 7,
-            created_at: '2024-01-03T11:10:00Z'
-        }
-    ]
-}
+// const loadSampleData = () => {
+//     categories.value = [
+//         {
+//             id: 1,
+//             name: 'Seblak Pedas',
+//             description: 'Seblak dengan level kepedasan yang menantang untuk pecinta makanan pedas',
+//             image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400',
+//             status: 'active',
+//             products_count: 12,
+//             created_at: '2024-01-15T08:30:00Z'
+//         },
+//         {
+//             id: 2,
+//             name: 'Seblak Original',
+//             description: 'Seblak dengan rasa original yang pas untuk semua kalangan',
+//             image: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400',
+//             status: 'active',
+//             products_count: 8,
+//             created_at: '2024-01-12T10:15:00Z'
+//         },
+//         {
+//             id: 3,
+//             name: 'Seblak Manis',
+//             description: 'Varian seblak dengan rasa manis yang unik dan menyegarkan',
+//             image: 'https://images.unsplash.com/photo-1567620832903-9fc6debc209f?w=400',
+//             status: 'active',
+//             products_count: 5,
+//             created_at: '2024-01-10T14:45:00Z'
+//         },
+//         {
+//             id: 4,
+//             name: 'Minuman',
+//             description: 'Berbagai jenis minuman segar untuk menemani seblak Anda',
+//             image: 'https://images.unsplash.com/photo-1544145945-f90425340c7e?w=400',
+//             status: 'active',
+//             products_count: 15,
+//             created_at: '2024-01-08T09:20:00Z'
+//         },
+//         {
+//             id: 5,
+//             name: 'Cemilan',
+//             description: 'Aneka cemilan ringan sebagai pelengkap hidangan utama',
+//             image: 'https://images.unsplash.com/photo-1599490659213-e2b9527bd087?w=400',
+//             status: 'inactive',
+//             products_count: 3,
+//             created_at: '2024-01-05T16:30:00Z'
+//         },
+//         {
+//             id: 6,
+//             name: 'Paket Combo',
+//             description: 'Paket hemat kombinasi seblak dengan minuman dan cemilan',
+//             image: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=400',
+//             status: 'active',
+//             products_count: 7,
+//             created_at: '2024-01-03T11:10:00Z'
+//         }
+//     ]
+// }
 </script>
