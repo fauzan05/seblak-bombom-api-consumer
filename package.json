@@ -8,7 +8,11 @@
     "start": "node .output/server/index.mjs || npm run preview",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "test": "vitest",
+    "test:watch": "vitest --watch",
+    "test:coverage": "vitest --coverage",
+    "test:ui": "vitest --ui"
   },
   "dependencies": {
     "@headlessui/vue": "^1.7.23",
@@ -27,5 +31,14 @@
     "vue-router": "^4.5.1",
     "vue-toastification": "^2.0.0-rc.5",
     "vuedraggable": "^4.1.0"
+  },
+  "devDependencies": {
+    "@nuxt/test-utils": "^3.19.2",
+    "@pinia/testing": "^1.0.2",
+    "@vitejs/plugin-vue": "^6.0.1",
+    "@vitest/coverage-v8": "^3.2.4",
+    "@vue/test-utils": "^2.4.6",
+    "happy-dom": "^18.0.1",
+    "vitest": "^3.2.4"
   }
 }

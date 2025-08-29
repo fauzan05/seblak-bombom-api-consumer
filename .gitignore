@@ -22,3 +22,6 @@ logs
 .env.local
 .env.prod
 !.env.example
+
+# Test coverage
+coverage
